@@ -12,4 +12,4 @@
 - name: Show changed packages # noqa: no-handler
   ansible.builtin.debug:
     var: brew_updates.changed_pkgs
-  when: brew_updates.changed_pkgs | length > 0
+  when: brew_updates.changed_pkgs | default([]) | length > 0
