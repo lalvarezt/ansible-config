@@ -63,12 +63,12 @@ Log out and back in, or start a new terminal session.
 
 Use `--tags` or `--skip-tags` to control which playbooks run:
 
-| Tag | Playbooks | Description |
-|-----|-----------|-------------|
-| `setup` | 00-06 | System prerequisites, 1Password, SSH, Homebrew, language managers |
-| `packages` | 07-12, 14-17 | All tool packages (shell, files, dev, git, data, search, misc, fonts) |
-| `pentesting` | 13 | Pentesting and security tools |
-| `config` | 18-19 | Chezmoi dotfiles and post-configuration |
+| Tag | Playbook | Description |
+|-----|----------|-------------|
+| `setup` | 00-setup.yml | System prerequisites, 1Password, SSH, Homebrew, language managers |
+| `packages` | 01-packages.yml | All tool packages (shell, files, dev, git, data, search, misc, fonts) |
+| `pentesting` | 02-pentesting.yml | Pentesting and security tools |
+| `config` | 03-config.yml | Chezmoi dotfiles and post-configuration |
 
 ```bash
 # Full bootstrap
@@ -156,13 +156,12 @@ ansible-config/
 │   ├── bootstrap.sh          # Initial Ansible installation
 │   └── list-modules.sh       # Package module discovery utility
 ├── ansible/
-│   ├── playbooks/            # 20 numbered playbooks
+│   ├── playbooks/
 │   │   ├── bootstrap.yml     # Main orchestrator
-│   │   ├── 00-prereqs.yml    # System prerequisites
-│   │   ├── 01-onepassword.yml
-│   │   ├── 02-ssh.yml
-│   │   ├── ...
-│   │   └── 19-post-config.yml
+│   │   ├── 00-setup.yml      # System prerequisites, 1Password, SSH, Homebrew
+│   │   ├── 01-packages.yml   # All tool packages
+│   │   ├── 02-pentesting.yml # Pentesting and security tools
+│   │   └── 03-config.yml     # Chezmoi dotfiles and post-configuration
 │   ├── roles/                # Reusable role modules
 │   │   ├── system_prereqs/
 │   │   ├── onepassword/

@@ -1,0 +1,36 @@
+---
+# Package installation: all tools except pentesting
+
+- name: Install Terminal Emulators
+  hosts: all
+  gather_facts: true
+  tags: [packages]
+  roles:
+    - role: terminal_emulators
+
+- name: Install Packages
+  hosts: all
+  gather_facts: true
+  tags: [packages]
+  vars:
+    _default_tags:
+      - shell
+      - files
+      - development
+      - git
+      - data
+      - search
+      - package-managers
+      - misc
+      - fonts
+      - core
+    _modules_raw: "{{ (modules | from_yaml) if modules is defined and modules is string else (modules | default(_default_tags)) }}"
+    modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"
+
+  tasks:
+    - name: Install packages
+      ansible.builtin.include_role:
+        name: package_installer
+      vars:
+        package_dict: "{{ packages }}"
+        modules_filter: "{{ modules_list }}"

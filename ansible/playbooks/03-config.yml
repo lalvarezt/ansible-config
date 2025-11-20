@@ -1,0 +1,16 @@
+---
+# Configuration: Chezmoi dotfiles and post-configuration
+
+- name: Initialize and Apply Chezmoi
+  hosts: all
+  gather_facts: true
+  tags: [config]
+  roles:
+    - role: chezmoi
+
+- name: Post-Configuration Tasks
+  hosts: all
+  gather_facts: true
+  tags: [config]
+  roles:
+    - role: post_config

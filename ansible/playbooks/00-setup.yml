@@ -1,0 +1,64 @@
+---
+# System setup: prerequisites, 1Password, SSH, Homebrew, language managers
+
+- name: Install System Prerequisites
+  hosts: all
+  gather_facts: true
+  tags: [setup]
+  roles:
+    - role: system_prereqs
+
+- name: Install 1Password CLI
+  hosts: all
+  gather_facts: true
+  tags: [setup]
+  module_defaults:
+    ansible.builtin.rpm_key:
+      validate_certs: "{{ not (skip_ssl_verify | default(false)) }}"
+    ansible.builtin.get_url:
+      validate_certs: "{{ not (skip_ssl_verify | default(false)) }}"
+    ansible.builtin.uri:
+      validate_certs: "{{ not (skip_ssl_verify | default(false)) }}"
+  roles:
+    - role: onepassword
+
+- name: Setup SSH Keys
+  hosts: all
+  gather_facts: true
+  tags: [setup]
+  roles:
+    - role: ssh_keys
+
+- name: Install and Configure Homebrew
+  hosts: all
+  gather_facts: true
+  tags: [setup]
+  roles:
+    - role: homebrew
+
+- name: Install Language Package Managers
+  hosts: all
+  gather_facts: true
+  tags: [setup]
+  roles:
+    - role: lang_managers
+
+- name: Setup Temporary Environment Variables
+  hosts: all
+  gather_facts: true
+  tags: [setup]
+  roles:
+    - role: env_setup
+
+- name: Add Homebrew Taps
+  hosts: all
+  gather_facts: true
+  tags: [setup]
+  tasks:
+    - name: Ensure custom Homebrew taps are present
+      community.general.homebrew_tap:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ homebrew_taps }}"
+      environment:
+        PATH: "{{ ansible_path }}"

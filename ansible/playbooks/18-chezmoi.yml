@@ -1,9 +1,0 @@
----
-# Chezmoi initialization and application (FINAL CONFIG)
-
-- name: Initialize and Apply Chezmoi
-  hosts: all
-  gather_facts: true
-  tags: [config]
-  roles:
-    - role: chezmoi

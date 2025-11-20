@@ -1,9 +1,0 @@
----
-# SSH keys setup from 1Password
-
-- name: Setup SSH Keys
-  hosts: all
-  gather_facts: true
-  tags: [setup]
-  roles:
-    - role: ssh_keys
