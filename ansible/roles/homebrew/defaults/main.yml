@@ -1,0 +1,13 @@
+---
+# Homebrew role defaults
+# These variables can be overridden in host_vars or group_vars
+
+# The installation prefix for Homebrew on Linux
+# Override in host_vars for custom installations
+brew_prefix: "/home/linuxbrew/.linuxbrew"
+
+# Path to the brew binary
+brew_bin: "/home/linuxbrew/.linuxbrew/bin/brew"
+
+# URL for the Homebrew installation script
+brew_install_script: "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"

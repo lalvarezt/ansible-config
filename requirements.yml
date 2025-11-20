@@ -1,0 +1,8 @@
+---
+# Ansible Galaxy requirements
+# Install with: ansible-galaxy install -r requirements.yml
+
+collections:
+  # Required for homebrew, cargo modules
+  - name: community.general
+    version: ">=7.0.0"

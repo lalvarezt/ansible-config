@@ -1,13 +1,22 @@
 ---
 # Install packages via Go (batch loop)
 
-- name: Install packages via Go
-  command: "{{ go_bin }} {{ item.command }}"
-  environment:
-    PATH: "{{ ansible_path }}"
-    GOPATH: "{{ ansible_user_dir }}/go"
+- name: Check existing Go binaries
+  stat:
+    path: "{{ ansible_user_dir }}/go/bin/{{ item.name }}"
   loop: "{{ go_packages }}"
   loop_control:
     label: "{{ item.name }}"
+  register: go_binary_checks
+
+- name: Install packages via Go
+  command: "{{ go_bin }} {{ item.item.command }}"
+  environment:
+    PATH: "{{ ansible_path }}"
+    GOPATH: "{{ ansible_user_dir }}/go"
+  loop: "{{ go_binary_checks.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: not item.stat.exists
   register: go_results
-  changed_when: go_results.stdout != '' or go_results.stderr != ''
+  changed_when: go_results.rc == 0

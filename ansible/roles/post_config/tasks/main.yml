@@ -1,12 +1,22 @@
 ---
 # Post-configuration tasks (run at the very end)
 
+- name: Check if bat is installed
+  command: which bat
+  environment:
+    PATH: "{{ ansible_path }}"
+  register: bat_check
+  failed_when: false
+  changed_when: false
+
 - name: Build bat cache
   command: bat cache --build
   environment:
     PATH: "{{ ansible_path }}"
-  ignore_errors: true
-  changed_when: false
+  when: bat_check.rc == 0
+  register: bat_cache_result
+  failed_when: false
+  changed_when: bat_cache_result.rc == 0
 
 - name: Check if update-alternatives exists
   command: which update-alternatives
@@ -14,22 +24,47 @@
   failed_when: false
   changed_when: false
 
-- name: Set neovim as default editor (if update-alternatives exists)
-  shell: |
-    if ! readlink -f /etc/alternatives/editor 2>/dev/null | grep -q ".linuxbrew/.*nvim"; then
-      sudo update-alternatives --install /usr/bin/editor editor "$(which nvim)" 1
-      sudo update-alternatives --set editor "$(which nvim)"
-    fi
+- name: Check if neovim is installed
+  command: which nvim
   environment:
     PATH: "{{ ansible_path }}"
-  when: update_alternatives_check.rc == 0
-  ignore_errors: true
+  register: nvim_check
+  failed_when: false
+  changed_when: false
+
+- name: Set neovim as default editor (if update-alternatives exists)
+  block:
+    - name: Check current editor alternative
+      shell: readlink -f /etc/alternatives/editor 2>/dev/null || echo "none"
+      register: current_editor
+      changed_when: false
+
+    - name: Install neovim as editor alternative
+      command: sudo update-alternatives --install /usr/bin/editor editor "{{ nvim_check.stdout }}" 1
+      when: "'nvim' not in current_editor.stdout"
+
+    - name: Set neovim as default editor
+      command: sudo update-alternatives --set editor "{{ nvim_check.stdout }}"
+      when: "'nvim' not in current_editor.stdout"
+  environment:
+    PATH: "{{ ansible_path }}"
+  when:
+    - update_alternatives_check.rc == 0
+    - nvim_check.rc == 0
 
 - name: Check if systemd is available
   command: systemctl --version
   register: systemd_check
   failed_when: false
   changed_when: false
+
+- name: Check if ghostty service exists
+  stat:
+    path: "{{ ansible_user_dir }}/.config/systemd/user/app-com.mitchellh.ghostty.service"
+  register: ghostty_service_check
+  when:
+    - systemd_check.rc == 0
+    - not (is_wsl | default(false))
 
 - name: Enable ghostty systemd service (if systemctl available)
   systemd:
@@ -39,15 +74,25 @@
   when:
     - systemd_check.rc == 0
     - not (is_wsl | default(false))
-  ignore_errors: true
+    - ghostty_service_check.stat.exists | default(false)
 
 # IMPORTANT: Unlink Python at the very end to avoid breaking dependencies during installation
+- name: Check if Python is linked in Homebrew
+  command: "{{ brew_bin }} list python"
+  environment:
+    PATH: "{{ ansible_path }}"
+  register: python_linked_check
+  failed_when: false
+  changed_when: false
+
 - name: Unlink Python from Homebrew (prevents conflicts with system Python)
   command: "{{ brew_bin }} unlink python"
   environment:
     PATH: "{{ ansible_path }}"
-  ignore_errors: true
-  changed_when: false
+  when: python_linked_check.rc == 0
+  register: python_unlink_result
+  failed_when: false
+  changed_when: python_unlink_result.rc == 0
 
 - name: Display final message
   debug:

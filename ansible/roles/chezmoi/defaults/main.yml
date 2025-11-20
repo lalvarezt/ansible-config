@@ -1,0 +1,7 @@
+---
+# Chezmoi role defaults
+# These variables can be overridden in host_vars or group_vars
+
+# Git repository URL for chezmoi dotfiles
+# Override this to use your own dotfiles repository
+chezmoi_repo_url: "git@gitlab.com:lalvarezt/chezmoi.git"

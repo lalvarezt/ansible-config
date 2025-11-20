@@ -1,31 +1,21 @@
 ---
 # Terminal emulators installation (ghostty, wezterm, kitty)
+# Note: These are GUI applications that cannot be installed via Homebrew on Linux
+# They require native package managers, Flatpak, or manual installation
 
 - name: Skip terminal emulators in WSL
   debug:
     msg: "Skipping terminal emulator installation in WSL environment"
   when: is_wsl | default(false)
 
-- name: Install terminal emulators via Homebrew (all platforms)
+- name: Install terminal emulators (non-WSL)
   block:
-    - name: Install ghostty via Homebrew
-      community.general.homebrew:
-        name: ghostty
-        state: present
-        install_options: ["quiet"]
-      ignore_errors: true
+    - name: Include distro-specific terminal emulator installation
+      include_tasks: "{{ ansible_distribution | lower }}.yml"
+      when: ansible_distribution | lower in ['ubuntu', 'fedora', 'archlinux']
 
-    - name: Install wezterm via Homebrew
-      community.general.homebrew:
-        name: wezterm
-        state: present
-        install_options: ["quiet"]
-      ignore_errors: true
-
-    - name: Install kitty via Homebrew
-      community.general.homebrew:
-        name: kitty
-        state: present
-        install_options: ["quiet"]
-      ignore_errors: true
+    - name: Warn if distribution not supported
+      debug:
+        msg: "Terminal emulator installation not configured for {{ ansible_distribution }}. Please install ghostty, wezterm, or kitty manually."
+      when: ansible_distribution | lower not in ['ubuntu', 'fedora', 'archlinux']
   when: not (is_wsl | default(false))

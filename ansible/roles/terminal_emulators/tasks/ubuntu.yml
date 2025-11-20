@@ -1,0 +1,74 @@
+---
+# Ubuntu-specific terminal emulator installation
+
+# Kitty - available in Ubuntu repos (may not be latest version)
+- name: Install kitty via apt
+  apt:
+    name: kitty
+    state: present
+  become: true
+  register: kitty_result
+  failed_when: false
+
+# WezTerm - install via APT repository
+- name: Check if wezterm is installed
+  command: which wezterm
+  register: wezterm_check
+  failed_when: false
+  changed_when: false
+
+- name: Set up WezTerm APT repository
+  block:
+    - name: Download WezTerm GPG key
+      shell: curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
+      args:
+        creates: /usr/share/keyrings/wezterm-fury.gpg
+
+    - name: Add WezTerm APT repository
+      copy:
+        content: "deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *"
+        dest: /etc/apt/sources.list.d/wezterm.list
+        mode: '0644'
+      become: true
+
+    - name: Set GPG key permissions
+      file:
+        path: /usr/share/keyrings/wezterm-fury.gpg
+        mode: '0644'
+      become: true
+
+    - name: Update apt cache
+      apt:
+        update_cache: true
+      become: true
+
+    - name: Install wezterm
+      apt:
+        name: wezterm
+        state: present
+      become: true
+  when: wezterm_check.rc != 0
+
+# Ghostty - install via Snap (official method for Ubuntu)
+- name: Check if ghostty is installed
+  command: which ghostty
+  register: ghostty_check
+  failed_when: false
+  changed_when: false
+
+- name: Install ghostty via snap
+  community.general.snap:
+    name: ghostty
+    classic: true
+    state: present
+  become: true
+  when: ghostty_check.rc != 0
+  register: ghostty_result
+  failed_when: false
+
+- name: Display ghostty snap installation note
+  debug:
+    msg: "Ghostty installed via Snap. If Snap installation failed, install manually from https://ghostty.org/docs/install/binary"
+  when:
+    - ghostty_check.rc != 0
+    - ghostty_result.failed | default(false)

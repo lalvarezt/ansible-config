@@ -7,4 +7,4 @@
 
   roles:
     - role: post_config
-      tags: [category:config]
+      tags: [config, post-config]

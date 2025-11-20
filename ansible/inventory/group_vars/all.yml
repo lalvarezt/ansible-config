@@ -1,6 +1,47 @@
 ---
+# =============================================================================
+# ANSIBLE CONFIGURATION VARIABLES
+# =============================================================================
+# This file contains all variables for the workstation bootstrap.
+# Override values in host_vars/localhost.yml for machine-specific settings.
+#
+# ENVIRONMENT VARIABLES
+# ---------------------
+# brew_prefix: Homebrew installation directory
+# brew_bin: Path to brew binary
+# homebrew_taps: Additional Homebrew taps to install
+# uv_bin: Path to uv (Python package manager)
+# go_bin: Path to Go binary
+# cargo_bin: Path to Cargo binary
+# rustup_bin: Path to Rustup binary
+# ansible_path: Combined PATH for task execution
+#
+# PACKAGE DEFINITIONS
+# -------------------
+# Packages are organized by category. Each package can specify:
+#   - brew: Install via Homebrew (name, flags)
+#   - uv: Install via uv/pip (command)
+#   - go: Install via go install (command)
+#   - cargo: Install via cargo (name, locked)
+#   - native: Install via system package manager (apt, dnf, pacman, yay, paru)
+#   - description: Human-readable description
+#   - tags: List of tags for filtering
+#   - post_install: Commands to run after installation
+#
+# TAG CONVENTIONS
+# ---------------
+#   - core: Essential tools installed by default
+#   - standard: Recommended tools for most users
+#   - Category tags: shell, files, development, git, pentesting, data, search, misc
+# =============================================================================
+
+# Homebrew installation prefix for Linux
 brew_prefix: /home/linuxbrew/.linuxbrew
+
+# Path to the brew binary
 brew_bin: /home/linuxbrew/.linuxbrew/bin/brew
+
+# Additional Homebrew taps for specialized packages
 homebrew_taps:
   - abdfnx/tap
   - marwanhawari/tap
@@ -10,20 +51,33 @@ homebrew_taps:
   - endava/tap
   - wader/tap
   - harehare/tap
+
+# Path to uv Python package manager
 uv_bin: /home/linuxbrew/.linuxbrew/bin/uv
+
+# Path to Go binary
 go_bin: /home/linuxbrew/.linuxbrew/bin/go
+
+# Path to Cargo binary
 cargo_bin: "{{ ansible_user_dir }}/.cargo/bin/cargo"
+
+# Path to Rustup binary
 rustup_bin: "{{ ansible_user_dir }}/.cargo/bin/rustup"
+
+# Combined PATH for Ansible task execution
 ansible_path:
   /home/linuxbrew/.linuxbrew/bin:{{ ansible_user_dir }}/.cargo/bin:{{
   ansible_user_dir }}/go/bin:{{ ansible_user_dir }}/.local/bin:{{ ansible_env.PATH
   }}
+
+# =============================================================================
+# PACKAGE DEFINITIONS BY CATEGORY
+# =============================================================================
 packages:
   shell_tools:
     atuin:
       brew:
         name: atuin
-        flags: --quiet
       description: Improved shell history for zsh, bash, fish and nushell
       tags:
         - shell
@@ -32,7 +86,6 @@ packages:
     bat:
       brew:
         name: bat
-        flags: --quiet
       description: Clone of cat(1) with syntax highlighting and Git integration
       tags:
         - shell
@@ -42,7 +95,6 @@ packages:
     fish:
       brew:
         name: fish
-        flags: --quiet
       description: User -friendly command -line shell for UNIX-like operating systems
       tags:
         - shell
@@ -50,7 +102,6 @@ packages:
     fisher:
       brew:
         name: fisher
-        flags: --quiet
       description: Plugin manager for the Fish shell
       tags:
         - standard
@@ -58,7 +109,6 @@ packages:
     rlwrap:
       brew:
         name: rlwrap
-        flags: --quiet
       description: "Readline wrapper: adds readline support to tools that lack it"
       tags:
         - standard
@@ -66,7 +116,6 @@ packages:
     starship:
       brew:
         name: starship
-        flags: --quiet
       description: Cross-shell prompt for astronauts
       tags:
         - shell
@@ -75,7 +124,6 @@ packages:
     tmux:
       brew:
         name: tmux
-        flags: --quiet
       description: Terminal multiplexer
       tags:
         - standard
@@ -84,7 +132,6 @@ packages:
     vivid:
       brew:
         name: vivid
-        flags: --quiet
       description: Generator for LS_COLORS with support for multiple color themes
       tags:
         - standard
@@ -92,7 +139,6 @@ packages:
     zellij:
       brew:
         name: zellij
-        flags: --quiet
       description:
         Pluggable terminal workspace, with terminal multiplexer as the
         base feature
@@ -103,7 +149,6 @@ packages:
     zoxide:
       brew:
         name: zoxide
-        flags: --quiet
       description: Shell extension to navigate your filesystem faster
       tags:
         - shell
@@ -112,7 +157,6 @@ packages:
     broot:
       brew:
         name: broot
-        flags: --quiet
       description: New way to see and navigate directory trees
       tags:
         - standard
@@ -121,7 +165,6 @@ packages:
     dust:
       brew:
         name: dust
-        flags: --quiet
       description: More intuitive version of du in rust
       tags:
         - standard
@@ -130,7 +173,6 @@ packages:
     eza:
       brew:
         name: eza
-        flags: --quiet
       description: Modern, maintained replacement for ls
       tags:
         - files
@@ -138,7 +180,6 @@ packages:
     fd:
       brew:
         name: fd
-        flags: --quiet
       description: Simple, fast and user-friendly alternative to find
       tags:
         - files
@@ -147,7 +188,6 @@ packages:
     gdu:
       brew:
         name: gdu
-        flags: --quiet
       description: Disk usage analyzer with console interface written in Go
       tags:
         - standard
@@ -156,7 +196,6 @@ packages:
     ncdu:
       brew:
         name: ncdu
-        flags: --quiet
       description: NCurses Disk Usage
       tags:
         - standard
@@ -165,7 +204,6 @@ packages:
     yazi:
       brew:
         name: yazi
-        flags: --quiet
       description:
         Blazing fast terminal file manager written in Rust, based on async
         I/O
@@ -177,7 +215,6 @@ packages:
     tree-sitter:
       brew:
         name: tree-sitter
-        flags: --quiet
       description: Parser generator tool and incremental parsing library
       tags:
         - standard
@@ -186,7 +223,6 @@ packages:
     neovim:
       brew:
         name: neovim
-        flags: --quiet
       description: Ambitious Vim-fork focused on extensibility and agility
       tags:
         - development
@@ -195,7 +231,6 @@ packages:
     luarocks:
       brew:
         name: luarocks
-        flags: --quiet
       description: Package manager for the Lua programming language
       tags:
         - standard
@@ -204,7 +239,6 @@ packages:
     age:
       brew:
         name: age
-        flags: --quiet
       description: Simple, modern, secure file encryption
       tags:
         - standard
@@ -213,7 +247,6 @@ packages:
     age-plugin-yubikey:
       brew:
         name: age-plugin-yubikey
-        flags: --quiet
       description: Plugin for encrypting files with age and PIV tokens such as YubiKeys
       tags:
         - standard
@@ -221,7 +254,6 @@ packages:
     bob:
       brew:
         name: bob
-        flags: --quiet
       description: Version manager for neovim
       tags:
         - standard
@@ -230,7 +262,6 @@ packages:
     detox:
       brew:
         name: detox
-        flags: --quiet
       description: Utility to replace problematic characters in filenames
       tags:
         - standard
@@ -238,7 +269,6 @@ packages:
     direnv:
       brew:
         name: direnv
-        flags: --quiet
       description: Load/unload environment variables based on $PWD
       tags:
         - development
@@ -247,14 +277,12 @@ packages:
     gcc11:
       brew:
         name: gcc@11
-        flags: --quiet
       tags:
         - standard
         - development
     golang:
       brew:
         name: go
-        flags: --quiet
       tags:
         - development
         - core
@@ -268,7 +296,6 @@ packages:
     hexyl:
       brew:
         name: hexyl
-        flags: --quiet
       description: Command-line hex viewer
       tags:
         - standard
@@ -276,7 +303,6 @@ packages:
     just:
       brew:
         name: just
-        flags: --quiet
       description: Handy way to save and run project-specific commands
       tags:
         - standard
@@ -284,7 +310,6 @@ packages:
     node:
       brew:
         name: node
-        flags: --quiet
       description: Open-source, cross-platform JavaScript runtime environment
       tags:
         - development
@@ -293,7 +318,6 @@ packages:
     openjdk:
       brew:
         name: openjdk
-        flags: --quiet
       description: Development kit for the Java programming language
       tags:
         - standard
@@ -302,7 +326,6 @@ packages:
     pastel:
       brew:
         name: pastel
-        flags: --quiet
       description:
         Command-line tool to generate, analyze, convert and manipulate
         colors
@@ -312,7 +335,6 @@ packages:
     python-argcomplete:
       brew:
         name: python-argcomplete
-        flags: --quiet
       description:
         Easy, extensible command line tab completion of arguments for your
         Python application
@@ -322,7 +344,6 @@ packages:
     tokei:
       brew:
         name: tokei
-        flags: --quiet
       description: Program that allows you to count code, quickly
       tags:
         - standard
@@ -330,7 +351,6 @@ packages:
     zig:
       brew:
         name: zig
-        flags: --quiet
       description: Programming language designed for robustness, optimality, and clarity
       tags:
         - standard
@@ -339,7 +359,6 @@ packages:
     dra:
       brew:
         name: dra
-        flags: --quiet
       description: Command-line tool to download release assets from GitHub
       tags:
         - standard
@@ -347,7 +366,6 @@ packages:
     eget:
       brew:
         name: eget
-        flags: --quiet
       description: Easily install prebuilt binaries from GitHub
       tags:
         - standard
@@ -355,7 +373,6 @@ packages:
     gup:
       brew:
         name: gup
-        flags: --quiet
       description: Update binaries installed by "go install"
       tags:
         - standard
@@ -363,7 +380,6 @@ packages:
     pipx:
       brew:
         name: pipx
-        flags: --quiet
       description:
         (use uv instead) Execute binaries from Python packages in isolated
         environments
@@ -373,7 +389,6 @@ packages:
     stew:
       brew:
         name: stew
-        flags: --quiet
       description: An independent package manager for compiled binaries
       tags:
         - standard
@@ -381,7 +396,6 @@ packages:
     uv:
       brew:
         name: uv
-        flags: --quiet
       description:
         Extremely fast Python package installer and resolver, written in
         Rust
@@ -392,7 +406,6 @@ packages:
     chezmoi:
       brew:
         name: chezmoi
-        flags: --quiet
       description: Manage your dotfiles across
       tags:
         - git
@@ -400,7 +413,6 @@ packages:
     commitizen:
       brew:
         name: commitizen
-        flags: --quiet
       description: Defines a standard way of committing rules and communicating it
       tags:
         - standard
@@ -409,7 +421,6 @@ packages:
     difftastic:
       brew:
         name: difftastic
-        flags: --quiet
       description: Diff that understands syntax
       tags:
         - standard
@@ -418,7 +429,6 @@ packages:
     gfold:
       brew:
         name: gfold
-        flags: --quiet
       description: Help keep track of your Git repositories, written in Rust
       tags:
         - standard
@@ -426,7 +436,6 @@ packages:
     git:
       brew:
         name: git
-        flags: --quiet
       description: Distributed revision control system
       tags:
         - git
@@ -434,7 +443,6 @@ packages:
     git-cc:
       brew:
         name: git-cc
-        flags: --quiet
       description: A git extension to help write conventional commits
       tags:
         - standard
@@ -443,7 +451,6 @@ packages:
     git-cliff:
       brew:
         name: git-cliff
-        flags: --quiet
       description: Highly customizable changelog generator
       tags:
         - standard
@@ -452,7 +459,6 @@ packages:
     git-delta:
       brew:
         name: git-delta
-        flags: --quiet
       description: Syntax-highlighting pager for git and diff output
       tags:
         - git
@@ -470,7 +476,6 @@ packages:
     gh:
       brew:
         name: gh
-        flags: --quiet
       description: GitHub command-line tool
       tags:
         - git
@@ -479,7 +484,6 @@ packages:
     glab:
       brew:
         name: glab
-        flags: --quiet
       description: Open-source GitLab command-line tool
       tags:
         - standard
@@ -488,7 +492,6 @@ packages:
     jujutsu:
       brew:
         name: jujutsu
-        flags: --quiet
       description: Git-compatible distributed version control system
       tags:
         - standard
@@ -496,7 +499,6 @@ packages:
     lazygit:
       brew:
         name: lazygit
-        flags: --quiet
       description: Simple terminal UI for git commands
       tags:
         - git
@@ -505,7 +507,6 @@ packages:
     mergiraf:
       brew:
         name: mergiraf
-        flags: --quiet
       description: Syntax-aware git merge driver
       tags:
         - standard
@@ -513,7 +514,6 @@ packages:
     onefetch:
       brew:
         name: onefetch
-        flags: --quiet
       description: Command-line Git information tool
       tags:
         - standard
@@ -521,7 +521,6 @@ packages:
     serie:
       brew:
         name: serie
-        flags: --quiet
       description: Rich git commit graph in your terminal
       tags:
         - standard
@@ -530,7 +529,6 @@ packages:
     xh:
       brew:
         name: xh
-        flags: --quiet
       description: Friendly and fast tool for sending HTTP requests
       tags:
         - standard
@@ -557,7 +555,6 @@ packages:
     bind:
       brew:
         name: bind
-        flags: --quiet
       description: Implementation of the DNS protocols (dig)
       tags:
         - standard
@@ -565,7 +562,6 @@ packages:
     cariddi:
       brew:
         name: cariddi
-        flags: --quiet
       description:
         Take a list of domains, crawl urls and scan for endpoints, secrets,
         api keys, etc
@@ -575,7 +571,6 @@ packages:
     cats:
       brew:
         name: cats
-        flags: --quiet
       description: REST API fuzzer and negative testing tool for OpenAPI endpoints
       tags:
         - standard
@@ -583,7 +578,6 @@ packages:
     curl:
       brew:
         name: curl
-        flags: --quiet
       description: Get a file from an HTTP, HTTPS or FTP server
       tags:
         - core
@@ -591,7 +585,6 @@ packages:
     curlie:
       brew:
         name: curlie
-        flags: --quiet
       description: Power of curl, ease of use of httpie
       tags:
         - standard
@@ -599,7 +592,6 @@ packages:
     feroxbuster:
       brew:
         name: feroxbuster
-        flags: --quiet
       description: Fast, simple, recursive content discovery tool written in Rust
       tags:
         - standard
@@ -608,7 +600,6 @@ packages:
     ffuf:
       brew:
         name: ffuf
-        flags: --quiet
       description: Fast web fuzzer written in Go
       tags:
         - standard
@@ -617,14 +608,12 @@ packages:
     gcc12:
       brew:
         name: gcc@12
-        flags: --quiet
       tags:
         - standard
         - pentesting
     gobuster:
       brew:
         name: gobuster
-        flags: --quiet
       description: Directory/file & DNS busting tool written in Go
       tags:
         - standard
@@ -633,7 +622,6 @@ packages:
     httpie:
       brew:
         name: httpie
-        flags: --quiet
       description: User-friendly cURL replacement (command-line HTTP client)
       tags:
         - standard
@@ -642,7 +630,6 @@ packages:
     hydra:
       brew:
         name: hydra
-        flags: --quiet
       description: Network logon cracker which supports many services
       tags:
         - standard
@@ -651,7 +638,6 @@ packages:
     lsof:
       brew:
         name: lsof
-        flags: --quiet
       description: Utility to list open files
       tags:
         - standard
@@ -659,7 +645,6 @@ packages:
     massdns:
       brew:
         name: massdns
-        flags: --quiet
       description: High-performance DNS stub resolver
       tags:
         - standard
@@ -668,7 +653,6 @@ packages:
     nmap:
       brew:
         name: nmap
-        flags: --quiet
       description: Port scanning utility for large networks
       tags:
         - standard
@@ -677,7 +661,6 @@ packages:
     posting:
       brew:
         name: posting
-        flags: --quiet
       description: Modern API client that lives in your terminal
       tags:
         - standard
@@ -686,7 +669,6 @@ packages:
     proxychains-ng:
       brew:
         name: proxychains-ng
-        flags: --quiet
       description: Hook preloader
       tags:
         - standard
@@ -695,7 +677,6 @@ packages:
     redis:
       brew:
         name: redis
-        flags: --quiet
       description: Persistent key-value database, with built-in net interface
       tags:
         - standard
@@ -705,7 +686,6 @@ packages:
     rustscan:
       brew:
         name: rustscan
-        flags: --quiet
       description: Modern Day Portscanner
       tags:
         - standard
@@ -714,7 +694,6 @@ packages:
     sqlmap:
       brew:
         name: sqlmap
-        flags: --quiet
       description: Penetration testing for SQL injection and database servers
       tags:
         - standard
@@ -723,7 +702,6 @@ packages:
     trufflehog:
       brew:
         name: trufflehog
-        flags: --quiet
       description: Find leaked credentials
       tags:
         - standard
@@ -731,7 +709,6 @@ packages:
     wget:
       brew:
         name: wget
-        flags: --quiet
       description: Internet file retriever
       tags:
         - core
@@ -739,7 +716,6 @@ packages:
     whois:
       brew:
         name: whois
-        flags: --quiet
       description: Lookup tool for domain names and other internet resources
       tags:
         - standard
@@ -747,7 +723,6 @@ packages:
     wtfis:
       brew:
         name: wtfis
-        flags: --quiet
       description: Passive hostname, domain, and IP lookup tool
       tags:
         - standard
@@ -1015,7 +990,6 @@ packages:
     ansifilter:
       brew:
         name: ansifilter
-        flags: --quiet
       description: Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
       tags:
         - standard
@@ -1023,7 +997,6 @@ packages:
     fq:
       brew:
         name: wader/tap/fq
-        flags: --quiet
       description: jq for binary formats
       tags:
         - standard
@@ -1031,7 +1004,6 @@ packages:
     fx:
       brew:
         name: fx
-        flags: --quiet
       description: Terminal JSON viewer
       tags:
         - data
@@ -1040,7 +1012,6 @@ packages:
     jc:
       brew:
         name: jc
-        flags: --quiet
       description:
         Serializes the output of command-line tools to structured JSON
         output
@@ -1050,7 +1021,6 @@ packages:
     jless:
       brew:
         name: jless
-        flags: --quiet
       description: Command-line pager for JSON data
       tags:
         - standard
@@ -1059,7 +1029,6 @@ packages:
     jnv:
       brew:
         name: jnv
-        flags: --quiet
       description: Interactive JSON filter using jq
       tags:
         - standard
@@ -1068,7 +1037,6 @@ packages:
     jq:
       brew:
         name: jq
-        flags: --quiet
       description: Lightweight and flexible command-line JSON processor
       tags:
         - data
@@ -1077,7 +1045,6 @@ packages:
     jql:
       brew:
         name: jql
-        flags: --quiet
       description: JSON query language CLI tool
       tags:
         - standard
@@ -1085,14 +1052,12 @@ packages:
     mq:
       brew:
         name: mq
-        flags: --quiet
       tags:
         - standard
         - data
     sttr:
       brew:
         name: sttr
-        flags: --quiet
       description: CLI to perform various operations on string
       tags:
         - standard
@@ -1100,7 +1065,6 @@ packages:
     yq:
       brew:
         name: yq
-        flags: --quiet
       description:
         Process YAML, JSON, XML, CSV and properties documents from the
         CLI
@@ -1112,7 +1076,6 @@ packages:
     ast-grep:
       brew:
         name: ast-grep
-        flags: --quiet
       description: Code searching, linting, rewriting
       tags:
         - standard
@@ -1121,7 +1084,6 @@ packages:
     fzf:
       brew:
         name: fzf
-        flags: --quiet
       description: Command-line fuzzy finder written in Go
       tags:
         - search
@@ -1130,7 +1092,6 @@ packages:
     grex:
       brew:
         name: grex
-        flags: --quiet
       description: Command-line tool for generating regular expressions
       tags:
         - standard
@@ -1138,7 +1099,6 @@ packages:
     ripgrep:
       brew:
         name: ripgrep
-        flags: --quiet
       description: Search tool like grep and The Silver Searcher
       tags:
         - search
@@ -1147,7 +1107,6 @@ packages:
     sigrs:
       brew:
         name: sigrs
-        flags: --quiet
       description: Interactive grep
       tags:
         - standard
@@ -1155,7 +1114,6 @@ packages:
     television:
       brew:
         name: television
-        flags: --quiet
       description: General purpose fuzzy finder TUI
       tags:
         - standard
@@ -1165,7 +1123,6 @@ packages:
     ouch:
       brew:
         name: ouch
-        flags: --quiet
       description: Painless compression and decompression for your terminal
       tags:
         - standard
@@ -1175,7 +1132,6 @@ packages:
     htop:
       brew:
         name: htop
-        flags: --quiet
       description: Improved top (interactive process viewer)
       tags:
         - standard
@@ -1185,7 +1141,6 @@ packages:
     dive:
       brew:
         name: dive
-        flags: --quiet
       description: Tool for exploring each layer in a docker image
       tags:
         - standard
@@ -1195,7 +1150,6 @@ packages:
     asciinema:
       brew:
         name: asciinema
-        flags: --quiet
       description: Record and share terminal sessions
       tags:
         - standard
@@ -1204,7 +1158,6 @@ packages:
     t-rec:
       brew:
         name: t-rec
-        flags: --quiet
       description:
         Blazingly fast terminal recorder that generates animated gif images
         for the web
@@ -1215,7 +1168,6 @@ packages:
     tran:
       brew:
         name: tran
-        flags: --quiet
       description: Securely transfer and send anything between computers with a TUI
       tags:
         - standard
@@ -1230,7 +1182,6 @@ packages:
     navi:
       brew:
         name: navi
-        flags: --quiet
       description: Interactive cheatsheet tool for the command-line
       tags:
         - standard
@@ -1239,7 +1190,6 @@ packages:
     tlrc:
       brew:
         name: tlrc
-        flags: --quiet
       description: Simplified and community-driven man pages
       tags:
         - standard
@@ -1249,21 +1199,18 @@ packages:
     jetbrains-mono-nerd:
       brew:
         name: font-jetbrains-mono-nerd-font
-        flags: --quiet --cask
       tags:
         - standard
         - fonts
     maple-mono:
       brew:
         name: font-maple-mono
-        flags: --quiet --cask
       tags:
         - standard
         - fonts
     maple-mono-nf:
       brew:
         name: font-maple-mono-nf
-        flags: --quiet --cask
       tags:
         - standard
         - fonts

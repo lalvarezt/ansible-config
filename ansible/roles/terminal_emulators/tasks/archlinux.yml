@@ -1,0 +1,30 @@
+---
+# Arch Linux-specific terminal emulator installation
+# All three terminal emulators are available in official repos
+
+# Kitty - available in official repos
+- name: Install kitty via pacman
+  pacman:
+    name: kitty
+    state: present
+  become: true
+  register: kitty_result
+  failed_when: false
+
+# WezTerm - available in Extra repo
+- name: Install wezterm via pacman
+  pacman:
+    name: wezterm
+    state: present
+  become: true
+  register: wezterm_result
+  failed_when: false
+
+# Ghostty - available in [extra] repo
+- name: Install ghostty via pacman
+  pacman:
+    name: ghostty
+    state: present
+  become: true
+  register: ghostty_result
+  failed_when: false

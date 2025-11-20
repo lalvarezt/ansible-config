@@ -21,6 +21,7 @@
       eval "$({{ brew_prefix }}/bin/brew shellenv)"
     create: true
   register: bashrc_updated
+  notify: Remind shell reload
 
 - name: Set brew facts for subsequent tasks
   set_fact:

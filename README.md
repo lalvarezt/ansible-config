@@ -72,7 +72,7 @@ ansible-playbook playbooks/bootstrap.yml --tags development,git
 ansible-playbook playbooks/bootstrap.yml --tags shell,files,search
 ```
 
-Available tags: `prereqs`, `setup`, `shell`, `terminal`, `files`, `development`, `package-managers`, `git`, `pentesting`, `data`, `search`, `misc`, `fonts`, `config`
+Available tags: `prereqs`, `core`, `shell`, `terminals`, `files`, `development`, `package-managers`, `git`, `pentesting`, `data`, `search`, `misc`, `fonts`, `config`, `chezmoi`
 
 ### By Package Tag
 
@@ -184,7 +184,7 @@ package_name:
 
 ### Changing Chezmoi Repository
 
-Edit `ansible/roles/chezmoi/tasks/main.yml` and update the repository URL.
+Edit `ansible/roles/chezmoi/defaults/main.yml` and update the `chezmoi_repo_url` variable.
 
 ### Host-specific Overrides
 

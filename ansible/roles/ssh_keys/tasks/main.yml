@@ -49,13 +49,36 @@
     mode: '0700'
     recurse: false
 
+- name: Find all SSH private keys
+  find:
+    paths: "{{ ansible_user_dir }}/.ssh"
+    patterns: "id_*"
+    excludes: "*.pub"
+    file_type: file
+  register: ssh_private_keys
+
 - name: Set correct permissions on SSH private keys
-  shell: chmod 600 {{ ansible_user_dir }}/.ssh/id_* 2>/dev/null || true
-  changed_when: false
+  file:
+    path: "{{ item.path }}"
+    mode: '0600'
+  loop: "{{ ssh_private_keys.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+
+- name: Find all SSH public keys
+  find:
+    paths: "{{ ansible_user_dir }}/.ssh"
+    patterns: "*.pub"
+    file_type: file
+  register: ssh_public_keys
 
 - name: Set correct permissions on SSH public keys
-  shell: chmod 644 {{ ansible_user_dir }}/.ssh/*.pub 2>/dev/null || true
-  changed_when: false
+  file:
+    path: "{{ item.path }}"
+    mode: '0644'
+  loop: "{{ ssh_public_keys.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
 
 - name: Check if authorized_keys exists
   stat:

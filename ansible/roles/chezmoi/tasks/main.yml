@@ -4,7 +4,7 @@
 - name: Check if chezmoi is installed
   command: which chezmoi
   register: chezmoi_check
-  ignore_errors: true
+  failed_when: false
   changed_when: false
   environment:
     PATH: "{{ ansible_path }}"
@@ -21,7 +21,7 @@
   register: chezmoi_init_check
 
 - name: Initialize chezmoi with SSH
-  command: chezmoi init git@gitlab.com:lalvarezt/chezmoi.git
+  command: chezmoi init {{ chezmoi_repo_url }}
   when: not chezmoi_init_check.stat.exists
   environment:
     PATH: "{{ ansible_path }}"

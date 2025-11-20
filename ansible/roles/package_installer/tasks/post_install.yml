@@ -10,5 +10,6 @@
     label: "{{ item.name }}"
   vars:
     _cmd: "{{ item.commands if item.commands is string else item.commands | join(' && ') }}"
-  ignore_errors: true
+  register: post_install_result
+  failed_when: false
   changed_when: false
