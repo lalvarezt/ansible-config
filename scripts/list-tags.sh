@@ -51,7 +51,7 @@ if [[ ${#missing[@]} -gt 0 ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ALL_YML="$SCRIPT_DIR/ansible/inventory/group_vars/all.yml"
+ALL_YML="$SCRIPT_DIR/../ansible/inventory/group_vars/all.yml"
 
 if [[ ! -f "$ALL_YML" ]]; then
   echo "Error: $ALL_YML not found" >&2

@@ -30,7 +30,7 @@ Before bootstrapping, ensure you have:
 ### 1. Install Ansible
 
 ```bash
-./bootstrap.sh
+./scripts/bootstrap.sh
 ```
 
 ### 2. Sign in to 1Password
@@ -91,8 +91,8 @@ ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['scanner']"
 List all available package tags:
 
 ```bash
-./list-tags.sh           # List tags
-./list-tags.sh --verbose # Show packages per tag
+./scripts/list-tags.sh           # List tags
+./scripts/list-tags.sh --verbose # Show packages per tag
 ```
 
 ### By Installer Type
@@ -137,8 +137,9 @@ ansible-playbook playbooks/bootstrap.yml --check
 
 ```
 ansible-config/
-├── bootstrap.sh              # Initial Ansible installation
-├── list-tags.sh              # Package tag discovery utility
+├── scripts/
+│   ├── bootstrap.sh          # Initial Ansible installation
+│   └── list-tags.sh          # Package tag discovery utility
 ├── ansible/
 │   ├── playbooks/            # 20 numbered playbooks
 │   │   ├── bootstrap.yml     # Main orchestrator
