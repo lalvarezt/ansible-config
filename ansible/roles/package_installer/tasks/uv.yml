@@ -14,5 +14,5 @@
     - "'Executable already exists' not in uv_results.stderr"
   changed_when:
     - "'is already installed' not in uv_results.stderr"
-    - "'executable:' not in uv_results.stderr"
+    - "uv_results.stderr is not regex('Installed \\d+ executable')"
     - "'Executable already exists' not in uv_results.stderr"
