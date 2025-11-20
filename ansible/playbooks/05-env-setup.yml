@@ -1,0 +1,10 @@
+---
+# Temporary environment variable setup
+
+- name: Setup Temporary Environment Variables
+  hosts: all
+  gather_facts: true
+
+  roles:
+    - role: env_setup
+      tags: [config, core]

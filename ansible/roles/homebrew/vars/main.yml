@@ -1,0 +1,6 @@
+---
+# Homebrew role variables
+
+brew_prefix: "/home/linuxbrew/.linuxbrew"
+brew_bin: "/home/linuxbrew/.linuxbrew/bin/brew"
+brew_install_script: "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"

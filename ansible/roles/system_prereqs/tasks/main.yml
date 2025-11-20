@@ -1,0 +1,20 @@
+---
+# Main task file for system prerequisites
+
+- name: Detect if running on WSL
+  shell: grep -qi microsoft /proc/version
+  register: wsl_check
+  failed_when: false
+  changed_when: false
+
+- name: Set WSL fact
+  set_fact:
+    is_wsl: "{{ wsl_check.rc == 0 }}"
+
+- name: Include distro-specific prerequisites
+  include_tasks: "{{ ansible_distribution | lower }}.yml"
+  when: ansible_distribution | lower in ['ubuntu', 'fedora', 'archlinux']
+
+- name: Display system information
+  debug:
+    msg: "Detected {{ ansible_distribution }} {{ ansible_distribution_version }}, WSL: {{ is_wsl }}"

@@ -1,0 +1,11 @@
+---
+# Install package via Cargo
+
+- name: "Install {{ package_name }} via Cargo"
+  community.general.cargo:
+    name: "{{ package_def.cargo.name }}"
+    locked: "{{ package_def.cargo.locked | default(false) }}"
+    state: present
+  environment:
+    PATH: "{{ ansible_path }}"
+  register: install_result

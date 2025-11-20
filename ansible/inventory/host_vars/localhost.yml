@@ -1,0 +1,7 @@
+---
+# Host-specific variables for localhost
+# Override any group_vars settings here for this specific machine
+
+# Example overrides:
+# install_pentesting: true
+# custom_packages: []

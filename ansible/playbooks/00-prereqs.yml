@@ -1,0 +1,10 @@
+---
+# System prerequisites installation
+
+- name: Install System Prerequisites
+  hosts: all
+  gather_facts: true
+
+  roles:
+    - role: system_prereqs
+      tags: [prereqs, core]

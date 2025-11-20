@@ -1,0 +1,43 @@
+---
+# Ubuntu-specific 1Password CLI installation
+
+- name: Download 1Password GPG key
+  shell: |
+    curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+      sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/1password-archive-keyring.gpg
+
+- name: Add 1Password repository
+  shell: |
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+      sudo tee /etc/apt/sources.list.d/1password.list
+  args:
+    creates: /etc/apt/sources.list.d/1password.list
+
+- name: Setup debsig policy for 1Password
+  shell: |
+    sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
+    curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | \
+      sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
+  args:
+    creates: /etc/debsig/policies/AC2D62742012EA22/1password.pol
+
+- name: Setup debsig keyrings for 1Password
+  shell: |
+    sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+    curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+      sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+  args:
+    creates: /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+
+- name: Update apt cache for 1Password
+  apt:
+    update_cache: true
+  become: true
+
+- name: Install 1Password CLI on Ubuntu
+  apt:
+    name: 1password-cli
+    state: present
+  become: true

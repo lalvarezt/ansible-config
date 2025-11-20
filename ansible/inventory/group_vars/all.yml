@@ -1,0 +1,1270 @@
+---
+brew_prefix: /home/linuxbrew/.linuxbrew
+brew_bin: /home/linuxbrew/.linuxbrew/bin/brew
+homebrew_taps:
+  - abdfnx/tap
+  - marwanhawari/tap
+  - nao1215/tap
+  - skalt/git-cc
+  - ynqa/tap
+  - endava/tap
+  - wader/tap
+  - harehare/tap
+uv_bin: /home/linuxbrew/.linuxbrew/bin/uv
+go_bin: /home/linuxbrew/.linuxbrew/bin/go
+cargo_bin: "{{ ansible_user_dir }}/.cargo/bin/cargo"
+rustup_bin: "{{ ansible_user_dir }}/.cargo/bin/rustup"
+ansible_path:
+  /home/linuxbrew/.linuxbrew/bin:{{ ansible_user_dir }}/.cargo/bin:{{
+  ansible_user_dir }}/go/bin:{{ ansible_user_dir }}/.local/bin:{{ ansible_env.PATH
+  }}
+packages:
+  shell_tools:
+    atuin:
+      brew:
+        name: atuin
+        flags: --quiet
+      description: Improved shell history for zsh, bash, fish and nushell
+      tags:
+        - shell
+        - core
+        - history
+    bat:
+      brew:
+        name: bat
+        flags: --quiet
+      description: Clone of cat(1) with syntax highlighting and Git integration
+      tags:
+        - shell
+        - core
+        - viewer
+      post_install: bat cache --build >/dev/null 2>&1
+    fish:
+      brew:
+        name: fish
+        flags: --quiet
+      description: User -friendly command -line shell for UNIX-like operating systems
+      tags:
+        - shell
+        - core
+    fisher:
+      brew:
+        name: fisher
+        flags: --quiet
+      description: Plugin manager for the Fish shell
+      tags:
+        - standard
+        - shell
+    rlwrap:
+      brew:
+        name: rlwrap
+        flags: --quiet
+      description: "Readline wrapper: adds readline support to tools that lack it"
+      tags:
+        - standard
+        - shell
+    starship:
+      brew:
+        name: starship
+        flags: --quiet
+      description: Cross-shell prompt for astronauts
+      tags:
+        - shell
+        - core
+        - prompt
+    tmux:
+      brew:
+        name: tmux
+        flags: --quiet
+      description: Terminal multiplexer
+      tags:
+        - standard
+        - shell
+        - multiplexer
+    vivid:
+      brew:
+        name: vivid
+        flags: --quiet
+      description: Generator for LS_COLORS with support for multiple color themes
+      tags:
+        - standard
+        - shell
+    zellij:
+      brew:
+        name: zellij
+        flags: --quiet
+      description:
+        Pluggable terminal workspace, with terminal multiplexer as the
+        base feature
+      tags:
+        - standard
+        - shell
+        - multiplexer
+    zoxide:
+      brew:
+        name: zoxide
+        flags: --quiet
+      description: Shell extension to navigate your filesystem faster
+      tags:
+        - shell
+        - core
+  file_tools:
+    broot:
+      brew:
+        name: broot
+        flags: --quiet
+      description: New way to see and navigate directory trees
+      tags:
+        - standard
+        - files
+        - explorer
+    dust:
+      brew:
+        name: dust
+        flags: --quiet
+      description: More intuitive version of du in rust
+      tags:
+        - standard
+        - files
+        - analyzer
+    eza:
+      brew:
+        name: eza
+        flags: --quiet
+      description: Modern, maintained replacement for ls
+      tags:
+        - files
+        - core
+    fd:
+      brew:
+        name: fd
+        flags: --quiet
+      description: Simple, fast and user-friendly alternative to find
+      tags:
+        - files
+        - core
+        - finder
+    gdu:
+      brew:
+        name: gdu
+        flags: --quiet
+      description: Disk usage analyzer with console interface written in Go
+      tags:
+        - standard
+        - files
+        - analyzer
+    ncdu:
+      brew:
+        name: ncdu
+        flags: --quiet
+      description: NCurses Disk Usage
+      tags:
+        - standard
+        - files
+        - analyzer
+    yazi:
+      brew:
+        name: yazi
+        flags: --quiet
+      description:
+        Blazing fast terminal file manager written in Rust, based on async
+        I/O
+      tags:
+        - files
+        - core
+        - explorer
+  dev_tools:
+    tree-sitter:
+      brew:
+        name: tree-sitter
+        flags: --quiet
+      description: Parser generator tool and incremental parsing library
+      tags:
+        - standard
+        - development
+        - lsp
+    neovim:
+      brew:
+        name: neovim
+        flags: --quiet
+      description: Ambitious Vim-fork focused on extensibility and agility
+      tags:
+        - development
+        - core
+        - editor
+    luarocks:
+      brew:
+        name: luarocks
+        flags: --quiet
+      description: Package manager for the Lua programming language
+      tags:
+        - standard
+        - development
+        - lua
+    age:
+      brew:
+        name: age
+        flags: --quiet
+      description: Simple, modern, secure file encryption
+      tags:
+        - standard
+        - development
+        - encryption
+    age-plugin-yubikey:
+      brew:
+        name: age-plugin-yubikey
+        flags: --quiet
+      description: Plugin for encrypting files with age and PIV tokens such as YubiKeys
+      tags:
+        - standard
+        - development
+    bob:
+      brew:
+        name: bob
+        flags: --quiet
+      description: Version manager for neovim
+      tags:
+        - standard
+        - development
+        - manager
+    detox:
+      brew:
+        name: detox
+        flags: --quiet
+      description: Utility to replace problematic characters in filenames
+      tags:
+        - standard
+        - development
+    direnv:
+      brew:
+        name: direnv
+        flags: --quiet
+      description: Load/unload environment variables based on $PWD
+      tags:
+        - development
+        - core
+        - manager
+    gcc11:
+      brew:
+        name: gcc@11
+        flags: --quiet
+      tags:
+        - standard
+        - development
+    golang:
+      brew:
+        name: go
+        flags: --quiet
+      tags:
+        - development
+        - core
+    hapless:
+      uv:
+        command: tool install hapless
+      description: Simplest way of running and tracking processes in the background
+      tags:
+        - standard
+        - development
+    hexyl:
+      brew:
+        name: hexyl
+        flags: --quiet
+      description: Command-line hex viewer
+      tags:
+        - standard
+        - development
+    just:
+      brew:
+        name: just
+        flags: --quiet
+      description: Handy way to save and run project-specific commands
+      tags:
+        - standard
+        - development
+    node:
+      brew:
+        name: node
+        flags: --quiet
+      description: Open-source, cross-platform JavaScript runtime environment
+      tags:
+        - development
+        - core
+        - node
+    openjdk:
+      brew:
+        name: openjdk
+        flags: --quiet
+      description: Development kit for the Java programming language
+      tags:
+        - standard
+        - development
+        - java
+    pastel:
+      brew:
+        name: pastel
+        flags: --quiet
+      description:
+        Command-line tool to generate, analyze, convert and manipulate
+        colors
+      tags:
+        - standard
+        - development
+    python-argcomplete:
+      brew:
+        name: python-argcomplete
+        flags: --quiet
+      description:
+        Easy, extensible command line tab completion of arguments for your
+        Python application
+      tags:
+        - standard
+        - development
+    tokei:
+      brew:
+        name: tokei
+        flags: --quiet
+      description: Program that allows you to count code, quickly
+      tags:
+        - standard
+        - development
+    zig:
+      brew:
+        name: zig
+        flags: --quiet
+      description: Programming language designed for robustness, optimality, and clarity
+      tags:
+        - standard
+        - development
+  package_managers:
+    dra:
+      brew:
+        name: dra
+        flags: --quiet
+      description: Command-line tool to download release assets from GitHub
+      tags:
+        - standard
+        - package-managers
+    eget:
+      brew:
+        name: eget
+        flags: --quiet
+      description: Easily install prebuilt binaries from GitHub
+      tags:
+        - standard
+        - package-managers
+    gup:
+      brew:
+        name: gup
+        flags: --quiet
+      description: Update binaries installed by "go install"
+      tags:
+        - standard
+        - package-managers
+    pipx:
+      brew:
+        name: pipx
+        flags: --quiet
+      description:
+        (use uv instead) Execute binaries from Python packages in isolated
+        environments
+      tags:
+        - standard
+        - package-managers
+    stew:
+      brew:
+        name: stew
+        flags: --quiet
+      description: An independent package manager for compiled binaries
+      tags:
+        - standard
+        - package-managers
+    uv:
+      brew:
+        name: uv
+        flags: --quiet
+      description:
+        Extremely fast Python package installer and resolver, written in
+        Rust
+      tags:
+        - package-managers
+        - core
+  git_tools:
+    chezmoi:
+      brew:
+        name: chezmoi
+        flags: --quiet
+      description: Manage your dotfiles across
+      tags:
+        - git
+        - core
+    commitizen:
+      brew:
+        name: commitizen
+        flags: --quiet
+      description: Defines a standard way of committing rules and communicating it
+      tags:
+        - standard
+        - git
+        - commit
+    difftastic:
+      brew:
+        name: difftastic
+        flags: --quiet
+      description: Diff that understands syntax
+      tags:
+        - standard
+        - git
+        - diff
+    gfold:
+      brew:
+        name: gfold
+        flags: --quiet
+      description: Help keep track of your Git repositories, written in Rust
+      tags:
+        - standard
+        - git
+    git:
+      brew:
+        name: git
+        flags: --quiet
+      description: Distributed revision control system
+      tags:
+        - git
+        - core
+    git-cc:
+      brew:
+        name: git-cc
+        flags: --quiet
+      description: A git extension to help write conventional commits
+      tags:
+        - standard
+        - git
+        - commit
+    git-cliff:
+      brew:
+        name: git-cliff
+        flags: --quiet
+      description: Highly customizable changelog generator
+      tags:
+        - standard
+        - git
+        - changelog
+    git-delta:
+      brew:
+        name: git-delta
+        flags: --quiet
+      description: Syntax-highlighting pager for git and diff output
+      tags:
+        - git
+        - core
+        - diff
+    gitingest:
+      uv:
+        command: tool install gitingest
+      description:
+        Turn any Git repository into a prompt-friendly text ingest for
+        LLMs
+      tags:
+        - standard
+        - git
+    gh:
+      brew:
+        name: gh
+        flags: --quiet
+      description: GitHub command-line tool
+      tags:
+        - git
+        - core
+        - client
+    glab:
+      brew:
+        name: glab
+        flags: --quiet
+      description: Open-source GitLab command-line tool
+      tags:
+        - standard
+        - git
+        - client
+    jujutsu:
+      brew:
+        name: jujutsu
+        flags: --quiet
+      description: Git-compatible distributed version control system
+      tags:
+        - standard
+        - git
+    lazygit:
+      brew:
+        name: lazygit
+        flags: --quiet
+      description: Simple terminal UI for git commands
+      tags:
+        - git
+        - core
+        - client
+    mergiraf:
+      brew:
+        name: mergiraf
+        flags: --quiet
+      description: Syntax-aware git merge driver
+      tags:
+        - standard
+        - git
+    onefetch:
+      brew:
+        name: onefetch
+        flags: --quiet
+      description: Command-line Git information tool
+      tags:
+        - standard
+        - git
+    serie:
+      brew:
+        name: serie
+        flags: --quiet
+      description: Rich git commit graph in your terminal
+      tags:
+        - standard
+        - git
+  pentesting:
+    xh:
+      brew:
+        name: xh
+        flags: --quiet
+      description: Friendly and fast tool for sending HTTP requests
+      tags:
+        - standard
+        - pentesting
+    exegol:
+      uv:
+        command: tool install exegol
+      description: Community-driven hacking environment
+      tags:
+        - standard
+        - pentesting
+    pwncat:
+      uv:
+        command: tool install git+https://github.com/Chocapikk/pwncat-vl
+      tags:
+        - standard
+        - pentesting
+    targetedkerberoast:
+      uv:
+        command: tool install git+https://github.com/gatariee/targetedKerberoast
+      tags:
+        - standard
+        - pentesting
+    bind:
+      brew:
+        name: bind
+        flags: --quiet
+      description: Implementation of the DNS protocols (dig)
+      tags:
+        - standard
+        - pentesting
+    cariddi:
+      brew:
+        name: cariddi
+        flags: --quiet
+      description:
+        Take a list of domains, crawl urls and scan for endpoints, secrets,
+        api keys, etc
+      tags:
+        - standard
+        - pentesting
+    cats:
+      brew:
+        name: cats
+        flags: --quiet
+      description: REST API fuzzer and negative testing tool for OpenAPI endpoints
+      tags:
+        - standard
+        - pentesting
+    curl:
+      brew:
+        name: curl
+        flags: --quiet
+      description: Get a file from an HTTP, HTTPS or FTP server
+      tags:
+        - core
+        - pentesting
+    curlie:
+      brew:
+        name: curlie
+        flags: --quiet
+      description: Power of curl, ease of use of httpie
+      tags:
+        - standard
+        - pentesting
+    feroxbuster:
+      brew:
+        name: feroxbuster
+        flags: --quiet
+      description: Fast, simple, recursive content discovery tool written in Rust
+      tags:
+        - standard
+        - pentesting
+        - fuzzer
+    ffuf:
+      brew:
+        name: ffuf
+        flags: --quiet
+      description: Fast web fuzzer written in Go
+      tags:
+        - standard
+        - pentesting
+        - fuzzer
+    gcc12:
+      brew:
+        name: gcc@12
+        flags: --quiet
+      tags:
+        - standard
+        - pentesting
+    gobuster:
+      brew:
+        name: gobuster
+        flags: --quiet
+      description: Directory/file & DNS busting tool written in Go
+      tags:
+        - standard
+        - pentesting
+        - fuzzer
+    httpie:
+      brew:
+        name: httpie
+        flags: --quiet
+      description: User-friendly cURL replacement (command-line HTTP client)
+      tags:
+        - standard
+        - pentesting
+        - api
+    hydra:
+      brew:
+        name: hydra
+        flags: --quiet
+      description: Network logon cracker which supports many services
+      tags:
+        - standard
+        - pentesting
+        - credential
+    lsof:
+      brew:
+        name: lsof
+        flags: --quiet
+      description: Utility to list open files
+      tags:
+        - standard
+        - pentesting
+    massdns:
+      brew:
+        name: massdns
+        flags: --quiet
+      description: High-performance DNS stub resolver
+      tags:
+        - standard
+        - pentesting
+        - recon
+    nmap:
+      brew:
+        name: nmap
+        flags: --quiet
+      description: Port scanning utility for large networks
+      tags:
+        - standard
+        - pentesting
+        - scanner
+    posting:
+      brew:
+        name: posting
+        flags: --quiet
+      description: Modern API client that lives in your terminal
+      tags:
+        - standard
+        - pentesting
+        - api
+    proxychains-ng:
+      brew:
+        name: proxychains-ng
+        flags: --quiet
+      description: Hook preloader
+      tags:
+        - standard
+        - pentesting
+        - proxy
+    redis:
+      brew:
+        name: redis
+        flags: --quiet
+      description: Persistent key-value database, with built-in net interface
+      tags:
+        - standard
+        - pentesting
+      post_install:
+        - brew services start redis
+        - sleep 3
+    rustscan:
+      brew:
+        name: rustscan
+        flags: --quiet
+      description: Modern Day Portscanner
+      tags:
+        - standard
+        - pentesting
+        - scanner
+    sqlmap:
+      brew:
+        name: sqlmap
+        flags: --quiet
+      description: Penetration testing for SQL injection and database servers
+      tags:
+        - standard
+        - pentesting
+        - exploit
+    trufflehog:
+      brew:
+        name: trufflehog
+        flags: --quiet
+      description: Find leaked credentials
+      tags:
+        - standard
+        - pentesting
+    wget:
+      brew:
+        name: wget
+        flags: --quiet
+      description: Internet file retriever
+      tags:
+        - core
+        - pentesting
+    whois:
+      brew:
+        name: whois
+        flags: --quiet
+      description: Lookup tool for domain names and other internet resources
+      tags:
+        - standard
+        - pentesting
+    wtfis:
+      brew:
+        name: wtfis
+        flags: --quiet
+      description: Passive hostname, domain, and IP lookup tool
+      tags:
+        - standard
+        - pentesting
+    mitmproxy:
+      uv:
+        command: tool install mitmproxy
+      description: An interactive TLS-capable intercepting HTTP proxy
+      tags:
+        - standard
+        - pentesting
+        - proxy
+    autobloody:
+      uv:
+        command: tool install git+https://github.com/CravateRouge/autobloody
+      description:
+        Automatically exploit Active Directory privilege escalation paths
+        shown by BloodHound
+      tags:
+        - standard
+        - pentesting
+    bloodyad:
+      uv:
+        command: tool install git+https://github.com/CravateRouge/bloodyAD
+      description: Active Directory privilege escalation swiss army knife
+      tags:
+        - standard
+        - pentesting
+    pkinittools:
+      uv:
+        command: tool install git+https://github.com/Cyb3rC3lt/PKINITtools
+      description: Utilities for playing with PKINIT and certificates
+      tags:
+        - standard
+        - pentesting
+    flask-unsign:
+      uv:
+        command: tool install git+https://github.com/Paradoxis/Flask-Unsign
+      description:
+        Fetch, decode, brute-force and craft session cookies of a Flask
+        application
+      tags:
+        - standard
+        - pentesting
+    netexec:
+      uv:
+        command: tool install git+https://github.com/Pennyw0rth/NetExec
+      description: The Network Execution Tool
+      tags:
+        - standard
+        - pentesting
+    pywhisker:
+      uv:
+        command: tool install git+https://github.com/ShutdownRepo/pywhisker
+      description: Tool for extracting credentials from Windows machines
+      tags:
+        - standard
+        - pentesting
+    wenum:
+      uv:
+        command: tool install git+https://github.com/WebFuzzForge/wenum --with "setuptools<81,legacy-cgi"
+      description: Fork of Wfuzz The Web Fuzzer
+      tags:
+        - standard
+        - pentesting
+    git-dumper:
+      uv:
+        command: tool install git+https://github.com/arthaud/git-dumper
+      description: A tool to dump a git repository from a website
+      tags:
+        - standard
+        - pentesting
+    penelope:
+      uv:
+        command: tool install git+https://github.com/brightio/penelope
+      description: Powerful shell handler built as a modern netcat replacement
+      tags:
+        - standard
+        - pentesting
+    dnsrecon:
+      uv:
+        command: tool install git+https://github.com/darkoperator/dnsrecon
+      description: DNS Enumeration Script
+      tags:
+        - standard
+        - pentesting
+        - recon
+    bloodhound-py:
+      uv:
+        command: tool install git+https://github.com/dirkjanm/BloodHound.py@bloodhound-ce
+      tags:
+        - standard
+        - pentesting
+    impacket:
+      uv:
+        command: tool install git+https://github.com/fortra/impacket
+      description: Collection of Python classes for working with network protocols
+      tags:
+        - standard
+        - pentesting
+    secator:
+      uv:
+        command: tool install git+https://github.com/freelabz/secator --with pip
+      description: The pentester's swiss knife
+      tags:
+        - standard
+        - pentesting
+      post_install:
+        - secator install addons worker
+        - secator install addons redis
+        - secator config set celery.broker_url redis://127.0.0.1:6379/0
+        - secator config set celery.result_backend redis://127.0.0.1:6379/0
+        - secator config set security.auto_install_commands false
+    knock:
+      uv:
+        command: tool install git+https://github.com/guelfoweb/knock
+      tags:
+        - standard
+        - pentesting
+    certipy:
+      uv:
+        command: tool install git+https://github.com/ly4k/Certipy
+      tags:
+        - standard
+        - pentesting
+    dirsearch:
+      uv:
+        command: tool install git+https://github.com/maurosoria/dirsearch
+      description: Web path discovery
+      tags:
+        - standard
+        - pentesting
+    wconv:
+      uv:
+        command: tool install git+https://github.com/qtc-de/wconv
+      description:
+        Util to parse and convert Windows related formats into human readable
+        form
+      tags:
+        - standard
+        - pentesting
+    ghauri:
+      uv:
+        command: tool install git+https://github.com/r0oth3x49/ghauri
+      description:
+        Automates the process of detecting and exploiting SQL injection
+        security flaws
+      tags:
+        - standard
+        - pentesting
+        - exploit
+    pypykatz:
+      uv:
+        command: tool install git+https://github.com/skelsec/pypykatz
+      description: Mimikatz implementation in pure Python
+      tags:
+        - standard
+        - pentesting
+    sshuttle:
+      uv:
+        command: tool install git+https://github.com/sshuttle/sshuttle
+      description: Where transparent proxy meets VPN meets ssh
+      tags:
+        - standard
+        - pentesting
+    wapiti:
+      uv:
+        command: tool install git+https://github.com/wapiti-scanner/wapiti
+      description: Wapiti is a web vulnerability scanner written in Python
+      tags:
+        - standard
+        - pentesting
+    sploitscan:
+      uv:
+        command: tool install git+https://github.com/xaitax/SploitScan
+      tags:
+        - standard
+        - pentesting
+    pdtm:
+      go:
+        command: install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
+      description: ProjectDiscovery Tool Manager to download and organize your tools
+      tags:
+        - standard
+        - pentesting
+      post_install: pdtm -install alterx,dnsx,httpx,katana,nuclei,vulnx
+    ghp:
+      go:
+        command: install github.com/ByteSizedMarius/gohttpprobe/cmd/ghp@latest
+      description: HTTP Methods Tester
+      tags:
+        - standard
+        - pentesting
+    puredns:
+      go:
+        command: install github.com/d3mondev/puredns/v2@latest
+      description: Puredns is a fast domain resolver
+      tags:
+        - standard
+        - pentesting
+    ffufPostprocessing:
+      go:
+        command: install github.com/dsecuredcom/ffufPostprocessing@latest
+      description: Fuff report enhancement, better filtering
+      tags:
+        - standard
+        - pentesting
+    pencode:
+      go:
+        command: install github.com/ffuf/pencode/cmd/pencode@latest
+      description: Complex payload encoder
+      tags:
+        - standard
+        - pentesting
+    cook:
+      go:
+        command: install github.com/glitchedgitz/cook/v2/cmd/cook@latest
+      description:
+        Wordlist generator, splitter, merger, finder, saver, create words
+        permutation
+      tags:
+        - standard
+        - pentesting
+    gowitness:
+      go:
+        command: install github.com/sensepost/gowitness@latest
+      description: It's a website screenshot utility written in Golang
+      tags:
+        - standard
+        - pentesting
+    filessh:
+      cargo:
+        name: filessh
+        locked: true
+      description:
+        A TUI-based file explorer for SSH servers (reconsider when yazi#611
+        has been merged)
+      tags:
+        - standard
+        - pentesting
+    medusa:
+      native:
+        apt: medusa
+        dnf: medusa
+        yay: medusa
+        paru: medusa
+      description: Medusa Parallel Network Login Auditor
+      tags:
+        - standard
+        - pentesting
+        - credential
+    whatweb:
+      native:
+        apt: whatweb
+        dnf: whatweb
+        yay: whatweb
+        paru: whatweb
+        skip_on:
+          - pacman
+      description: Next generation web scanner
+      tags:
+        - standard
+        - pentesting
+  data_tools:
+    ansifilter:
+      brew:
+        name: ansifilter
+        flags: --quiet
+      description: Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
+      tags:
+        - standard
+        - data
+    fq:
+      brew:
+        name: wader/tap/fq
+        flags: --quiet
+      description: jq for binary formats
+      tags:
+        - standard
+        - data
+    fx:
+      brew:
+        name: fx
+        flags: --quiet
+      description: Terminal JSON viewer
+      tags:
+        - data
+        - core
+        - viewer
+    jc:
+      brew:
+        name: jc
+        flags: --quiet
+      description:
+        Serializes the output of command-line tools to structured JSON
+        output
+      tags:
+        - standard
+        - data
+    jless:
+      brew:
+        name: jless
+        flags: --quiet
+      description: Command-line pager for JSON data
+      tags:
+        - standard
+        - data
+        - viewer
+    jnv:
+      brew:
+        name: jnv
+        flags: --quiet
+      description: Interactive JSON filter using jq
+      tags:
+        - standard
+        - data
+        - filter
+    jq:
+      brew:
+        name: jq
+        flags: --quiet
+      description: Lightweight and flexible command-line JSON processor
+      tags:
+        - data
+        - core
+        - parser
+    jql:
+      brew:
+        name: jql
+        flags: --quiet
+      description: JSON query language CLI tool
+      tags:
+        - standard
+        - data
+    mq:
+      brew:
+        name: mq
+        flags: --quiet
+      tags:
+        - standard
+        - data
+    sttr:
+      brew:
+        name: sttr
+        flags: --quiet
+      description: CLI to perform various operations on string
+      tags:
+        - standard
+        - data
+    yq:
+      brew:
+        name: yq
+        flags: --quiet
+      description:
+        Process YAML, JSON, XML, CSV and properties documents from the
+        CLI
+      tags:
+        - data
+        - core
+        - parser
+  search_tools:
+    ast-grep:
+      brew:
+        name: ast-grep
+        flags: --quiet
+      description: Code searching, linting, rewriting
+      tags:
+        - standard
+        - search
+        - ast
+    fzf:
+      brew:
+        name: fzf
+        flags: --quiet
+      description: Command-line fuzzy finder written in Go
+      tags:
+        - search
+        - core
+        - fuzzy
+    grex:
+      brew:
+        name: grex
+        flags: --quiet
+      description: Command-line tool for generating regular expressions
+      tags:
+        - standard
+        - search
+    ripgrep:
+      brew:
+        name: ripgrep
+        flags: --quiet
+      description: Search tool like grep and The Silver Searcher
+      tags:
+        - search
+        - core
+        - grep
+    sigrs:
+      brew:
+        name: sigrs
+        flags: --quiet
+      description: Interactive grep
+      tags:
+        - standard
+        - search
+    television:
+      brew:
+        name: television
+        flags: --quiet
+      description: General purpose fuzzy finder TUI
+      tags:
+        - standard
+        - search
+        - fuzzy
+  compression:
+    ouch:
+      brew:
+        name: ouch
+        flags: --quiet
+      description: Painless compression and decompression for your terminal
+      tags:
+        - standard
+        - misc
+        - compression
+  monitoring:
+    htop:
+      brew:
+        name: htop
+        flags: --quiet
+      description: Improved top (interactive process viewer)
+      tags:
+        - standard
+        - misc
+        - monitoring
+  docker:
+    dive:
+      brew:
+        name: dive
+        flags: --quiet
+      description: Tool for exploring each layer in a docker image
+      tags:
+        - standard
+        - misc
+        - container
+  terminal:
+    asciinema:
+      brew:
+        name: asciinema
+        flags: --quiet
+      description: Record and share terminal sessions
+      tags:
+        - standard
+        - misc
+        - recording
+    t-rec:
+      brew:
+        name: t-rec
+        flags: --quiet
+      description:
+        Blazingly fast terminal recorder that generates animated gif images
+        for the web
+      tags:
+        - standard
+        - misc
+        - recording
+    tran:
+      brew:
+        name: tran
+        flags: --quiet
+      description: Securely transfer and send anything between computers with a TUI
+      tags:
+        - standard
+        - misc
+  cheatsheets:
+    arsenal-cli:
+      uv:
+        command: tool install arsenal-cli
+      tags:
+        - standard
+        - misc
+    navi:
+      brew:
+        name: navi
+        flags: --quiet
+      description: Interactive cheatsheet tool for the command-line
+      tags:
+        - standard
+        - misc
+        - documentation
+    tlrc:
+      brew:
+        name: tlrc
+        flags: --quiet
+      description: Simplified and community-driven man pages
+      tags:
+        - standard
+        - misc
+        - documentation
+  fonts:
+    jetbrains-mono-nerd:
+      brew:
+        name: font-jetbrains-mono-nerd-font
+        flags: --quiet --cask
+      tags:
+        - standard
+        - fonts
+    maple-mono:
+      brew:
+        name: font-maple-mono
+        flags: --quiet --cask
+      tags:
+        - standard
+        - fonts
+    maple-mono-nf:
+      brew:
+        name: font-maple-mono-nf
+        flags: --quiet --cask
+      tags:
+        - standard
+        - fonts

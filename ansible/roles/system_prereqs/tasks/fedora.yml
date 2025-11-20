@@ -1,0 +1,9 @@
+---
+# Fedora-specific system prerequisites
+
+- name: Install system prerequisites for Fedora
+  dnf:
+    name: "{{ system_prereqs }}"
+    state: present
+  become: true
+  when: system_prereqs is defined

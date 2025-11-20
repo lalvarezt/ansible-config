@@ -1,0 +1,9 @@
+---
+# Install package via Homebrew
+
+- name: "Install {{ package_name }} via Homebrew"
+  community.general.homebrew:
+    name: "{{ package_def.brew.name }}"
+    state: present
+    install_options: ["quiet"]
+  register: install_result

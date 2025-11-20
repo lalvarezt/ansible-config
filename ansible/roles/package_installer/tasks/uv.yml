@@ -1,0 +1,15 @@
+---
+# Install package via UV
+
+- name: "Install {{ package_name }} via UV"
+  command: "{{ uv_bin }} {{ package_def.uv.command }}"
+  environment:
+    PATH: "{{ ansible_path }}"
+  register: install_result
+  failed_when:
+    - install_result.rc != 0
+    - "'Executable already exists' not in install_result.stderr"
+  changed_when:
+    - "'is already installed' not in install_result.stderr"
+    - "'executable:' not in install_result.stderr"
+    - "'Executable already exists' not in install_result.stderr"

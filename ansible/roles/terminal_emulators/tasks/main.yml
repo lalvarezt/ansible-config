@@ -1,0 +1,31 @@
+---
+# Terminal emulators installation (ghostty, wezterm, kitty)
+
+- name: Skip terminal emulators in WSL
+  debug:
+    msg: "Skipping terminal emulator installation in WSL environment"
+  when: is_wsl | default(false)
+
+- name: Install terminal emulators via Homebrew (all platforms)
+  block:
+    - name: Install ghostty via Homebrew
+      community.general.homebrew:
+        name: ghostty
+        state: present
+        install_options: ["quiet"]
+      ignore_errors: true
+
+    - name: Install wezterm via Homebrew
+      community.general.homebrew:
+        name: wezterm
+        state: present
+        install_options: ["quiet"]
+      ignore_errors: true
+
+    - name: Install kitty via Homebrew
+      community.general.homebrew:
+        name: kitty
+        state: present
+        install_options: ["quiet"]
+      ignore_errors: true
+  when: not (is_wsl | default(false))

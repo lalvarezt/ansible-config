@@ -1,0 +1,23 @@
+---
+# Package installer
+
+- name: Set package definition
+  set_fact:
+    package_def: "{{ package_info }}"
+    package_name: "{{ pkg_name }}"
+
+- name: Run chosen installer
+  include_tasks: "{{ (
+    'brew.yml' if package_def.brew is defined else
+    'uv.yml'   if package_def.uv  is defined else
+    'go.yml'   if package_def.go  is defined else
+    'cargo.yml' if package_def.cargo is defined else
+    'native.yml' if package_def.native is defined else
+    'none'
+    ) }}"
+
+- name: Run post-install commands
+  include_tasks: post_install.yml
+  when:
+    - package_def.post_install is defined
+    - install_result.changed | default(false)

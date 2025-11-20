@@ -1,0 +1,22 @@
+---
+# Ubuntu-specific variables
+native_pkg_manager: apt
+native_update_command: "apt update"
+
+# System prerequisites for Ubuntu
+system_prereqs:
+  - build-essential
+  - git
+  - curl
+  - python3
+  - python3-pip
+  - plocate
+  - python3-pynvim
+  - python3-venv
+  - xsel
+  - flameshot
+
+# Additional Ubuntu-specific package names (overrides for native installation)
+package_name_overrides:
+  fd: fd-find
+  python-argcomplete: python3-argcomplete

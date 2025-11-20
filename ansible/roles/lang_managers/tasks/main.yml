@@ -1,0 +1,61 @@
+---
+# Language package managers installation
+
+- name: Install uv via Homebrew
+  command: "{{ brew_bin }} install --quiet uv"
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+  args:
+    creates: "{{ brew_prefix }}/bin/uv"
+
+- name: Install go via Homebrew
+  command: "{{ brew_bin }} install --quiet go"
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+  args:
+    creates: "{{ brew_prefix }}/bin/go"
+
+- name: Check if rustup is installed
+  stat:
+    path: "{{ ansible_user_dir }}/.cargo/bin/rustup"
+  register: rustup_check
+
+- name: Install Rust via rustup
+  shell: |
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  when: not rustup_check.stat.exists
+
+- name: Set language manager facts
+  set_fact:
+    uv_bin: "{{ brew_prefix }}/bin/uv"
+    go_bin: "{{ brew_prefix }}/bin/go"
+    cargo_bin: "{{ ansible_user_dir }}/.cargo/bin/cargo"
+    rustup_bin: "{{ ansible_user_dir }}/.cargo/bin/rustup"
+
+- name: Verify UV installation
+  command: "{{ uv_bin }} --version"
+  register: uv_version
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Verify Go installation
+  command: "{{ go_bin }} version"
+  register: go_version
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Verify Rust installation
+  command: "{{ cargo_bin }} --version"
+  register: cargo_version
+  environment:
+    PATH: "{{ ansible_user_dir }}/.cargo/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Display language manager versions
+  debug:
+    msg:
+      - "UV: {{ uv_version.stdout }}"
+      - "Go: {{ go_version.stdout }}"
+      - "Cargo: {{ cargo_version.stdout }}"

@@ -1,0 +1,16 @@
+---
+# Add Homebrew taps
+
+- name: Add Homebrew Taps
+  hosts: all
+  gather_facts: true
+  tags: [package-managers]
+
+  tasks:
+    - name: Ensure custom Homebrew taps are present
+      community.general.homebrew_tap:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ homebrew_taps }}"
+      environment:
+        PATH: "{{ ansible_path }}"

@@ -1,0 +1,10 @@
+---
+# Post-configuration tasks (including brew unlink python at the end)
+
+- name: Post-Configuration Tasks
+  hosts: all
+  gather_facts: true
+
+  roles:
+    - role: post_config
+      tags: [category:config]

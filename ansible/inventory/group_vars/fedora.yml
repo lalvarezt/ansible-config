@@ -1,0 +1,22 @@
+---
+# Fedora-specific variables
+native_pkg_manager: dnf
+native_update_command: "dnf check-update"
+
+# System prerequisites for Fedora
+system_prereqs:
+  - "@development-tools"
+  - git
+  - curl
+  - python3
+  - python3-pip
+  - plocate
+  - python3-neovim
+  - xsel
+  - flameshot
+
+# Additional Fedora-specific package names
+package_name_overrides:
+  fd: fd-find
+  python-argcomplete: python3-argcomplete
+  nodejs: nodejs

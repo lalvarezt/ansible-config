@@ -1,0 +1,31 @@
+---
+# Shell and terminal tools installation
+
+- name: Install Shell Tools
+  hosts: all
+  gather_facts: true
+  tags: [shell]
+
+  vars:
+    # Normalize modules input
+    _modules_raw: "{{ (modules | from_yaml) if modules is defined and modules is string else (modules | default([])) }}"
+    modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"
+
+  tasks:
+    - name: Install shell tools
+      include_role:
+        name: package_installer
+      vars:
+        package_info: "{{ packages.shell_tools[item] }}"
+        pkg_name: "{{ item }}"
+      loop: "{{ packages.shell_tools.keys() | list }}"
+      when: >
+        modules_list | length == 0 or
+        (
+          (packages.shell_tools[item].tags | default([]))
+          + (['uv'] if packages.shell_tools[item].uv is defined else [])
+          + (['brew'] if packages.shell_tools[item].brew is defined else [])
+          + (['go'] if packages.shell_tools[item].go is defined else [])
+          + (['cargo'] if packages.shell_tools[item].cargo is defined else [])
+          + (['native'] if packages.shell_tools[item].native is defined else [])
+        ) | intersect(modules_list) | length > 0

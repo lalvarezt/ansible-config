@@ -1,0 +1,64 @@
+---
+# Post-configuration tasks (run at the very end)
+
+- name: Build bat cache
+  command: bat cache --build
+  environment:
+    PATH: "{{ ansible_path }}"
+  ignore_errors: true
+  changed_when: false
+
+- name: Check if update-alternatives exists
+  command: which update-alternatives
+  register: update_alternatives_check
+  failed_when: false
+  changed_when: false
+
+- name: Set neovim as default editor (if update-alternatives exists)
+  shell: |
+    if ! readlink -f /etc/alternatives/editor 2>/dev/null | grep -q ".linuxbrew/.*nvim"; then
+      sudo update-alternatives --install /usr/bin/editor editor "$(which nvim)" 1
+      sudo update-alternatives --set editor "$(which nvim)"
+    fi
+  environment:
+    PATH: "{{ ansible_path }}"
+  when: update_alternatives_check.rc == 0
+  ignore_errors: true
+
+- name: Check if systemd is available
+  command: systemctl --version
+  register: systemd_check
+  failed_when: false
+  changed_when: false
+
+- name: Enable ghostty systemd service (if systemctl available)
+  systemd:
+    name: app-com.mitchellh.ghostty.service
+    enabled: true
+    scope: user
+  when:
+    - systemd_check.rc == 0
+    - not (is_wsl | default(false))
+  ignore_errors: true
+
+# IMPORTANT: Unlink Python at the very end to avoid breaking dependencies during installation
+- name: Unlink Python from Homebrew (prevents conflicts with system Python)
+  command: "{{ brew_bin }} unlink python"
+  environment:
+    PATH: "{{ ansible_path }}"
+  ignore_errors: true
+  changed_when: false
+
+- name: Display final message
+  debug:
+    msg: |
+      Bootstrap complete!
+
+      IMPORTANT: You should now:
+      1. Log out and log back in (or open a new terminal)
+      2. Your shell configuration from chezmoi is now active
+      3. All temporary environment variables have been replaced
+      4. Homebrew Python has been unlinked to prevent conflicts
+
+      To switch to fish shell (if installed):
+      chsh -s $(which fish)

@@ -1,0 +1,35 @@
+---
+# Arch Linux-specific system prerequisites
+
+- name: Detect available package manager for Arch
+  shell: |
+    if command -v yay >/dev/null 2>&1; then
+      echo "yay"
+    elif command -v paru >/dev/null 2>&1; then
+      echo "paru"
+    else
+      echo "pacman"
+    fi
+  register: arch_pkg_mgr
+  changed_when: false
+
+- name: Set Arch package manager fact
+  set_fact:
+    arch_package_manager: "{{ arch_pkg_mgr.stdout }}"
+
+- name: Install system prerequisites via yay
+  command: "yay -S --noconfirm {{ item }}"
+  loop: "{{ system_prereqs }}"
+  when: arch_package_manager == "yay"
+
+- name: Install system prerequisites via paru
+  command: "paru -S --noconfirm {{ item }}"
+  loop: "{{ system_prereqs }}"
+  when: arch_package_manager == "paru"
+
+- name: Install system prerequisites via pacman
+  pacman:
+    name: "{{ system_prereqs }}"
+    state: present
+  become: true
+  when: arch_package_manager == "pacman"

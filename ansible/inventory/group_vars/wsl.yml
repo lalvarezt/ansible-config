@@ -1,0 +1,8 @@
+---
+# WSL-specific variables
+is_wsl: true
+
+wsl_specific_config:
+  x11_fix_enabled: true
+  plocate_config_path: /etc/updatedb.conf
+  plocate_prune_paths: "/tmp /mnt /var/spool /media /var/lib/os-prober /var/lib/ceph /home/.ecryptfs /var/lib/schroot"

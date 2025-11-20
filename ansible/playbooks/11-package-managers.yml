@@ -1,0 +1,31 @@
+---
+# Alternative package managers installation
+
+- name: Install Package Managers
+  hosts: all
+  gather_facts: true
+  tags: [package-managers]
+
+  vars:
+    # Normalize modules input
+    _modules_raw: "{{ (modules | from_yaml) if modules is defined and modules is string else (modules | default([])) }}"
+    modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"
+
+  tasks:
+    - name: Install package managers
+      include_role:
+        name: package_installer
+      vars:
+        package_info: "{{ packages.package_managers[item] }}"
+        pkg_name: "{{ item }}"
+      loop: "{{ packages.package_managers.keys() | list }}"
+      when: >
+        modules_list | length == 0 or
+        (
+          (packages.package_managers[item].tags | default([]))
+          + (['uv'] if packages.package_managers[item].uv is defined else [])
+          + (['brew'] if packages.package_managers[item].brew is defined else [])
+          + (['go'] if packages.package_managers[item].go is defined else [])
+          + (['cargo'] if packages.package_managers[item].cargo is defined else [])
+          + (['native'] if packages.package_managers[item].native is defined else [])
+        ) | intersect(modules_list) | length > 0

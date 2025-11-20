@@ -1,0 +1,103 @@
+---
+# Miscellaneous tools installation (compression, monitoring, docker, terminal recording, cheatsheets)
+
+- name: Install Miscellaneous Tools
+  hosts: all
+  gather_facts: true
+  tags: [misc]
+
+  vars:
+    # Normalize modules input
+    _modules_raw: "{{ (modules | from_yaml) if modules is defined and modules is string else (modules | default([])) }}"
+    modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"
+
+  tasks:
+    - name: Install compression tools
+      include_role:
+        name: package_installer
+      vars:
+        package_info: "{{ packages.compression[item] }}"
+        pkg_name: "{{ item }}"
+      loop: "{{ packages.compression.keys() | list }}"
+      when: >
+        modules_list | length == 0 or
+        (
+          (packages.compression[item].tags | default([]))
+          + (['uv'] if packages.compression[item].uv is defined else [])
+          + (['brew'] if packages.compression[item].brew is defined else [])
+          + (['go'] if packages.compression[item].go is defined else [])
+          + (['cargo'] if packages.compression[item].cargo is defined else [])
+          + (['native'] if packages.compression[item].native is defined else [])
+        ) | intersect(modules_list) | length > 0
+
+    - name: Install monitoring tools
+      include_role:
+        name: package_installer
+      vars:
+        package_info: "{{ packages.monitoring[item] }}"
+        pkg_name: "{{ item }}"
+      loop: "{{ packages.monitoring.keys() | list }}"
+      when: >
+        modules_list | length == 0 or
+        (
+          (packages.monitoring[item].tags | default([]))
+          + (['uv'] if packages.monitoring[item].uv is defined else [])
+          + (['brew'] if packages.monitoring[item].brew is defined else [])
+          + (['go'] if packages.monitoring[item].go is defined else [])
+          + (['cargo'] if packages.monitoring[item].cargo is defined else [])
+          + (['native'] if packages.monitoring[item].native is defined else [])
+        ) | intersect(modules_list) | length > 0
+
+    - name: Install docker tools
+      include_role:
+        name: package_installer
+      vars:
+        package_info: "{{ packages.docker[item] }}"
+        pkg_name: "{{ item }}"
+      loop: "{{ packages.docker.keys() | list }}"
+      when: >
+        modules_list | length == 0 or
+        (
+          (packages.docker[item].tags | default([]))
+          + (['uv'] if packages.docker[item].uv is defined else [])
+          + (['brew'] if packages.docker[item].brew is defined else [])
+          + (['go'] if packages.docker[item].go is defined else [])
+          + (['cargo'] if packages.docker[item].cargo is defined else [])
+          + (['native'] if packages.docker[item].native is defined else [])
+        ) | intersect(modules_list) | length > 0
+
+    - name: Install terminal tools
+      include_role:
+        name: package_installer
+      vars:
+        package_info: "{{ packages.terminal[item] }}"
+        pkg_name: "{{ item }}"
+      loop: "{{ packages.terminal.keys() | list }}"
+      when: >
+        modules_list | length == 0 or
+        (
+          (packages.terminal[item].tags | default([]))
+          + (['uv'] if packages.terminal[item].uv is defined else [])
+          + (['brew'] if packages.terminal[item].brew is defined else [])
+          + (['go'] if packages.terminal[item].go is defined else [])
+          + (['cargo'] if packages.terminal[item].cargo is defined else [])
+          + (['native'] if packages.terminal[item].native is defined else [])
+        ) | intersect(modules_list) | length > 0
+
+    - name: Install cheatsheets
+      include_role:
+        name: package_installer
+      vars:
+        package_info: "{{ packages.cheatsheets[item] }}"
+        pkg_name: "{{ item }}"
+      loop: "{{ packages.cheatsheets.keys() | list }}"
+      when: >
+        modules_list | length == 0 or
+        (
+          (packages.cheatsheets[item].tags | default([]))
+          + (['uv'] if packages.cheatsheets[item].uv is defined else [])
+          + (['brew'] if packages.cheatsheets[item].brew is defined else [])
+          + (['go'] if packages.cheatsheets[item].go is defined else [])
+          + (['cargo'] if packages.cheatsheets[item].cargo is defined else [])
+          + (['native'] if packages.cheatsheets[item].native is defined else [])
+        ) | intersect(modules_list) | length > 0

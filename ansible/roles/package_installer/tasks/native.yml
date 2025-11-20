@@ -1,0 +1,78 @@
+---
+# Install package via native package manager
+
+- name: Detect native package manager (if not already detected)
+  shell: |
+    if command -v yay >/dev/null 2>&1; then
+      echo "yay"
+    elif command -v paru >/dev/null 2>&1; then
+      echo "paru"
+    elif command -v pacman >/dev/null 2>&1; then
+      echo "pacman"
+    elif command -v apt >/dev/null 2>&1; then
+      echo "apt"
+    elif command -v dnf >/dev/null 2>&1; then
+      echo "dnf"
+    else
+      echo "none"
+    fi
+  register: native_pkg_mgr_detect
+  changed_when: false
+  when: native_pkg_manager is not defined
+
+- name: Set native package manager fact
+  set_fact:
+    detected_pkg_manager: "{{ native_pkg_mgr_detect.stdout | default(native_pkg_manager) }}"
+
+- name: Check if package should be skipped for this package manager
+  set_fact:
+    should_skip: "{{ (package_def.native.skip_on is defined) and (detected_pkg_manager in package_def.native.skip_on) }}"
+
+- name: "Install {{ package_name }} via yay"
+  command: "yay -S --noconfirm {{ package_def.native.yay | default(package_name) }}"
+  register: install_result
+  when:
+    - detected_pkg_manager == "yay"
+    - not should_skip
+    - package_def.native.yay is defined or package_def.native is defined
+
+- name: "Install {{ package_name }} via paru"
+  command: "paru -S --noconfirm {{ package_def.native.paru | default(package_name) }}"
+  register: install_result
+  when:
+    - detected_pkg_manager == "paru"
+    - not should_skip
+    - package_def.native.paru is defined or package_def.native is defined
+
+- name: "Install {{ package_name }} via pacman"
+  pacman:
+    name: "{{ package_def.native.pacman | default(package_name) }}"
+    state: present
+  become: true
+  register: install_result
+  when:
+    - detected_pkg_manager == "pacman"
+    - not should_skip
+    - package_def.native.pacman is defined or package_def.native is defined
+
+- name: "Install {{ package_name }} via apt"
+  apt:
+    name: "{{ package_def.native.apt | default(package_name) }}"
+    state: present
+  become: true
+  register: install_result
+  when:
+    - detected_pkg_manager == "apt"
+    - not should_skip
+    - package_def.native.apt is defined or package_def.native is defined
+
+- name: "Install {{ package_name }} via dnf"
+  dnf:
+    name: "{{ package_def.native.dnf | default(package_name) }}"
+    state: present
+  become: true
+  register: install_result
+  when:
+    - detected_pkg_manager == "dnf"
+    - not should_skip
+    - package_def.native.dnf is defined or package_def.native is defined

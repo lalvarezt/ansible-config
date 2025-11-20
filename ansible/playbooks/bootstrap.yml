@@ -1,0 +1,33 @@
+---
+# Main bootstrap orchestrator
+# Imports all other playbooks in the correct order
+
+- name: Dotfiles Bootstrap - Complete System Setup
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Display bootstrap information
+      debug:
+        msg: "Starting bootstrap on {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+- import_playbook: 00-prereqs.yml
+- import_playbook: 01-onepassword.yml
+- import_playbook: 02-ssh.yml
+- import_playbook: 03-homebrew.yml
+- import_playbook: 04-lang-managers.yml
+- import_playbook: 05-env-setup.yml
+- import_playbook: 06-homebrew-taps.yml
+- import_playbook: 07-shell.yml
+- import_playbook: 08-terminal-emulators.yml
+- import_playbook: 09-file-management.yml
+- import_playbook: 10-development.yml
+- import_playbook: 11-package-managers.yml
+- import_playbook: 12-git.yml
+- import_playbook: 13-pentesting.yml
+- import_playbook: 14-data-processing.yml
+- import_playbook: 15-search-tools.yml
+- import_playbook: 16-misc-tools.yml
+- import_playbook: 17-fonts.yml
+- import_playbook: 18-chezmoi.yml
+- import_playbook: 19-post-config.yml
