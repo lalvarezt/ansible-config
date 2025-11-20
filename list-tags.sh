@@ -1,7 +1,43 @@
 #!/usr/bin/env bash
-# List all packages grouped by tag
+# List all tags or packages grouped by tag
 
 set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+List all available package tags from the Ansible configuration.
+
+Options:
+    -v, --verbose    Show packages grouped by each tag (YAML format)
+    -h, --help       Show this help message
+
+Examples:
+    $(basename "$0")              # List all tags
+    $(basename "$0") --verbose    # Show packages for each tag
+EOF
+}
+
+VERBOSE=false
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  -v | --verbose)
+    VERBOSE=true
+    shift
+    ;;
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Error: unknown option '$1'" >&2
+    usage >&2
+    exit 1
+    ;;
+  esac
+done
 
 # Check required tools
 missing=()
@@ -22,7 +58,11 @@ if [[ ! -f "$ALL_YML" ]]; then
   exit 1
 fi
 
-for tag in $(yq '.. | select(has("tags")) | .tags[]' "$ALL_YML" | sort -u); do
-  echo "$tag:"
-  yq ".. | select(has(\"tags\") and .tags[] == \"$tag\") | path | .[-1]" "$ALL_YML" | sort | sed 's/^/  - /'
-done
+if [[ "$VERBOSE" == true ]]; then
+  for tag in $(yq '.. | select(has("tags")) | .tags[]' "$ALL_YML" | sort -u); do
+    echo "$tag:"
+    yq ".. | select(has(\"tags\") and .tags[] == \"$tag\") | path | .[-1]" "$ALL_YML" | sort | sed 's/^/  - /'
+  done
+else
+  yq '.. | select(has("tags")) | .tags[]' "$ALL_YML" | sort -u
+fi
