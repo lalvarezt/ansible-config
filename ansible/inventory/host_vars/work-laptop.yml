@@ -1,0 +1,4 @@
+---
+# Host-specific variables for work-laptop (WSL)
+
+skip_ssl_verify: true

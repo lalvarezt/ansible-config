@@ -345,6 +345,13 @@ packages:
       tags:
         - standard
         - development
+    socat:
+      brew:
+        name: socat
+      description: Multipurpose relay for bidirectional data transfer
+      tags:
+        - standard
+        - development
   package_managers:
     dra:
       brew:

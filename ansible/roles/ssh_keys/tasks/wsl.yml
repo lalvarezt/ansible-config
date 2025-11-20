@@ -1,0 +1,93 @@
+---
+# WSL-specific SSH agent bridge setup
+# Bridges Windows 1Password SSH agent to WSL using npiperelay
+
+- name: Set SSH_AUTH_SOCK path
+  ansible.builtin.set_fact:
+    ssh_auth_sock: /tmp/1password-agent.sock
+
+- name: Ensure WSL interop is enabled
+  community.general.ini_file:
+    path: /etc/wsl.conf
+    section: interop
+    option: enabled
+    value: "true"
+    mode: "0644"
+  become: true
+
+- name: Get Windows username
+  ansible.builtin.command: /mnt/c/Windows/System32/cmd.exe /c echo %USERNAME%
+  register: windows_username_result
+  changed_when: false
+
+- name: Set npiperelay path
+  ansible.builtin.set_fact:
+    npiperelay_path: "/mnt/c/Users/{{ windows_username_result.stdout | trim }}/go/bin/npiperelay.exe"
+
+- name: Check if npiperelay exists
+  ansible.builtin.stat:
+    path: "{{ npiperelay_path }}"
+  register: npiperelay_check
+
+- name: Fail if npiperelay not found
+  ansible.builtin.fail:
+    msg: "npiperelay.exe not found at {{ npiperelay_path }}. Install it with: go install github.com/jstarks/npiperelay@latest"
+  when: not npiperelay_check.stat.exists
+
+- name: Create systemd user directory
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.config/systemd/user"
+    state: directory
+    mode: "0755"
+
+- name: Create 1Password SSH agent bridge service
+  ansible.builtin.copy:
+    dest: "{{ ansible_user_dir }}/.config/systemd/user/1password-ssh-agent.service"
+    mode: "0644"
+    content: |
+      [Unit]
+      Description=Connect 1Password SSH Agent from Windows
+
+      [Service]
+      Type=simple
+      ExecStart=/usr/bin/socat -d -d UNIX-LISTEN:"{{ ssh_auth_sock }}",fork EXEC:"{{ npiperelay_path }} -ei -s //./pipe/openssh-ssh-agent",nofork
+      ExecStop=rm -f {{ ssh_auth_sock }}
+      Restart=always
+
+      [Install]
+      WantedBy=default.target
+
+- name: Reload systemd user daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+    scope: user
+
+- name: Enable and start 1Password SSH agent bridge service
+  ansible.builtin.systemd:
+    name: 1password-ssh-agent.service
+    enabled: true
+    state: started
+    scope: user
+
+- name: Check if SSH_AUTH_SOCK is already in profile
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_user_dir }}/.profile"
+    regexp: "^export SSH_AUTH_SOCK="
+    state: absent
+  check_mode: true
+  register: ssh_auth_sock_check
+  changed_when: false
+
+- name: Add SSH_AUTH_SOCK to profile
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_user_dir }}/.profile"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SSH agent bridge"
+    block: |
+      # ssh agent bridge
+      export SSH_AUTH_SOCK={{ ssh_auth_sock }}
+    create: true
+    mode: "0644"
+
+- name: Display WSL SSH agent bridge setup completion
+  ansible.builtin.debug:
+    msg: "WSL SSH agent bridge has been configured to use Windows 1Password"
