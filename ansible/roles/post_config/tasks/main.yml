@@ -16,7 +16,7 @@
   when: bat_check.rc == 0
   register: bat_cache_result
   failed_when: false
-  changed_when: bat_cache_result.rc == 0
+  changed_when: false
 
 - name: Check if update-alternatives exists
   ansible.builtin.command: which update-alternatives
@@ -94,7 +94,7 @@
   when: python_linked_check.rc == 0
   register: python_unlink_result
   failed_when: false
-  changed_when: python_unlink_result.rc == 0
+  changed_when: python_unlink_result.stdout is not search('0 symlinks removed')
 
 - name: Display final message
   ansible.builtin.debug:
@@ -103,9 +103,11 @@
 
       IMPORTANT: You should now:
       1. Log out and log back in (or open a new terminal)
+      {% if chezmoi_was_applied | default(false) %}
       2. Your shell configuration from chezmoi is now active
       3. All temporary environment variables have been replaced
-      4. Homebrew Python has been unlinked to prevent conflicts
+      {% endif %}
+      {{ '2' if not chezmoi_was_applied | default(false) else '4' }}. Homebrew Python has been unlinked to prevent conflicts
 
       To switch to fish shell (if installed):
       chsh -s $(which fish)
