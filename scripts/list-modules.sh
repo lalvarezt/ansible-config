@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# List all tags or packages grouped by tag
+# List all modules or packages grouped by module
 
 set -euo pipefail
 
@@ -7,15 +7,16 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-List all available package tags from the Ansible configuration.
+List all available package modules from the Ansible configuration.
+These modules can be used with --extra-vars "modules=[...]" to filter packages.
 
 Options:
-    -v, --verbose    Show packages grouped by each tag (YAML format)
+    -v, --verbose    Show packages grouped by each module (YAML format)
     -h, --help       Show this help message
 
 Examples:
-    $(basename "$0")              # List all tags
-    $(basename "$0") --verbose    # Show packages for each tag
+    $(basename "$0")              # List all modules
+    $(basename "$0") --verbose    # Show packages for each module
 EOF
 }
 

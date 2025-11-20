@@ -4,7 +4,7 @@
 - name: Install Git Tools
   hosts: all
   gather_facts: true
-  tags: [git]
+  tags: [packages]
   vars:
     _modules_raw: "{{ (modules | from_yaml) if modules is defined and modules is string else (modules | default([])) }}"
     modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"

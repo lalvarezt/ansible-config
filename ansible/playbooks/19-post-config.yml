@@ -4,7 +4,6 @@
 - name: Post-Configuration Tasks
   hosts: all
   gather_facts: true
-
+  tags: [config]
   roles:
     - role: post_config
-      tags: [config, post-config]

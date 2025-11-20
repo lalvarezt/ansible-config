@@ -4,7 +4,6 @@
 - name: Install Language Package Managers
   hosts: all
   gather_facts: true
-
+  tags: [setup]
   roles:
     - role: lang_managers
-      tags: [development, core]

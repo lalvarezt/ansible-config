@@ -4,7 +4,7 @@
 - name: Add Homebrew Taps
   hosts: all
   gather_facts: true
-  tags: [package-managers]
+  tags: [setup]
   tasks:
     - name: Ensure custom Homebrew taps are present
       community.general.homebrew_tap:

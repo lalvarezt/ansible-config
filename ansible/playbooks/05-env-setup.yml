@@ -4,7 +4,6 @@
 - name: Setup Temporary Environment Variables
   hosts: all
   gather_facts: true
-
+  tags: [setup]
   roles:
     - role: env_setup
-      tags: [config, core]

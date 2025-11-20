@@ -23,7 +23,7 @@ Before bootstrapping, ensure you have:
 
 ### Optional
 
-- **yq** - Required for `list-tags.sh` utility (installed during bootstrap)
+- **yq** - Required for `list-modules.sh` utility (installed during bootstrap)
 
 ## Quick Start
 
@@ -59,20 +59,34 @@ This will:
 
 Log out and back in, or start a new terminal session.
 
-## Filtering Packages
+## Playbook Tags
 
-Use `--tags` to select playbooks and `--extra-vars "modules=[...]"` to filter packages.
+Use `--tags` or `--skip-tags` to control which playbooks run:
 
-### By Playbook Tag
+| Tag | Playbooks | Description |
+|-----|-----------|-------------|
+| `setup` | 00-06 | System prerequisites, 1Password, SSH, Homebrew, language managers |
+| `packages` | 07-12, 14-17 | All tool packages (shell, files, dev, git, data, search, misc, fonts) |
+| `pentesting` | 13 | Pentesting and security tools |
+| `config` | 18-19 | Chezmoi dotfiles and post-configuration |
 
 ```bash
-# Run specific playbooks
-ansible-playbook playbooks/bootstrap.yml --tags pentesting
-ansible-playbook playbooks/bootstrap.yml --tags development,git
-ansible-playbook playbooks/bootstrap.yml --tags shell,files,search
+# Full bootstrap
+ansible-playbook playbooks/bootstrap.yml
+
+# Skip pentesting tools
+ansible-playbook playbooks/bootstrap.yml --skip-tags pentesting
+
+# Only install packages (skip setup and config)
+ansible-playbook playbooks/bootstrap.yml --tags packages,pentesting
+
+# Only run setup
+ansible-playbook playbooks/bootstrap.yml --tags setup
 ```
 
-Available tags: `prereqs`, `core`, `shell`, `terminals`, `files`, `development`, `package-managers`, `git`, `pentesting`, `data`, `search`, `misc`, `fonts`, `config`, `chezmoi`
+## Filtering Packages
+
+Use `--extra-vars "modules=[...]"` to filter which packages are installed by tag or installer type.
 
 ### By Package Tag
 
@@ -80,19 +94,20 @@ Available tags: `prereqs`, `core`, `shell`, `terminals`, `files`, `development`,
 # Only core packages
 ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['core']"
 
-# Only standard packages
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['standard']"
+# Only shell tools
+ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['shell']"
 
-# Filter by functional tags
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['fuzzer']"
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['scanner']"
+# Only pentesting tools
+ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['pentesting']"
 ```
 
-List all available package tags:
+Available tags: `core`, `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
+
+List all available modules:
 
 ```bash
-./scripts/list-tags.sh           # List tags
-./scripts/list-tags.sh --verbose # Show packages per tag
+./scripts/list-modules.sh           # List modules
+./scripts/list-modules.sh --verbose # Show packages per module
 ```
 
 ### By Installer Type
@@ -117,14 +132,14 @@ ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['native']"
 ### Combined Filtering
 
 ```bash
-# Pentesting tools installed via go
-ansible-playbook playbooks/bootstrap.yml --tags pentesting --extra-vars "modules=['go']"
-
 # Core development tools
-ansible-playbook playbooks/bootstrap.yml --tags development --extra-vars "modules=['core']"
+ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['development','core']"
 
-# Multiple filters (OR logic)
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['core','scanner']"
+# Pentesting tools installed via go
+ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['pentesting','go']"
+
+# Multiple categories (OR logic)
+ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['shell','files']"
 ```
 
 ### Dry Run
@@ -139,7 +154,7 @@ ansible-playbook playbooks/bootstrap.yml --check
 ansible-config/
 ├── scripts/
 │   ├── bootstrap.sh          # Initial Ansible installation
-│   └── list-tags.sh          # Package tag discovery utility
+│   └── list-modules.sh       # Package module discovery utility
 ├── ansible/
 │   ├── playbooks/            # 20 numbered playbooks
 │   │   ├── bootstrap.yml     # Main orchestrator
@@ -178,10 +193,13 @@ Edit `ansible/inventory/group_vars/all.yml`, sample `brew` package:
 package_name:
   brew:
     name: package-name
+  description: Brief description of the package
   tags:
-    - core
     - development
+    - core
 ```
+
+Available tags: `core` (essential), `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
 
 ### Changing Chezmoi Repository
 

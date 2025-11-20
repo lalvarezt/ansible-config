@@ -4,7 +4,6 @@
 - name: Install and Configure Homebrew
   hosts: all
   gather_facts: true
-
+  tags: [setup]
   roles:
     - role: homebrew
-      tags: [package-managers, core]

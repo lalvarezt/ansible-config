@@ -4,6 +4,6 @@
 - name: Install Terminal Emulators
   hosts: all
   gather_facts: true
-  tags: [terminals]
+  tags: [packages]
   roles:
     - role: terminal_emulators
