@@ -28,9 +28,11 @@ jobs:
           uvx yamllint -d relaxed ansible/
 
       - name: Run ansible-lint
+        working-directory: ansible
         run: |
-          uvx ansible-lint ansible/playbooks/*.yml
+          uvx ansible-lint playbooks/*.yml
 
       - name: Check Ansible syntax
+        working-directory: ansible
         run: |
-          uvx --from ansible-core ansible-playbook ansible/playbooks/*.yml --syntax-check -i ansible/inventory/hosts.yml
+          uvx --from ansible-core ansible-playbook playbooks/*.yml --syntax-check -i inventory/hosts.yml

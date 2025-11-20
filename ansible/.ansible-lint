@@ -1,0 +1,11 @@
+---
+# Production profile
+profile: production
+
+skip_list:
+  - yaml[line-length] # Handled by yamllint separately
+  - name[play] # import_playbook cannot have names
+  - var-naming[no-role-prefix] # Shared facts between roles (brew_prefix used by multiple roles)
+
+# Note: var-naming is skipped because this codebase uses intentionally shared facts
+# (e.g., homebrew sets brew_prefix/brew_bin used by lang_managers, env_setup, etc.)
