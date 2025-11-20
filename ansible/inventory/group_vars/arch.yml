@@ -1,7 +1,7 @@
 ---
 # Arch-specific variables
 # Note: Will auto-detect yay/paru/pacman
-native_pkg_manager: pacman # Default, will be overridden if yay/paru available
+native_pkg_manager: pacman  # Default, will be overridden if yay/paru available
 
 # System prerequisites for Arch
 system_prereqs:

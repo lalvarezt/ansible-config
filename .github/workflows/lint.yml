@@ -1,7 +1,7 @@
 ---
 name: Ansible Lint
 
-on:
+"on":
   push:
     branches: [main, master]
   pull_request:
@@ -16,28 +16,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible ansible-lint yamllint
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
 
       - name: Install Ansible collections
         run: |
-          ansible-galaxy collection install -r requirements.yml
+          uvx --from ansible-core ansible-galaxy collection install -r requirements.yml
 
       - name: Run yamllint
         run: |
-          yamllint -d relaxed ansible/
+          uvx yamllint -d relaxed ansible/
 
       - name: Run ansible-lint
         run: |
-          ansible-lint ansible/playbooks/*.yml
+          uvx ansible-lint ansible/playbooks/*.yml
 
       - name: Check Ansible syntax
         run: |
-          ansible-playbook ansible/playbooks/*.yml --syntax-check -i ansible/inventory/hosts.yml
+          uvx --from ansible-core ansible-playbook ansible/playbooks/*.yml --syntax-check -i ansible/inventory/hosts.yml
