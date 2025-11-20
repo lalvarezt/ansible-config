@@ -1,11 +1,14 @@
 ---
-# Install package via Cargo
+# Install packages via Cargo
 
-- name: "Install {{ package_name }} via Cargo"
+- name: Install packages via Cargo
   community.general.cargo:
-    name: "{{ package_def.cargo.name }}"
-    locked: "{{ package_def.cargo.locked | default(false) }}"
+    name: "{{ item.name }}"
+    locked: "{{ item.locked }}"
     state: present
   environment:
     PATH: "{{ ansible_path }}"
-  register: install_result
+  loop: "{{ cargo_packages }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: not ansible_check_mode

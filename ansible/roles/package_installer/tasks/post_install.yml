@@ -1,19 +1,14 @@
 ---
-# Run post-install commands for a package
+# Run post-install commands for all packages
 
-- name: "Run post-install command for {{ package_name }} (single command)"
-  shell: "{{ package_def.post_install }}"
+- name: Run post-install commands
+  shell: "{{ _cmd }}"
   environment:
     PATH: "{{ ansible_path }}"
-  when: package_def.post_install is string
-  ignore_errors: true
-
-- name: "Run post-install commands for {{ package_name }} (multiple commands)"
-  shell: "{{ post_cmd }}"
-  environment:
-    PATH: "{{ ansible_path }}"
-  loop: "{{ package_def.post_install if package_def.post_install is not string else [] }}"
+  loop: "{{ post_install_tasks }}"
   loop_control:
-    loop_var: post_cmd
-  when: package_def.post_install is not string
+    label: "{{ item.name }}"
+  vars:
+    _cmd: "{{ item.commands if item.commands is string else item.commands | join(' && ') }}"
   ignore_errors: true
+  changed_when: false

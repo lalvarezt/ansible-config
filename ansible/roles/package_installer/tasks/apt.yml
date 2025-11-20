@@ -1,0 +1,13 @@
+---
+# Install packages via apt (bulk)
+
+- name: Filter apt packages (exclude skipped)
+  set_fact:
+    apt_packages_filtered: "{{ apt_packages | selectattr('skip_on', 'undefined') | map(attribute='name') | list + apt_packages | rejectattr('skip_on', 'undefined') | rejectattr('skip_on', 'contains', 'apt') | map(attribute='name') | list }}"
+
+- name: Install packages via apt
+  apt:
+    name: "{{ apt_packages_filtered }}"
+    state: present
+  become: true
+  when: apt_packages_filtered | length > 0

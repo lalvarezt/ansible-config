@@ -1,10 +1,13 @@
 ---
-# Install package via Go
+# Install packages via Go (batch loop)
 
-- name: "Install {{ package_name }} via Go"
-  command: "{{ go_bin }} {{ package_def.go.command }}"
+- name: Install packages via Go
+  command: "{{ go_bin }} {{ item.command }}"
   environment:
     PATH: "{{ ansible_path }}"
     GOPATH: "{{ ansible_user_dir }}/go"
-  register: install_result
-  changed_when: install_result.stdout != '' or install_result.stderr != ''
+  loop: "{{ go_packages }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: go_results
+  changed_when: go_results.stdout != '' or go_results.stderr != ''

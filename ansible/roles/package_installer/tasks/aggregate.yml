@@ -1,0 +1,71 @@
+---
+# Aggregate packages by installation method
+# Input: package_dict (dictionary of packages)
+# Output: Lists grouped by method (brew_packages, apt_packages, etc.)
+
+- name: Initialize package lists
+  set_fact:
+    brew_packages: []
+    apt_packages: []
+    dnf_packages: []
+    pacman_packages: []
+    yay_packages: []
+    paru_packages: []
+    uv_packages: []
+    go_packages: []
+    cargo_packages: []
+    post_install_tasks: []
+
+- name: Aggregate packages by installation method
+  set_fact:
+    brew_packages: >-
+      {{ brew_packages + [item.value.brew.name]
+         if item.value.brew is defined and _passes_filter else brew_packages }}
+    apt_packages: >-
+      {{ apt_packages + [{'name': item.value.native.apt | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+         if item.value.native is defined and item.value.native.apt is defined and _passes_filter else apt_packages }}
+    dnf_packages: >-
+      {{ dnf_packages + [{'name': item.value.native.dnf | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+         if item.value.native is defined and item.value.native.dnf is defined and _passes_filter else dnf_packages }}
+    pacman_packages: >-
+      {{ pacman_packages + [{'name': item.value.native.pacman | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+         if item.value.native is defined and item.value.native.pacman is defined and _passes_filter else pacman_packages }}
+    yay_packages: >-
+      {{ yay_packages + [{'name': item.value.native.yay | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+         if item.value.native is defined and item.value.native.yay is defined and _passes_filter else yay_packages }}
+    paru_packages: >-
+      {{ paru_packages + [{'name': item.value.native.paru | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+         if item.value.native is defined and item.value.native.paru is defined and _passes_filter else paru_packages }}
+    uv_packages: >-
+      {{ uv_packages + [{'name': item.key, 'command': item.value.uv.command}]
+         if item.value.uv is defined and _passes_filter else uv_packages }}
+    go_packages: >-
+      {{ go_packages + [{'name': item.key, 'command': item.value.go.command}]
+         if item.value.go is defined and _passes_filter else go_packages }}
+    cargo_packages: >-
+      {{ cargo_packages + [{'name': item.value.cargo.name, 'locked': item.value.cargo.locked | default(false)}]
+         if item.value.cargo is defined and _passes_filter else cargo_packages }}
+    post_install_tasks: >-
+      {{ post_install_tasks + [{'name': item.key, 'commands': item.value.post_install}]
+         if item.value.post_install is defined and _passes_filter else post_install_tasks }}
+  loop: "{{ package_dict | dict2items }}"
+  loop_control:
+    label: >-
+      {{ _method }} -> {{ item.key }} - {{ item.value.description | default('') }} {{ item.value.tags | default([]) }}
+  vars:
+    _method: >-
+      {{ 'brew' if item.value.brew is defined else
+         'uv' if item.value.uv is defined else
+         'go' if item.value.go is defined else
+         'cargo' if item.value.cargo is defined else
+         'native' if item.value.native is defined else 'unknown' }}
+    _pkg_tags: >-
+      {{ (item.value.tags | default([]))
+         + (['uv'] if item.value.uv is defined else [])
+         + (['brew'] if item.value.brew is defined else [])
+         + (['go'] if item.value.go is defined else [])
+         + (['cargo'] if item.value.cargo is defined else [])
+         + (['native'] if item.value.native is defined else []) }}
+    _passes_filter: >-
+      {{ (modules_filter | default([]) | length == 0) or
+         (_pkg_tags | intersect(modules_filter | default([])) | length > 0) }}

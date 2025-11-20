@@ -7,7 +7,6 @@
   tags: [development]
 
   vars:
-    # Normalize modules input
     _modules_raw: "{{ (modules | from_yaml) if modules is defined and modules is string else (modules | default([])) }}"
     modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"
 
@@ -16,16 +15,5 @@
       include_role:
         name: package_installer
       vars:
-        package_info: "{{ packages.dev_tools[item] }}"
-        pkg_name: "{{ item }}"
-      loop: "{{ packages.dev_tools.keys() | list }}"
-      when: >
-        modules_list | length == 0 or
-        (
-          (packages.dev_tools[item].tags | default([]))
-          + (['uv'] if packages.dev_tools[item].uv is defined else [])
-          + (['brew'] if packages.dev_tools[item].brew is defined else [])
-          + (['go'] if packages.dev_tools[item].go is defined else [])
-          + (['cargo'] if packages.dev_tools[item].cargo is defined else [])
-          + (['native'] if packages.dev_tools[item].native is defined else [])
-        ) | intersect(modules_list) | length > 0
+        package_dict: "{{ packages.dev_tools }}"
+        modules_filter: "{{ modules_list }}"

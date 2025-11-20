@@ -1,9 +1,12 @@
 ---
-# Install package via Homebrew
+# Install packages via Homebrew
 
-- name: "Install {{ package_name }} via Homebrew"
+- name: Install packages via Homebrew
   community.general.homebrew:
-    name: "{{ package_def.brew.name }}"
+    name: "{{ item }}"
     state: present
     install_options: ["quiet"]
-  register: install_result
+  loop: "{{ brew_packages }}"
+  loop_control:
+    label: "{{ item }}"
+  when: not ansible_check_mode

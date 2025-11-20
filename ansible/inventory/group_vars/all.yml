@@ -702,7 +702,6 @@ packages:
         - pentesting
       post_install:
         - brew services start redis
-        - sleep 3
     rustscan:
       brew:
         name: rustscan
