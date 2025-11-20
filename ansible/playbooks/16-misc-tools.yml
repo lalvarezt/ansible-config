@@ -5,42 +5,41 @@
   hosts: all
   gather_facts: true
   tags: [misc]
-
   vars:
     _modules_raw: "{{ (modules | from_yaml) if modules is defined and modules is string else (modules | default([])) }}"
     modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"
 
   tasks:
     - name: Install compression tools
-      include_role:
+      ansible.builtin.include_role:
         name: package_installer
       vars:
         package_dict: "{{ packages.compression }}"
         modules_filter: "{{ modules_list }}"
 
     - name: Install monitoring tools
-      include_role:
+      ansible.builtin.include_role:
         name: package_installer
       vars:
         package_dict: "{{ packages.monitoring }}"
         modules_filter: "{{ modules_list }}"
 
     - name: Install docker tools
-      include_role:
+      ansible.builtin.include_role:
         name: package_installer
       vars:
         package_dict: "{{ packages.docker }}"
         modules_filter: "{{ modules_list }}"
 
     - name: Install terminal tools
-      include_role:
+      ansible.builtin.include_role:
         name: package_installer
       vars:
         package_dict: "{{ packages.terminal }}"
         modules_filter: "{{ modules_list }}"
 
     - name: Install cheatsheets
-      include_role:
+      ansible.builtin.include_role:
         name: package_installer
       vars:
         package_dict: "{{ packages.cheatsheets }}"

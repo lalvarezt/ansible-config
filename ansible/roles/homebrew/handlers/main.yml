@@ -2,12 +2,13 @@
 # Handlers for homebrew role
 
 - name: Remind shell reload
-  debug:
+  ansible.builtin.debug:
     msg: "Shell profile updated. Run 'source ~/.bashrc' or start a new terminal to apply changes."
 
 - name: Source bashrc
-  shell: source {{ ansible_user_dir }}/.bashrc
+  ansible.builtin.shell: source {{ ansible_user_dir }}/.bashrc
   args:
     executable: /bin/bash
   listen: "reload shell profile"
   failed_when: false
+  changed_when: false

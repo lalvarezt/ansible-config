@@ -2,9 +2,11 @@
 # Install packages via yay (bulk)
 
 - name: Filter yay packages (exclude skipped)
-  set_fact:
-    yay_packages_filtered: "{{ yay_packages | selectattr('skip_on', 'undefined') | map(attribute='name') | list + yay_packages | rejectattr('skip_on', 'undefined') | rejectattr('skip_on', 'contains', 'yay') | map(attribute='name') | list }}"
+  ansible.builtin.set_fact:
+    yay_packages_filtered: "{{ yay_packages | selectattr('skip_on', 'undefined') | map(attribute='name') | list + yay_packages | rejectattr('skip_on', 'undefined')
+      | rejectattr('skip_on', 'contains', 'yay') | map(attribute='name') | list }}"
 
 - name: Install packages via yay
-  command: "yay -S --noconfirm --needed {{ yay_packages_filtered | join(' ') }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed {{ yay_packages_filtered | join(' ') }}"
   when: yay_packages_filtered | length > 0
+  changed_when: true

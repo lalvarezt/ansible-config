@@ -65,10 +65,8 @@ cargo_bin: "{{ ansible_user_dir }}/.cargo/bin/cargo"
 rustup_bin: "{{ ansible_user_dir }}/.cargo/bin/rustup"
 
 # Combined PATH for Ansible task execution
-ansible_path:
-  /home/linuxbrew/.linuxbrew/bin:{{ ansible_user_dir }}/.cargo/bin:{{
-  ansible_user_dir }}/go/bin:{{ ansible_user_dir }}/.local/bin:{{ ansible_env.PATH
-  }}
+ansible_path: /home/linuxbrew/.linuxbrew/bin:{{ ansible_user_dir }}/.cargo/bin:{{ ansible_user_dir }}/go/bin:{{ ansible_user_dir }}/.local/bin:{{
+  ansible_env.PATH }}
 
 # =============================================================================
 # PACKAGE DEFINITIONS BY CATEGORY
@@ -139,9 +137,7 @@ packages:
     zellij:
       brew:
         name: zellij
-      description:
-        Pluggable terminal workspace, with terminal multiplexer as the
-        base feature
+      description: Pluggable terminal workspace, with terminal multiplexer as the base feature
       tags:
         - standard
         - shell
@@ -204,9 +200,7 @@ packages:
     yazi:
       brew:
         name: yazi
-      description:
-        Blazing fast terminal file manager written in Rust, based on async
-        I/O
+      description: Blazing fast terminal file manager written in Rust, based on async I/O
       tags:
         - files
         - core
@@ -288,7 +282,7 @@ packages:
         - core
     hapless:
       uv:
-        command: tool install hapless
+        ansible.builtin.command: tool install hapless
       description: Simplest way of running and tracking processes in the background
       tags:
         - standard
@@ -326,18 +320,14 @@ packages:
     pastel:
       brew:
         name: pastel
-      description:
-        Command-line tool to generate, analyze, convert and manipulate
-        colors
+      description: Command-line tool to generate, analyze, convert and manipulate colors
       tags:
         - standard
         - development
     python-argcomplete:
       brew:
         name: python-argcomplete
-      description:
-        Easy, extensible command line tab completion of arguments for your
-        Python application
+      description: Easy, extensible command line tab completion of arguments for your Python application
       tags:
         - standard
         - development
@@ -380,9 +370,7 @@ packages:
     pipx:
       brew:
         name: pipx
-      description:
-        (use uv instead) Execute binaries from Python packages in isolated
-        environments
+      description: (use uv instead) Execute binaries from Python packages in isolated environments
       tags:
         - standard
         - package-managers
@@ -396,9 +384,7 @@ packages:
     uv:
       brew:
         name: uv
-      description:
-        Extremely fast Python package installer and resolver, written in
-        Rust
+      description: Extremely fast Python package installer and resolver, written in Rust
       tags:
         - package-managers
         - core
@@ -433,7 +419,7 @@ packages:
       tags:
         - standard
         - git
-    git:
+    ansible.builtin.git:
       brew:
         name: git
       description: Distributed revision control system
@@ -466,10 +452,8 @@ packages:
         - diff
     gitingest:
       uv:
-        command: tool install gitingest
-      description:
-        Turn any Git repository into a prompt-friendly text ingest for
-        LLMs
+        ansible.builtin.command: tool install gitingest
+      description: Turn any Git repository into a prompt-friendly text ingest for LLMs
       tags:
         - standard
         - git
@@ -535,20 +519,20 @@ packages:
         - pentesting
     exegol:
       uv:
-        command: tool install exegol
+        ansible.builtin.command: tool install exegol
       description: Community-driven hacking environment
       tags:
         - standard
         - pentesting
     pwncat:
       uv:
-        command: tool install git+https://github.com/Chocapikk/pwncat-vl
+        ansible.builtin.command: tool install git+https://github.com/Chocapikk/pwncat-vl
       tags:
         - standard
         - pentesting
     targetedkerberoast:
       uv:
-        command: tool install git+https://github.com/gatariee/targetedKerberoast
+        ansible.builtin.command: tool install git+https://github.com/gatariee/targetedKerberoast
       tags:
         - standard
         - pentesting
@@ -562,9 +546,7 @@ packages:
     cariddi:
       brew:
         name: cariddi
-      description:
-        Take a list of domains, crawl urls and scan for endpoints, secrets,
-        api keys, etc
+      description: Take a list of domains, crawl urls and scan for endpoints, secrets, api keys, etc
       tags:
         - standard
         - pentesting
@@ -729,7 +711,7 @@ packages:
         - pentesting
     mitmproxy:
       uv:
-        command: tool install mitmproxy
+        ansible.builtin.command: tool install mitmproxy
       description: An interactive TLS-capable intercepting HTTP proxy
       tags:
         - standard
@@ -737,74 +719,70 @@ packages:
         - proxy
     autobloody:
       uv:
-        command: tool install git+https://github.com/CravateRouge/autobloody
-      description:
-        Automatically exploit Active Directory privilege escalation paths
-        shown by BloodHound
+        ansible.builtin.command: tool install git+https://github.com/CravateRouge/autobloody
+      description: Automatically exploit Active Directory privilege escalation paths shown by BloodHound
       tags:
         - standard
         - pentesting
     bloodyad:
       uv:
-        command: tool install git+https://github.com/CravateRouge/bloodyAD
+        ansible.builtin.command: tool install git+https://github.com/CravateRouge/bloodyAD
       description: Active Directory privilege escalation swiss army knife
       tags:
         - standard
         - pentesting
     pkinittools:
       uv:
-        command: tool install git+https://github.com/Cyb3rC3lt/PKINITtools
+        ansible.builtin.command: tool install git+https://github.com/Cyb3rC3lt/PKINITtools
       description: Utilities for playing with PKINIT and certificates
       tags:
         - standard
         - pentesting
     flask-unsign:
       uv:
-        command: tool install git+https://github.com/Paradoxis/Flask-Unsign
-      description:
-        Fetch, decode, brute-force and craft session cookies of a Flask
-        application
+        ansible.builtin.command: tool install git+https://github.com/Paradoxis/Flask-Unsign
+      description: Fetch, decode, brute-force and craft session cookies of a Flask application
       tags:
         - standard
         - pentesting
     netexec:
       uv:
-        command: tool install git+https://github.com/Pennyw0rth/NetExec
+        ansible.builtin.command: tool install git+https://github.com/Pennyw0rth/NetExec
       description: The Network Execution Tool
       tags:
         - standard
         - pentesting
     pywhisker:
       uv:
-        command: tool install git+https://github.com/ShutdownRepo/pywhisker
+        ansible.builtin.command: tool install git+https://github.com/ShutdownRepo/pywhisker
       description: Tool for extracting credentials from Windows machines
       tags:
         - standard
         - pentesting
     wenum:
       uv:
-        command: tool install git+https://github.com/WebFuzzForge/wenum --with "setuptools<81,legacy-cgi"
+        ansible.builtin.command: tool install git+https://github.com/WebFuzzForge/wenum --with "setuptools<81,legacy-cgi"
       description: Fork of Wfuzz The Web Fuzzer
       tags:
         - standard
         - pentesting
     git-dumper:
       uv:
-        command: tool install git+https://github.com/arthaud/git-dumper
+        ansible.builtin.command: tool install git+https://github.com/arthaud/git-dumper
       description: A tool to dump a git repository from a website
       tags:
         - standard
         - pentesting
     penelope:
       uv:
-        command: tool install git+https://github.com/brightio/penelope
+        ansible.builtin.command: tool install git+https://github.com/brightio/penelope
       description: Powerful shell handler built as a modern netcat replacement
       tags:
         - standard
         - pentesting
     dnsrecon:
       uv:
-        command: tool install git+https://github.com/darkoperator/dnsrecon
+        ansible.builtin.command: tool install git+https://github.com/darkoperator/dnsrecon
       description: DNS Enumeration Script
       tags:
         - standard
@@ -812,20 +790,20 @@ packages:
         - recon
     bloodhound-py:
       uv:
-        command: tool install git+https://github.com/dirkjanm/BloodHound.py@bloodhound-ce
+        ansible.builtin.command: tool install git+https://github.com/dirkjanm/BloodHound.py@bloodhound-ce
       tags:
         - standard
         - pentesting
     impacket:
       uv:
-        command: tool install git+https://github.com/fortra/impacket
+        ansible.builtin.command: tool install git+https://github.com/fortra/impacket
       description: Collection of Python classes for working with network protocols
       tags:
         - standard
         - pentesting
     secator:
       uv:
-        command: tool install git+https://github.com/freelabz/secator --with pip
+        ansible.builtin.command: tool install git+https://github.com/freelabz/secator --with pip
       description: The pentester's swiss knife
       tags:
         - standard
@@ -838,72 +816,68 @@ packages:
         - secator config set security.auto_install_commands false
     knock:
       uv:
-        command: tool install git+https://github.com/guelfoweb/knock
+        ansible.builtin.command: tool install git+https://github.com/guelfoweb/knock
       tags:
         - standard
         - pentesting
     certipy:
       uv:
-        command: tool install git+https://github.com/ly4k/Certipy
+        ansible.builtin.command: tool install git+https://github.com/ly4k/Certipy
       tags:
         - standard
         - pentesting
     dirsearch:
       uv:
-        command: tool install git+https://github.com/maurosoria/dirsearch
+        ansible.builtin.command: tool install git+https://github.com/maurosoria/dirsearch
       description: Web path discovery
       tags:
         - standard
         - pentesting
     wconv:
       uv:
-        command: tool install git+https://github.com/qtc-de/wconv
-      description:
-        Util to parse and convert Windows related formats into human readable
-        form
+        ansible.builtin.command: tool install git+https://github.com/qtc-de/wconv
+      description: Util to parse and convert Windows related formats into human readable form
       tags:
         - standard
         - pentesting
     ghauri:
       uv:
-        command: tool install git+https://github.com/r0oth3x49/ghauri
-      description:
-        Automates the process of detecting and exploiting SQL injection
-        security flaws
+        ansible.builtin.command: tool install git+https://github.com/r0oth3x49/ghauri
+      description: Automates the process of detecting and exploiting SQL injection security flaws
       tags:
         - standard
         - pentesting
         - exploit
     pypykatz:
       uv:
-        command: tool install git+https://github.com/skelsec/pypykatz
+        ansible.builtin.command: tool install git+https://github.com/skelsec/pypykatz
       description: Mimikatz implementation in pure Python
       tags:
         - standard
         - pentesting
     sshuttle:
       uv:
-        command: tool install git+https://github.com/sshuttle/sshuttle
+        ansible.builtin.command: tool install git+https://github.com/sshuttle/sshuttle
       description: Where transparent proxy meets VPN meets ssh
       tags:
         - standard
         - pentesting
     wapiti:
       uv:
-        command: tool install git+https://github.com/wapiti-scanner/wapiti
+        ansible.builtin.command: tool install git+https://github.com/wapiti-scanner/wapiti
       description: Wapiti is a web vulnerability scanner written in Python
       tags:
         - standard
         - pentesting
     sploitscan:
       uv:
-        command: tool install git+https://github.com/xaitax/SploitScan
+        ansible.builtin.command: tool install git+https://github.com/xaitax/SploitScan
       tags:
         - standard
         - pentesting
     pdtm:
       go:
-        command: install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
+        ansible.builtin.command: install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
       description: ProjectDiscovery Tool Manager to download and organize your tools
       tags:
         - standard
@@ -911,44 +885,42 @@ packages:
       post_install: pdtm -install alterx,dnsx,httpx,katana,nuclei,vulnx
     ghp:
       go:
-        command: install github.com/ByteSizedMarius/gohttpprobe/cmd/ghp@latest
+        ansible.builtin.command: install github.com/ByteSizedMarius/gohttpprobe/cmd/ghp@latest
       description: HTTP Methods Tester
       tags:
         - standard
         - pentesting
     puredns:
       go:
-        command: install github.com/d3mondev/puredns/v2@latest
+        ansible.builtin.command: install github.com/d3mondev/puredns/v2@latest
       description: Puredns is a fast domain resolver
       tags:
         - standard
         - pentesting
     ffufPostprocessing:
       go:
-        command: install github.com/dsecuredcom/ffufPostprocessing@latest
+        ansible.builtin.command: install github.com/dsecuredcom/ffufPostprocessing@latest
       description: Fuff report enhancement, better filtering
       tags:
         - standard
         - pentesting
     pencode:
       go:
-        command: install github.com/ffuf/pencode/cmd/pencode@latest
+        ansible.builtin.command: install github.com/ffuf/pencode/cmd/pencode@latest
       description: Complex payload encoder
       tags:
         - standard
         - pentesting
     cook:
       go:
-        command: install github.com/glitchedgitz/cook/v2/cmd/cook@latest
-      description:
-        Wordlist generator, splitter, merger, finder, saver, create words
-        permutation
+        ansible.builtin.command: install github.com/glitchedgitz/cook/v2/cmd/cook@latest
+      description: Wordlist generator, splitter, merger, finder, saver, create words permutation
       tags:
         - standard
         - pentesting
     gowitness:
       go:
-        command: install github.com/sensepost/gowitness@latest
+        ansible.builtin.command: install github.com/sensepost/gowitness@latest
       description: It's a website screenshot utility written in Golang
       tags:
         - standard
@@ -957,16 +929,14 @@ packages:
       cargo:
         name: filessh
         locked: true
-      description:
-        A TUI-based file explorer for SSH servers (reconsider when yazi#611
-        has been merged)
+      description: A TUI-based file explorer for SSH servers (reconsider when yazi#611 has been merged)
       tags:
         - standard
         - pentesting
     medusa:
       native:
-        apt: medusa
-        dnf: medusa
+        ansible.builtin.apt: medusa
+        ansible.builtin.dnf: medusa
         yay: medusa
         paru: medusa
       description: Medusa Parallel Network Login Auditor
@@ -976,8 +946,8 @@ packages:
         - credential
     whatweb:
       native:
-        apt: whatweb
-        dnf: whatweb
+        ansible.builtin.apt: whatweb
+        ansible.builtin.dnf: whatweb
         yay: whatweb
         paru: whatweb
         skip_on:
@@ -1012,9 +982,7 @@ packages:
     jc:
       brew:
         name: jc
-      description:
-        Serializes the output of command-line tools to structured JSON
-        output
+      description: Serializes the output of command-line tools to structured JSON output
       tags:
         - standard
         - data
@@ -1065,9 +1033,7 @@ packages:
     yq:
       brew:
         name: yq
-      description:
-        Process YAML, JSON, XML, CSV and properties documents from the
-        CLI
+      description: Process YAML, JSON, XML, CSV and properties documents from the CLI
       tags:
         - data
         - core
@@ -1158,9 +1124,7 @@ packages:
     t-rec:
       brew:
         name: t-rec
-      description:
-        Blazingly fast terminal recorder that generates animated gif images
-        for the web
+      description: Blazingly fast terminal recorder that generates animated gif images for the web
       tags:
         - standard
         - misc
@@ -1175,7 +1139,7 @@ packages:
   cheatsheets:
     arsenal-cli:
       uv:
-        command: tool install arsenal-cli
+        ansible.builtin.command: tool install arsenal-cli
       tags:
         - standard
         - misc

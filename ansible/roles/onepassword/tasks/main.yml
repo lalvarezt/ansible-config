@@ -2,22 +2,22 @@
 # Main task file for 1Password installation
 
 - name: Check if 1Password CLI is already installed
-  command: which op
+  ansible.builtin.command: which op
   register: op_check
   failed_when: false
   changed_when: false
 
 - name: Include distro-specific 1Password installation
-  include_tasks: "{{ ansible_distribution | lower }}.yml"
+  ansible.builtin.include_tasks: "{{ ansible_distribution | lower }}.yml"
   when:
     - op_check.rc != 0
     - ansible_distribution | lower in ['ubuntu', 'fedora', 'archlinux']
 
 - name: Verify 1Password CLI installation
-  command: op --version
+  ansible.builtin.command: op --version
   register: op_version
   changed_when: false
 
 - name: Display 1Password CLI version
-  debug:
+  ansible.builtin.debug:
     msg: "1Password CLI version: {{ op_version.stdout }}"

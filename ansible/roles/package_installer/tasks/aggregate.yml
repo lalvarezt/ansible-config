@@ -4,7 +4,7 @@
 # Output: Lists grouped by method (brew_packages, apt_packages, etc.)
 
 - name: Initialize package lists
-  set_fact:
+  ansible.builtin.set_fact:
     brew_packages: []
     apt_packages: []
     dnf_packages: []
@@ -17,7 +17,7 @@
     post_install_tasks: []
 
 - name: Aggregate packages by installation method
-  set_fact:
+  ansible.builtin.set_fact:
     brew_packages: >-
       {{ brew_packages + [item.value.brew.name]
          if item.value.brew is defined and _passes_filter else brew_packages }}

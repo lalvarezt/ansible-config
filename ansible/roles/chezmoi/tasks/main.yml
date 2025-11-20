@@ -2,7 +2,7 @@
 # Chezmoi initialization and application (FINAL CONFIG)
 
 - name: Check if chezmoi is installed
-  command: which chezmoi
+  ansible.builtin.command: which chezmoi
   register: chezmoi_check
   failed_when: false
   changed_when: false
@@ -10,27 +10,30 @@
     PATH: "{{ ansible_path }}"
 
 - name: Install chezmoi via Homebrew (if not present)
-  command: "{{ brew_bin }} install --quiet chezmoi"
+  ansible.builtin.command: "{{ brew_bin }} install --quiet chezmoi"
   environment:
     PATH: "{{ ansible_path }}"
   when: chezmoi_check.rc != 0
+  changed_when: true
 
 - name: Check if chezmoi is already initialized
-  stat:
+  ansible.builtin.stat:
     path: "{{ ansible_user_dir }}/.local/share/chezmoi/.git"
   register: chezmoi_init_check
 
 - name: Initialize chezmoi with SSH
-  command: chezmoi init {{ chezmoi_repo_url }}
+  ansible.builtin.command: chezmoi init {{ chezmoi_repo_url }}
   when: not chezmoi_init_check.stat.exists
   environment:
     PATH: "{{ ansible_path }}"
+  changed_when: true
 
 - name: Apply chezmoi configuration (FINAL CONFIG - overrides temp env)
-  command: chezmoi apply
+  ansible.builtin.command: chezmoi apply
   environment:
     PATH: "{{ ansible_path }}"
+  changed_when: true
 
 - name: Display chezmoi completion message
-  debug:
+  ansible.builtin.debug:
     msg: "Chezmoi has applied the final configuration. Any temporary environment variables set during installation are now superseded by chezmoi-managed configs."

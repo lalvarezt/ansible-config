@@ -2,7 +2,7 @@
 # Install packages via UV (batch loop)
 
 - name: Install packages via UV
-  command: "{{ uv_bin }} {{ item.command }}"
+  ansible.builtin.command: "{{ uv_bin }} {{ item.command }}"
   environment:
     PATH: "{{ ansible_path }}"
   loop: "{{ uv_packages }}"

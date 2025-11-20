@@ -2,7 +2,7 @@
 # Temporary environment setup for installation phase
 
 - name: Create temporary environment setup for bash
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ ansible_user_dir }}/.bashrc"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - TEMP ENV (will be replaced by chezmoi)"
     block: |
@@ -19,11 +19,12 @@
       # UV tools
       export PATH="$HOME/.local/bin:$PATH"
     create: true
+    mode: "0644"
 
 - name: Set unified PATH fact for Ansible tasks
-  set_fact:
+  ansible.builtin.set_fact:
     ansible_path: "{{ brew_prefix }}/bin:{{ ansible_user_dir }}/.cargo/bin:{{ ansible_user_dir }}/go/bin:{{ ansible_user_dir }}/.local/bin:{{ ansible_env.PATH }}"
 
 - name: Display configured PATH
-  debug:
+  ansible.builtin.debug:
     msg: "Unified PATH for package installation: {{ ansible_path }}"

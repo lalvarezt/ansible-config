@@ -2,7 +2,7 @@
 # Fedora-specific system prerequisites
 
 - name: Install system prerequisites for Fedora
-  dnf:
+  ansible.builtin.dnf:
     name: "{{ system_prereqs }}"
     state: present
   become: true

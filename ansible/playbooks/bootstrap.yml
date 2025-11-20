@@ -8,7 +8,7 @@
 
   tasks:
     - name: Display bootstrap information
-      debug:
+      ansible.builtin.debug:
         msg: "Starting bootstrap on {{ ansible_distribution }} {{ ansible_distribution_version }}"
 
 - import_playbook: 00-prereqs.yml

@@ -2,7 +2,7 @@
 # Arch Linux-specific 1Password CLI installation
 
 - name: Detect available package manager for Arch
-  shell: |
+  ansible.builtin.shell: |
     if command -v yay >/dev/null 2>&1; then
       echo "yay"
     elif command -v paru >/dev/null 2>&1; then
@@ -14,14 +14,16 @@
   changed_when: false
 
 - name: Install 1Password CLI via yay
-  command: yay -S --noconfirm 1password-cli
+  ansible.builtin.command: yay -S --noconfirm 1password-cli
   when: arch_pkg_mgr.stdout == "yay"
+  changed_when: true
 
 - name: Install 1Password CLI via paru
-  command: paru -S --noconfirm 1password-cli
+  ansible.builtin.command: paru -S --noconfirm 1password-cli
   when: arch_pkg_mgr.stdout == "paru"
+  changed_when: true
 
 - name: Fail if no AUR helper is available
-  fail:
+  ansible.builtin.fail:
     msg: "1Password CLI requires an AUR helper (yay or paru) to be installed on Arch Linux"
   when: arch_pkg_mgr.stdout == "none"

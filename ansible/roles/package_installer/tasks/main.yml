@@ -3,10 +3,10 @@
 # Input: package_dict (dictionary of packages), modules_filter (optional list of tags)
 
 - name: Aggregate packages by installation method
-  include_tasks: aggregate.yml
+  ansible.builtin.include_tasks: aggregate.yml
 
 - name: Detect native package manager
-  shell: |
+  ansible.builtin.shell: |
     if command -v yay >/dev/null 2>&1; then
       echo "yay"
     elif command -v paru >/dev/null 2>&1; then
@@ -25,57 +25,57 @@
   when: detected_pkg_manager is not defined
 
 - name: Set native package manager fact
-  set_fact:
+  ansible.builtin.set_fact:
     detected_pkg_manager: "{{ native_pkg_mgr_detect.stdout | default(detected_pkg_manager | default('none')) }}"
 
 # Install packages by method (bulk operations)
 - name: Install brew packages
-  include_tasks: brew.yml
+  ansible.builtin.include_tasks: brew.yml
   when: brew_packages | length > 0
 
 - name: Install apt packages
-  include_tasks: apt.yml
+  ansible.builtin.include_tasks: apt.yml
   when:
     - detected_pkg_manager == "apt"
     - apt_packages | length > 0
 
 - name: Install dnf packages
-  include_tasks: dnf.yml
+  ansible.builtin.include_tasks: dnf.yml
   when:
     - detected_pkg_manager == "dnf"
     - dnf_packages | length > 0
 
 - name: Install pacman packages
-  include_tasks: pacman.yml
+  ansible.builtin.include_tasks: pacman.yml
   when:
     - detected_pkg_manager == "pacman"
     - pacman_packages | length > 0
 
 - name: Install yay packages
-  include_tasks: yay.yml
+  ansible.builtin.include_tasks: yay.yml
   when:
     - detected_pkg_manager == "yay"
     - yay_packages | length > 0
 
 - name: Install paru packages
-  include_tasks: paru.yml
+  ansible.builtin.include_tasks: paru.yml
   when:
     - detected_pkg_manager == "paru"
     - paru_packages | length > 0
 
 - name: Install uv packages
-  include_tasks: uv.yml
+  ansible.builtin.include_tasks: uv.yml
   when: uv_packages | length > 0
 
 - name: Install go packages
-  include_tasks: go.yml
+  ansible.builtin.include_tasks: go.yml
   when: go_packages | length > 0
 
 - name: Install cargo packages
-  include_tasks: cargo.yml
+  ansible.builtin.include_tasks: cargo.yml
   when: cargo_packages | length > 0
 
 # Run post-install commands
 - name: Run post-install commands
-  include_tasks: post_install.yml
+  ansible.builtin.include_tasks: post_install.yml
   when: post_install_tasks | length > 0

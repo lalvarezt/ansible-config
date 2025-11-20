@@ -2,55 +2,55 @@
 # SSH key management from 1Password
 
 - name: Check if user is logged into 1Password
-  command: op account list
+  ansible.builtin.command: op account list
   register: op_login_check
   failed_when: false
   changed_when: false
 
 - name: Ensure user is logged into 1Password
-  fail:
+  ansible.builtin.fail:
     msg: "Please log into 1Password first: eval $(op signin)"
   when: op_login_check.rc != 0
 
 - name: Ensure .ssh directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.ssh"
     state: directory
-    mode: '0700'
+    mode: "0700"
 
 - name: Retrieve SSH private key from 1Password
-  command: op read "op://Private/SSH Keys/id_ed25519"
+  ansible.builtin.command: op read "op://Private/SSH Keys/id_ed25519"
   register: ssh_private_key
   no_log: true
   changed_when: false
 
 - name: Retrieve SSH public key from 1Password
-  command: op read "op://Private/SSH Keys/id_ed25519.pub"
+  ansible.builtin.command: op read "op://Private/SSH Keys/id_ed25519.pub"
   register: ssh_public_key
   no_log: true
   changed_when: false
 
 - name: Write SSH private key
-  copy:
+  ansible.builtin.copy:
     content: "{{ ssh_private_key.stdout }}"
     dest: "{{ ansible_user_dir }}/.ssh/id_ed25519"
-    mode: '0600'
+    mode: "0600"
   no_log: true
 
 - name: Write SSH public key
-  copy:
+  ansible.builtin.copy:
     content: "{{ ssh_public_key.stdout }}"
     dest: "{{ ansible_user_dir }}/.ssh/id_ed25519.pub"
-    mode: '0644'
+    mode: "0644"
 
 - name: Set correct permissions on .ssh directory
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.ssh"
-    mode: '0700'
+    mode: "0700"
     recurse: false
 
 - name: Find all SSH private keys
-  find:
+  ansible.builtin.find:
     paths: "{{ ansible_user_dir }}/.ssh"
     patterns: "id_*"
     excludes: "*.pub"
@@ -58,61 +58,61 @@
   register: ssh_private_keys
 
 - name: Set correct permissions on SSH private keys
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
-    mode: '0600'
+    mode: "0600"
   loop: "{{ ssh_private_keys.files }}"
   loop_control:
     label: "{{ item.path | basename }}"
 
 - name: Find all SSH public keys
-  find:
+  ansible.builtin.find:
     paths: "{{ ansible_user_dir }}/.ssh"
     patterns: "*.pub"
     file_type: file
   register: ssh_public_keys
 
 - name: Set correct permissions on SSH public keys
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
-    mode: '0644'
+    mode: "0644"
   loop: "{{ ssh_public_keys.files }}"
   loop_control:
     label: "{{ item.path | basename }}"
 
 - name: Check if authorized_keys exists
-  stat:
+  ansible.builtin.stat:
     path: "{{ ansible_user_dir }}/.ssh/authorized_keys"
   register: authorized_keys_check
 
 - name: Set correct permissions on authorized_keys if exists
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.ssh/authorized_keys"
-    mode: '0644'
+    mode: "0644"
   when: authorized_keys_check.stat.exists
 
 - name: Check if known_hosts exists
-  stat:
+  ansible.builtin.stat:
     path: "{{ ansible_user_dir }}/.ssh/known_hosts"
   register: known_hosts_check
 
 - name: Set correct permissions on known_hosts if exists
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.ssh/known_hosts"
-    mode: '0644'
+    mode: "0644"
   when: known_hosts_check.stat.exists
 
 - name: Check if config exists
-  stat:
+  ansible.builtin.stat:
     path: "{{ ansible_user_dir }}/.ssh/config"
   register: config_check
 
 - name: Set correct permissions on config if exists
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.ssh/config"
-    mode: '0644'
+    mode: "0644"
   when: config_check.stat.exists
 
 - name: Display SSH setup completion
-  debug:
+  ansible.builtin.debug:
     msg: "SSH keys have been successfully retrieved from 1Password and configured"

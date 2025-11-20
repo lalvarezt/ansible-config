@@ -2,7 +2,7 @@
 # Run post-install commands for all packages
 
 - name: Run post-install commands
-  shell: "{{ _cmd }}"
+  ansible.builtin.command: "{{ _cmd }}"
   environment:
     PATH: "{{ ansible_path }}"
   loop: "{{ post_install_tasks }}"

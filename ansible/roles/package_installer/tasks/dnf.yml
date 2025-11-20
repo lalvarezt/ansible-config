@@ -2,11 +2,12 @@
 # Install packages via dnf (bulk)
 
 - name: Filter dnf packages (exclude skipped)
-  set_fact:
-    dnf_packages_filtered: "{{ dnf_packages | selectattr('skip_on', 'undefined') | map(attribute='name') | list + dnf_packages | rejectattr('skip_on', 'undefined') | rejectattr('skip_on', 'contains', 'dnf') | map(attribute='name') | list }}"
+  ansible.builtin.set_fact:
+    dnf_packages_filtered: "{{ dnf_packages | selectattr('skip_on', 'undefined') | map(attribute='name') | list + dnf_packages | rejectattr('skip_on', 'undefined')
+      | rejectattr('skip_on', 'contains', 'dnf') | map(attribute='name') | list }}"
 
 - name: Install packages via dnf
-  dnf:
+  ansible.builtin.dnf:
     name: "{{ dnf_packages_filtered }}"
     state: present
   become: true

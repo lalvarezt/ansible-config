@@ -3,7 +3,7 @@
 
 # Kitty - available in Fedora repos
 - name: Install kitty via dnf
-  dnf:
+  ansible.builtin.dnf:
     name: kitty
     state: present
   become: true
@@ -12,48 +12,45 @@
 
 # WezTerm - install via COPR (official method)
 - name: Check if wezterm is installed
-  command: which wezterm
+  ansible.builtin.command: which wezterm
   register: wezterm_check
   failed_when: false
   changed_when: false
 
 - name: Install WezTerm via COPR
+  when: wezterm_check.rc != 0
   block:
     - name: Enable WezTerm COPR repository
-      command: dnf copr enable -y wezfurlong/wezterm-nightly
+      ansible.builtin.command: dnf copr enable -y wezfurlong/wezterm-nightly
       become: true
+      changed_when: true
 
     - name: Install wezterm
-      dnf:
+      ansible.builtin.dnf:
         name: wezterm
         state: present
       become: true
-  when: wezterm_check.rc != 0
 
 # Ghostty - install via COPR
 - name: Check if ghostty is installed
-  command: which ghostty
+  ansible.builtin.command: which ghostty
   register: ghostty_check
   failed_when: false
   changed_when: false
 
 - name: Install Ghostty via COPR
+  when: ghostty_check.rc != 0
   block:
-    - name: Get Fedora version
-      command: rpm -E %fedora
-      register: fedora_version
-      changed_when: false
-
     - name: Add Ghostty COPR repository
-      get_url:
-        url: "https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-{{ fedora_version.stdout }}/scottames-ghostty-fedora-{{ fedora_version.stdout }}.repo"
+      ansible.builtin.get_url:
+        url: "https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-{{ ansible_distribution_major_version }}/scottames-ghostty-fedora-{{ ansible_distribution_major_version
+          }}.repo"
         dest: "/etc/yum.repos.d/ghostty.repo"
-        mode: '0644'
+        mode: "0644"
       become: true
 
     - name: Install ghostty
-      dnf:
+      ansible.builtin.dnf:
         name: ghostty
         state: present
       become: true
-  when: ghostty_check.rc != 0

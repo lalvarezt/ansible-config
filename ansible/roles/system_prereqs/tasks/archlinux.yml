@@ -2,7 +2,7 @@
 # Arch Linux-specific system prerequisites
 
 - name: Detect available package manager for Arch
-  shell: |
+  ansible.builtin.shell: |
     if command -v yay >/dev/null 2>&1; then
       echo "yay"
     elif command -v paru >/dev/null 2>&1; then
@@ -14,11 +14,11 @@
   changed_when: false
 
 - name: Set Arch package manager fact
-  set_fact:
+  ansible.builtin.set_fact:
     arch_package_manager: "{{ arch_pkg_mgr.stdout }}"
 
 - name: Check installed packages (yay)
-  shell: yay -Q {{ item }} 2>/dev/null
+  ansible.builtin.shell: yay -Q {{ item }} 2>/dev/null
   loop: "{{ system_prereqs }}"
   register: yay_pkg_check
   failed_when: false
@@ -26,7 +26,7 @@
   when: arch_package_manager == "yay"
 
 - name: Install system prerequisites via yay
-  command: "yay -S --noconfirm --needed {{ item.item }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed {{ item.item }}"
   loop: "{{ yay_pkg_check.results }}"
   loop_control:
     label: "{{ item.item }}"
@@ -37,7 +37,7 @@
   changed_when: yay_install.rc == 0
 
 - name: Check installed packages (paru)
-  shell: paru -Q {{ item }} 2>/dev/null
+  ansible.builtin.shell: paru -Q {{ item }} 2>/dev/null
   loop: "{{ system_prereqs }}"
   register: paru_pkg_check
   failed_when: false
@@ -45,7 +45,7 @@
   when: arch_package_manager == "paru"
 
 - name: Install system prerequisites via paru
-  command: "paru -S --noconfirm --needed {{ item.item }}"
+  ansible.builtin.command: "paru -S --noconfirm --needed {{ item.item }}"
   loop: "{{ paru_pkg_check.results }}"
   loop_control:
     label: "{{ item.item }}"
@@ -56,7 +56,7 @@
   changed_when: paru_install.rc == 0
 
 - name: Install system prerequisites via pacman
-  pacman:
+  community.general.pacman:
     name: "{{ system_prereqs }}"
     state: present
   become: true
