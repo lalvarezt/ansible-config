@@ -37,10 +37,10 @@
       {{ paru_packages + [{'name': item.value.native.paru | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
          if item.value.native is defined and item.value.native.paru is defined and _passes_filter else paru_packages }}
     uv_packages: >-
-      {{ uv_packages + [{'name': item.key, 'command': item.value.uv.command}]
+      {{ uv_packages + [{'name': item.key, 'command': item.value.uv['ansible.builtin.command']}]
          if item.value.uv is defined and _passes_filter else uv_packages }}
     go_packages: >-
-      {{ go_packages + [{'name': item.key, 'command': item.value.go.command}]
+      {{ go_packages + [{'name': item.key, 'command': item.value.go['ansible.builtin.command']}]
          if item.value.go is defined and _passes_filter else go_packages }}
     cargo_packages: >-
       {{ cargo_packages + [{'name': item.value.cargo.name, 'locked': item.value.cargo.locked | default(false)}]
