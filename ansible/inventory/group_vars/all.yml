@@ -426,7 +426,7 @@ packages:
       tags:
         - standard
         - git
-    ansible.builtin.git:
+    git:
       brew:
         name: git
       description: Distributed revision control system
