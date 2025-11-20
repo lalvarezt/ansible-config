@@ -3,10 +3,13 @@
 
 - name: Install packages via Homebrew
   community.general.homebrew:
-    name: "{{ item }}"
+    name: "{{ brew_packages }}"
     state: present
     install_options: ["quiet"]
-  loop: "{{ brew_packages }}"
-  loop_control:
-    label: "{{ item }}"
+  register: brew_updates
   when: not ansible_check_mode
+
+- name: Show changed packages # noqa: no-handler
+  ansible.builtin.debug:
+    var: brew_updates.changed_pkgs
+  when: brew_updates.changed_pkgs | length > 0
