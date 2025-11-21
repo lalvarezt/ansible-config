@@ -36,7 +36,7 @@
 #   - Usage: Binary paths for language-specific package installation
 #
 # ansible_path (string: PATH)
-#   - Set by: env_setup role
+#   - Set by: lang_managers role
 #   - Source: Combines brew, cargo, go, and local bin paths
 #   - Usage: Passed to shell tasks via environment to find installed binaries
 #

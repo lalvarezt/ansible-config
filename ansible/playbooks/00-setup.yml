@@ -36,19 +36,12 @@
   roles:
     - role: homebrew
 
-- name: Install Language Package Managers
+- name: Install Language Package Managers and Setup Environment
   hosts: all
   gather_facts: true
   tags: [setup]
   roles:
     - role: lang_managers
-
-- name: Setup Temporary Environment Variables
-  hosts: all
-  gather_facts: true
-  tags: [setup]
-  roles:
-    - role: env_setup
 
 - name: Add Homebrew Taps
   hosts: all
