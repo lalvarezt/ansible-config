@@ -200,6 +200,23 @@ package_name:
 
 Available tags: `core` (essential), `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
 
+### Post-Install Commands
+
+Some packages need additional setup after installation. Use `post_install` to run commands automatically:
+
+```yaml
+secator:
+  uv:
+    ansible.builtin.command: tool install git+https://github.com/freelabz/secator --with pip
+  description: The pentester's swiss knife
+  tags:
+    - pentesting
+  post_install:
+    - secator install addons worker
+    - secator install addons redis
+    - secator config set celery.broker_url redis://127.0.0.1:6379/0
+```
+
 ### Changing Chezmoi Repository
 
 Edit `ansible/roles/chezmoi/defaults/main.yml` and update the `chezmoi_repo_url` variable.

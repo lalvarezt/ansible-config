@@ -1,6 +1,19 @@
 ---
-# Ansible Galaxy requirements
+# =============================================================================
+# ANSIBLE GALAXY REQUIREMENTS
+# =============================================================================
 # Install with: ansible-galaxy install -r requirements.yml
+#
+# ANSIBLE VERSION REQUIREMENTS
+# ----------------------------
+# Minimum supported version: 2.12
+# Recommended version: 2.15+
+#
+# This project uses features including:
+#   - module_defaults (2.12+)
+#   - ansible.builtin.* FQCN (2.10+)
+#   - blockinfile improvements (2.12+)
+# =============================================================================
 
 collections:
   # Required for homebrew, cargo modules

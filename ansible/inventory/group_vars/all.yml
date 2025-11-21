@@ -7,14 +7,38 @@
 #
 # ENVIRONMENT VARIABLES
 # ---------------------
-# brew_prefix: Homebrew installation directory
+# brew_prefix: Homebrew installation directory (default: /home/linuxbrew/.linuxbrew)
 # brew_bin: Path to brew binary
 # homebrew_taps: Additional Homebrew taps to install
 # uv_bin: Path to uv (Python package manager)
 # go_bin: Path to Go binary
 # cargo_bin: Path to Cargo binary
 # rustup_bin: Path to Rustup binary
-# ansible_path: Combined PATH for task execution
+# ansible_path: Combined PATH for task execution (includes brew, cargo, go, local bins)
+#
+# CUSTOM FACTS (Set During Playbook Execution)
+# --------------------------------------------
+# These facts are dynamically set by roles and used throughout the playbook:
+#
+# is_wsl (boolean)
+#   - Set by: system_prereqs role
+#   - Source: Detects WSL via /proc/version containing "microsoft"
+#   - Usage: Skip GUI apps in WSL, configure SSH agent bridge
+#
+# arch_package_manager (string: "yay" | "paru" | "pacman")
+#   - Set by: system_prereqs role (Arch Linux only)
+#   - Source: Detects available AUR helper or falls back to pacman
+#   - Usage: Determines which package manager to use for native packages
+#
+# uv_bin, go_bin, cargo_bin, rustup_bin (string: path)
+#   - Set by: lang_managers role
+#   - Source: Constructed from brew_prefix and ansible_user_dir
+#   - Usage: Binary paths for language-specific package installation
+#
+# ansible_path (string: PATH)
+#   - Set by: env_setup role
+#   - Source: Combines brew, cargo, go, and local bin paths
+#   - Usage: Passed to shell tasks via environment to find installed binaries
 #
 # PACKAGE DEFINITIONS
 # -------------------
@@ -26,7 +50,7 @@
 #   - native: Install via system package manager (apt, dnf, pacman, yay, paru)
 #   - description: Human-readable description
 #   - tags: List of tags for filtering
-#   - post_install: Commands to run after installation
+#   - post_install: Commands to run after installation (string or list of strings)
 #
 # TAG CONVENTIONS
 # ---------------

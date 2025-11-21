@@ -1,7 +1,26 @@
 ---
-# Chezmoi role defaults
-# These variables can be overridden in host_vars or group_vars
+# =============================================================================
+# CHEZMOI ROLE DEFAULTS
+# =============================================================================
+# Variables for Chezmoi dotfiles management.
+# Override these in host_vars or group_vars for your own configuration.
+#
+# VARIABLES
+# ---------
+# chezmoi_repo_url (string)
+#   - Description: Git repository URL containing your dotfiles
+#   - Default: "git@gitlab.com:lalvarezt/chezmoi.git"
+#   - Format: SSH URL (requires SSH keys configured via ssh_keys role)
+#   - Note: Must be accessible via SSH after 1Password authentication
+#
+# USAGE
+# -----
+# To use your own dotfiles:
+# 1. Override in host_vars/your-host.yml:
+#    chezmoi_repo_url: "git@github.com:your-username/dotfiles.git"
+#
+# 2. Or in group_vars/all.yml to apply globally
+# =============================================================================
 
-# Git repository URL for chezmoi dotfiles
-# Override this to use your own dotfiles repository
+# Git repository URL for chezmoi dotfiles (SSH format)
 chezmoi_repo_url: "git@gitlab.com:lalvarezt/chezmoi.git"

@@ -1,13 +1,33 @@
 ---
-# Homebrew role defaults
-# These variables can be overridden in host_vars or group_vars
+# =============================================================================
+# HOMEBREW ROLE DEFAULTS
+# =============================================================================
+# Variables for Homebrew installation and configuration on Linux.
+# Override these in host_vars or group_vars for custom installations.
+#
+# VARIABLES
+# ---------
+# brew_prefix (string)
+#   - Description: Root installation directory for Homebrew on Linux
+#   - Default: "/home/linuxbrew/.linuxbrew"
+#   - Note: This is the standard Homebrew location for Linux systems
+#
+# brew_bin (string)
+#   - Description: Full path to the brew executable
+#   - Default: "{{ brew_prefix }}/bin/brew"
+#   - Usage: Used to check if Homebrew is installed and run brew commands
+#
+# brew_install_script (string)
+#   - Description: URL of the official Homebrew installation script
+#   - Default: "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
+#   - Note: Downloaded and executed during initial Homebrew setup
+# =============================================================================
 
-# The installation prefix for Homebrew on Linux
-# Override in host_vars for custom installations
+# Root installation directory for Homebrew on Linux
 brew_prefix: "/home/linuxbrew/.linuxbrew"
 
-# Path to the brew binary
+# Full path to the brew executable
 brew_bin: "/home/linuxbrew/.linuxbrew/bin/brew"
 
-# URL for the Homebrew installation script
+# URL for the official Homebrew installation script
 brew_install_script: "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
