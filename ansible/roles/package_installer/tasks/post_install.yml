@@ -1,7 +1,7 @@
 ---
 # Run post-install commands for all packages
 
-- name: Run post-install commands
+- name: Run post-install commands # noqa: command-instead-of-shell
   ansible.builtin.shell: "{{ _cmd }}"
   environment:
     PATH: "{{ ansible_path }}"
