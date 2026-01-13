@@ -75,6 +75,10 @@
   ansible.builtin.include_tasks: cargo.yml
   when: cargo_packages | length > 0
 
+- name: Install npm packages
+  ansible.builtin.include_tasks: npm.yml
+  when: npm_packages | length > 0
+
 # Run post-install commands
 - name: Run post-install commands
   ansible.builtin.include_tasks: post_install.yml

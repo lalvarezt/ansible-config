@@ -14,6 +14,7 @@
     uv_packages: []
     go_packages: []
     cargo_packages: []
+    npm_packages: []
     post_install_tasks: []
 
 - name: Aggregate packages by installation method
@@ -45,6 +46,9 @@
     cargo_packages: >-
       {{ cargo_packages + [{'name': item.value.cargo.name, 'locked': item.value.cargo.locked | default(false)}]
          if item.value.cargo is defined and _passes_filter else cargo_packages }}
+    npm_packages: >-
+      {{ npm_packages + [item.value.npm.name]
+         if item.value.npm is defined and _passes_filter else npm_packages }}
     post_install_tasks: >-
       {{ post_install_tasks + [{'name': item.key, 'commands': item.value.post_install}]
          if item.value.post_install is defined and _passes_filter else post_install_tasks }}
@@ -58,6 +62,7 @@
          'uv' if item.value.uv is defined else
          'go' if item.value.go is defined else
          'cargo' if item.value.cargo is defined else
+         'npm' if item.value.npm is defined else
          'native' if item.value.native is defined else 'unknown' }}
     _pkg_tags: >-
       {{ (item.value.tags | default([]))
@@ -65,6 +70,7 @@
          + (['brew'] if item.value.brew is defined else [])
          + (['go'] if item.value.go is defined else [])
          + (['cargo'] if item.value.cargo is defined else [])
+         + (['npm'] if item.value.npm is defined else [])
          + (['native'] if item.value.native is defined else []) }}
     _passes_filter: >-
       {{ (modules_filter | default([]) | length == 0) or

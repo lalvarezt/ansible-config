@@ -1,0 +1,11 @@
+---
+# Install packages via npm
+
+- name: Install packages via npm
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+    state: present
+  loop: "{{ npm_packages }}"
+  register: npm_results
+  changed_when: npm_results.changed

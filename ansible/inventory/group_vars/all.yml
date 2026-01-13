@@ -47,6 +47,7 @@
 #   - uv: Install via uv/pip (command)
 #   - go: Install via go install (command)
 #   - cargo: Install via cargo (name, locked)
+#   - npm: Install via npm (name)
 #   - native: Install via system package manager (apt, dnf, pacman, yay, paru)
 #   - description: Human-readable description
 #   - tags: List of tags for filtering
@@ -55,6 +56,8 @@
 # TAG CONVENTIONS
 # ---------------
 #   - core: Essential tools installed by default
+#   - optional: Large/heavy tools not installed by default (lima, exegol, qemu)
+#   - ai: AI-related tools (claude-code, claude-monitor, ollama, opencode, gemini-cli)
 #   - Category tags: shell, files, development, git, pentesting, data, search, package-managers, misc, fonts
 # =============================================================================
 
@@ -107,6 +110,24 @@ packages:
     description: Plugin for encrypting files with age and PIV tokens such as YubiKeys
     tags:
       - development
+  aliasr:
+    uv:
+      ansible.builtin.command: tool install aliasr
+    description: Alias manager for the shell
+    tags:
+      - shell
+  ansible-lint:
+    uv:
+      ansible.builtin.command: tool install ansible-lint
+    description: Checks playbooks for practices and behavior that could be improved
+    tags:
+      - development
+  aoc-helper:
+    uv:
+      ansible.builtin.command: tool install aoc-helper
+    description: Advent of Code helper tool
+    tags:
+      - misc
   ansifilter:
     brew:
       name: ansifilter
@@ -197,6 +218,21 @@ packages:
       ansible.builtin.command: tool install git+https://github.com/ly4k/Certipy
     tags:
       - pentesting
+  claude-code:
+    npm:
+      name: "@anthropic-ai/claude-code"
+    description: Claude Code CLI - AI coding assistant
+    tags:
+      - development
+      - ai
+      - core
+  claude-monitor:
+    uv:
+      ansible.builtin.command: tool install claude-monitor
+    description: Monitor Claude Code usage and costs
+    tags:
+      - development
+      - ai
   chezmoi:
     brew:
       name: chezmoi
@@ -204,6 +240,12 @@ packages:
     tags:
       - git
       - core
+  cmdperf:
+    go:
+      ansible.builtin.command: install github.com/miklosn/cmdperf/cmd/cmdperf@latest
+    description: Command performance measurement tool
+    tags:
+      - development
   commitizen:
     brew:
       name: commitizen
@@ -254,6 +296,12 @@ packages:
     description: Web path discovery
     tags:
       - pentesting
+  diffoscope:
+    uv:
+      ansible.builtin.command: tool install diffoscope
+    description: In-depth comparison of files, archives, and directories
+    tags:
+      - development
   dive:
     brew:
       name: dive
@@ -284,12 +332,18 @@ packages:
     description: Easily install prebuilt binaries from GitHub
     tags:
       - package-managers
+  enum4linux-ng:
+    uv:
+      ansible.builtin.command: tool install enum4linux-ng
+    description: Next generation version of enum4linux
+    tags:
+      - pentesting
   exegol:
     uv:
       ansible.builtin.command: tool install exegol
     description: Community-driven hacking environment
     tags:
-      - pentesting
+      - optional
   eza:
     brew:
       name: eza
@@ -368,6 +422,13 @@ packages:
     tags:
       - search
       - core
+  gemini-cli:
+    npm:
+      name: "@google/gemini-cli"
+    description: Google Gemini CLI - AI assistant
+    tags:
+      - development
+      - ai
   gcc11:
     brew:
       name: gcc@11
@@ -490,10 +551,22 @@ packages:
     description: Simplest way of running and tracking processes in the background
     tags:
       - development
+  hashcat:
+    brew:
+      name: hashcat
+    description: World's fastest and most advanced password recovery utility
+    tags:
+      - pentesting
   hexyl:
     brew:
       name: hexyl
     description: Command-line hex viewer
+    tags:
+      - development
+  hl:
+    brew:
+      name: hl
+    description: Fast and powerful log viewer and processor
     tags:
       - development
   htop:
@@ -509,12 +582,30 @@ packages:
     description: User-friendly cURL replacement (command-line HTTP client)
     tags:
       - pentesting
+  htb-operator:
+    uv:
+      ansible.builtin.command: tool install htb-operator
+    description: HackTheBox operator tool
+    tags:
+      - pentesting
+  httpmethods:
+    uv:
+      ansible.builtin.command: tool install httpmethods
+    description: HTTP methods testing tool
+    tags:
+      - pentesting
   hydra:
     brew:
       name: hydra
     description: Network logon cracker which supports many services
     tags:
       - pentesting
+  hyperfine:
+    brew:
+      name: hyperfine
+    description: Command-line benchmarking tool
+    tags:
+      - development
   impacket:
     uv:
       ansible.builtin.command: tool install git+https://github.com/fortra/impacket
@@ -582,6 +673,18 @@ packages:
     tags:
       - git
       - core
+  lazyjj:
+    brew:
+      name: lazyjj
+    description: TUI for Jujutsu/jj
+    tags:
+      - git
+  lima:
+    brew:
+      name: lima
+    description: Linux virtual machines
+    tags:
+      - optional
   lsof:
     brew:
       name: lsof
@@ -614,6 +717,12 @@ packages:
     description: High-performance DNS stub resolver
     tags:
       - pentesting
+  mdq:
+    brew:
+      name: mdq
+    description: Like jq but for Markdown
+    tags:
+      - data
   medusa:
     native:
       ansible.builtin.apt: medusa
@@ -684,6 +793,20 @@ packages:
     description: Command-line Git information tool
     tags:
       - git
+  ollama:
+    brew:
+      name: ollama
+    description: Create, run, and share large language models (LLMs)
+    tags:
+      - development
+      - ai
+  opencode:
+    brew:
+      name: opencode
+    description: AI coding agent, built for the terminal
+    tags:
+      - development
+      - ai
   openjdk:
     brew:
       name: openjdk
@@ -775,6 +898,12 @@ packages:
     description: Tool for extracting credentials from Windows machines
     tags:
       - pentesting
+  qemu:
+    brew:
+      name: qemu
+    description: Generic machine emulator and virtualizer
+    tags:
+      - optional
   redis:
     brew:
       name: redis
@@ -796,6 +925,24 @@ packages:
     description: "Readline wrapper: adds readline support to tools that lack it"
     tags:
       - shell
+  ruby:
+    brew:
+      name: ruby
+    description: Powerful, clean, object-oriented scripting language
+    tags:
+      - development
+  ruff:
+    uv:
+      ansible.builtin.command: tool install ruff
+    description: An extremely fast Python linter and code formatter
+    tags:
+      - development
+  rust-analyzer:
+    brew:
+      name: rust-analyzer
+    description: Experimental Rust compiler front-end for IDEs
+    tags:
+      - development
   rustscan:
     brew:
       name: rustscan
@@ -820,12 +967,42 @@ packages:
     description: Rich git commit graph in your terminal
     tags:
       - git
+  sevenzip:
+    brew:
+      name: sevenzip
+    description: 7-Zip is a file archiver with a high compression ratio
+    tags:
+      - misc
+  shfmt:
+    brew:
+      name: shfmt
+    description: Autoformat shell script source code
+    tags:
+      - development
   sigrs:
     brew:
       name: sigrs
     description: Interactive grep
     tags:
       - search
+  sj:
+    go:
+      ansible.builtin.command: install github.com/BishopFox/sj@latest
+    description: JSON stream parser for BishopFox
+    tags:
+      - data
+  smbclientng:
+    uv:
+      ansible.builtin.command: tool install smbclientng
+    description: SMB client with modern features
+    tags:
+      - pentesting
+  smtp-user-enum:
+    uv:
+      ansible.builtin.command: tool install smtp-user-enum
+    description: SMTP user enumeration tool
+    tags:
+      - pentesting
   socat:
     brew:
       name: socat
@@ -857,6 +1034,12 @@ packages:
     tags:
       - shell
       - core
+  ssh-audit:
+    brew:
+      name: ssh-audit
+    description: SSH server & client auditing
+    tags:
+      - pentesting
   stew:
     brew:
       name: stew
@@ -923,6 +1106,18 @@ packages:
     description: Find leaked credentials
     tags:
       - pentesting
+  try:
+    brew:
+      name: try
+    description: Fresh directories for every vibe - lightweight experiments for people with ADHD
+    tags:
+      - development
+  ty:
+    uv:
+      ansible.builtin.command: tool install ty
+    description: Type checker for Python
+    tags:
+      - development
   uv:
     brew:
       name: uv
@@ -999,6 +1194,12 @@ packages:
     tags:
       - files
       - core
+  yamllint:
+    uv:
+      ansible.builtin.command: tool install yamllint
+    description: Linter for YAML files
+    tags:
+      - development
   yq:
     brew:
       name: yq
@@ -1025,3 +1226,9 @@ packages:
     tags:
       - shell
       - core
+  zsh:
+    brew:
+      name: zsh
+    description: UNIX shell (command interpreter)
+    tags:
+      - shell
