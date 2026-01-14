@@ -70,6 +70,7 @@ brew_bin: /home/linuxbrew/.linuxbrew/bin/brew
 # Additional Homebrew taps for specialized packages
 homebrew_taps:
   - abdfnx/tap
+  - arimxyer/tap
   - marwanhawari/tap
   - nao1215/tap
   - skalt/git-cc
@@ -110,6 +111,13 @@ packages:
     description: Plugin for encrypting files with age and PIV tokens such as YubiKeys
     tags:
       - development
+  aic:
+    brew:
+      name: arimxyer/tap/aic
+    description: Fetch the latest changelogs for popular AI coding assistants
+    tags:
+      - ai
+      - core
   aliasr:
     uv:
       ansible.builtin.command: tool install aliasr
