@@ -841,7 +841,7 @@ packages:
       - pentesting
   penelope:
     uv:
-      ansible.builtin.command: tool install git+https://github.com/brightio/penelope
+      ansible.builtin.command: tool install penelope-shell-handler --from git+https://github.com/brightio/penelope
     description: Powerful shell handler built as a modern netcat replacement
     tags:
       - pentesting
