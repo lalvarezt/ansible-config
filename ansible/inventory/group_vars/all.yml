@@ -92,7 +92,8 @@ cargo_bin: "{{ ansible_user_dir }}/.cargo/bin/cargo"
 rustup_bin: "{{ ansible_user_dir }}/.cargo/bin/rustup"
 
 # Combined PATH for Ansible task execution
-ansible_path: /home/linuxbrew/.linuxbrew/bin:{{ ansible_user_dir }}/.cargo/bin:{{ ansible_user_dir }}/go/bin:{{ ansible_user_dir }}/.local/bin:{{
+ansible_path:
+  /home/linuxbrew/.linuxbrew/bin:{{ ansible_user_dir }}/.cargo/bin:{{ ansible_user_dir }}/go/bin:{{ ansible_user_dir }}/.local/bin:{{
   ansible_env.PATH }}
 
 # =============================================================================
@@ -186,6 +187,7 @@ packages:
     description: Implementation of the DNS protocols (dig)
     tags:
       - pentesting
+      - core
   bloodhound-py:
     uv:
       ansible.builtin.command: tool install git+https://github.com/dirkjanm/BloodHound.py@bloodhound-ce
@@ -278,6 +280,7 @@ packages:
       name: curlie
     description: Power of curl, ease of use of httpie
     tags:
+      - development
       - pentesting
   detox:
     brew:
@@ -285,6 +288,12 @@ packages:
     description: Utility to replace problematic characters in filenames
     tags:
       - development
+  devbox:
+    post_install: curl -fsSL https://get.jetify.com/devbox | bash
+    description: Instant, easy, and predictable development environments
+    tags:
+      - development
+      - package-managers
   difftastic:
     brew:
       name: difftastic
@@ -315,6 +324,7 @@ packages:
       name: dive
     description: Tool for exploring each layer in a docker image
     tags:
+      - development
       - misc
   dnsrecon:
     uv:
@@ -552,6 +562,7 @@ packages:
       name: gup
     description: Update binaries installed by "go install"
     tags:
+      - development
       - package-managers
   hapless:
     uv:
@@ -577,6 +588,7 @@ packages:
     description: Fast and powerful log viewer and processor
     tags:
       - development
+      - core
   htop:
     brew:
       name: htop
@@ -589,6 +601,7 @@ packages:
       name: httpie
     description: User-friendly cURL replacement (command-line HTTP client)
     tags:
+      - development
       - pentesting
   htb-operator:
     uv:
@@ -788,6 +801,7 @@ packages:
     description: Port scanning utility for large networks
     tags:
       - pentesting
+      - core
   node:
     brew:
       name: node
@@ -870,6 +884,7 @@ packages:
       name: posting
     description: Modern API client that lives in your terminal
     tags:
+      - development
       - pentesting
   proxychains-ng:
     brew:
@@ -1011,6 +1026,11 @@ packages:
     description: SMTP user enumeration tool
     tags:
       - pentesting
+  soar:
+    post_install: curl -fsSL https://raw.githubusercontent.com/pkgforge/soar/main/install.sh | sh
+    description: Fast, modern, distro-independent package manager for static binaries and portable formats
+    tags:
+      - package-managers
   socat:
     brew:
       name: socat
@@ -1089,6 +1109,7 @@ packages:
     description: Terminal multiplexer
     tags:
       - shell
+      - core
   tokei:
     brew:
       name: tokei
@@ -1194,6 +1215,7 @@ packages:
       name: xh
     description: Friendly and fast tool for sending HTTP requests
     tags:
+      - development
       - pentesting
   yazi:
     brew:
@@ -1240,3 +1262,4 @@ packages:
     description: UNIX shell (command interpreter)
     tags:
       - shell
+      - core
