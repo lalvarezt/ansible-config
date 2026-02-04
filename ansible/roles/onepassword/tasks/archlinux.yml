@@ -14,12 +14,12 @@
   changed_when: false
 
 - name: Install 1Password CLI via yay
-  ansible.builtin.command: yay -S --noconfirm 1password-cli
+  ansible.builtin.command: yay -S --noconfirm --sudoloop 1password-cli
   when: arch_pkg_mgr.stdout == "yay"
   changed_when: true
 
 - name: Install 1Password CLI via paru
-  ansible.builtin.command: paru -S --noconfirm 1password-cli
+  ansible.builtin.command: paru -S --noconfirm --sudoloop 1password-cli
   when: arch_pkg_mgr.stdout == "paru"
   changed_when: true
 

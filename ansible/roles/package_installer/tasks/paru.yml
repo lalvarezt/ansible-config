@@ -7,6 +7,6 @@
       | rejectattr('skip_on', 'contains', 'paru') | map(attribute='name') | list }}"
 
 - name: Install packages via paru
-  ansible.builtin.command: "paru -S --noconfirm --needed {{ paru_packages_filtered | join(' ') }}"
+  ansible.builtin.command: "paru -S --noconfirm --needed --sudoloop {{ paru_packages_filtered | join(' ') }}"
   when: paru_packages_filtered | length > 0
   changed_when: true

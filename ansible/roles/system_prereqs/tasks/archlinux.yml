@@ -26,7 +26,7 @@
   when: arch_package_manager == "yay"
 
 - name: Install system prerequisites via yay
-  ansible.builtin.command: "yay -S --noconfirm --needed {{ item.item }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed --sudoloop {{ item.item }}"
   loop: "{{ yay_pkg_check.results }}"
   loop_control:
     label: "{{ item.item }}"
@@ -45,7 +45,7 @@
   when: arch_package_manager == "paru"
 
 - name: Install system prerequisites via paru
-  ansible.builtin.command: "paru -S --noconfirm --needed {{ item.item }}"
+  ansible.builtin.command: "paru -S --noconfirm --needed --sudoloop {{ item.item }}"
   loop: "{{ paru_pkg_check.results }}"
   loop_control:
     label: "{{ item.item }}"

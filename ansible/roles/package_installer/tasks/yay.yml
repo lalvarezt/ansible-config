@@ -7,6 +7,6 @@
       | rejectattr('skip_on', 'contains', 'yay') | map(attribute='name') | list }}"
 
 - name: Install packages via yay
-  ansible.builtin.command: "yay -S --noconfirm --needed {{ yay_packages_filtered | join(' ') }}"
+  ansible.builtin.command: "yay -S --noconfirm --needed --sudoloop {{ yay_packages_filtered | join(' ') }}"
   when: yay_packages_filtered | length > 0
   changed_when: true
