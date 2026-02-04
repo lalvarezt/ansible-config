@@ -9,8 +9,6 @@
   ansible.builtin.shell: |
     if command -v yay >/dev/null 2>&1; then
       echo "yay"
-    elif command -v paru >/dev/null 2>&1; then
-      echo "paru"
     elif command -v pacman >/dev/null 2>&1; then
       echo "pacman"
     elif command -v apt >/dev/null 2>&1; then
@@ -56,12 +54,6 @@
   when:
     - detected_pkg_manager == "yay"
     - yay_packages | length > 0
-
-- name: Install paru packages
-  ansible.builtin.include_tasks: paru.yml
-  when:
-    - detected_pkg_manager == "paru"
-    - paru_packages | length > 0
 
 - name: Install uv packages
   ansible.builtin.include_tasks: uv.yml

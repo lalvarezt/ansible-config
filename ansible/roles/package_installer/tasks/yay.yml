@@ -1,17 +1,13 @@
 ---
 # Install packages via yay (bulk)
 
-- name: Cache sudo credentials for yay
-  ansible.builtin.command: /usr/bin/true
-  become: true
-  changed_when: false
-
 - name: Filter yay packages (exclude skipped)
   ansible.builtin.set_fact:
     yay_packages_filtered: "{{ yay_packages | selectattr('skip_on', 'undefined') | map(attribute='name') | list + yay_packages | rejectattr('skip_on', 'undefined')
       | rejectattr('skip_on', 'contains', 'yay') | map(attribute='name') | list }}"
 
 - name: Install packages via yay
-  ansible.builtin.command: "yay -S --noconfirm --needed --sudoloop {{ yay_packages_filtered | join(' ') }}"
+  yay:
+    name: "{{ yay_packages_filtered }}"
+    state: present
   when: yay_packages_filtered | length > 0
-  changed_when: true

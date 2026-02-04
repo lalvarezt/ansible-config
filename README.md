@@ -7,7 +7,7 @@ shell utilities, and system packages across multiple distributions.
 
 - **Multi-distribution support**: `Ubuntu`, `Fedora`, `Arch Linux`, `EndeavourOS`, `WSL`
 - **Modular package management**: Filter by category, installer type, or functionality
-- **Multiple installers**: `Homebrew`, `apt`, `dnf`, `pacman`, `yay`, `paru`, `uv`, `cargo`, `go`
+- **Multiple installers**: `Homebrew`, `apt`, `dnf`, `pacman`, `yay`, `uv`, `cargo`, `go`
 - **1Password integration**: Secure SSH key retrieval during bootstrap
 - **Dotfiles via Chezmoi**: Final configuration applied from [chezmoi repository](https://gitlab.com/lalvarezt/chezmoi)
 

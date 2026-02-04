@@ -5,8 +5,6 @@
   ansible.builtin.shell: |
     if command -v yay >/dev/null 2>&1; then
       echo "yay"
-    elif command -v paru >/dev/null 2>&1; then
-      echo "paru"
     else
       echo "pacman"
     fi
@@ -17,49 +15,11 @@
   ansible.builtin.set_fact:
     arch_package_manager: "{{ arch_pkg_mgr.stdout }}"
 
-- name: Cache sudo credentials for AUR helper
-  ansible.builtin.command: /usr/bin/true
-  become: true
-  changed_when: false
-  when: arch_package_manager in ['yay', 'paru']
-
-- name: Check installed packages (yay)
-  ansible.builtin.shell: yay -Q {{ item }} 2>/dev/null
-  loop: "{{ system_prereqs }}"
-  register: yay_pkg_check
-  failed_when: false
-  changed_when: false
-  when: arch_package_manager == "yay"
-
 - name: Install system prerequisites via yay
-  ansible.builtin.command: "yay -S --noconfirm --needed --sudoloop {{ item.item }}"
-  loop: "{{ yay_pkg_check.results }}"
-  loop_control:
-    label: "{{ item.item }}"
-  when:
-    - arch_package_manager == "yay"
-    - item.rc != 0
-  register: yay_install
-  changed_when: yay_install.rc == 0
-
-- name: Check installed packages (paru)
-  ansible.builtin.shell: paru -Q {{ item }} 2>/dev/null
-  loop: "{{ system_prereqs }}"
-  register: paru_pkg_check
-  failed_when: false
-  changed_when: false
-  when: arch_package_manager == "paru"
-
-- name: Install system prerequisites via paru
-  ansible.builtin.command: "paru -S --noconfirm --needed --sudoloop {{ item.item }}"
-  loop: "{{ paru_pkg_check.results }}"
-  loop_control:
-    label: "{{ item.item }}"
-  when:
-    - arch_package_manager == "paru"
-    - item.rc != 0
-  register: paru_install
-  changed_when: paru_install.rc == 0
+  yay:
+    name: "{{ system_prereqs }}"
+    state: present
+  when: arch_package_manager == "yay"
 
 - name: Install system prerequisites via pacman
   community.general.pacman:

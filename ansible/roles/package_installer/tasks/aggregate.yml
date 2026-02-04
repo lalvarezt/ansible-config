@@ -10,7 +10,6 @@
     dnf_packages: []
     pacman_packages: []
     yay_packages: []
-    paru_packages: []
     uv_packages: []
     go_packages: []
     cargo_packages: []
@@ -34,9 +33,6 @@
     yay_packages: >-
       {{ yay_packages + [{'name': item.value.native.yay | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
          if item.value.native is defined and item.value.native.yay is defined and _passes_filter else yay_packages }}
-    paru_packages: >-
-      {{ paru_packages + [{'name': item.value.native.paru | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
-         if item.value.native is defined and item.value.native.paru is defined and _passes_filter else paru_packages }}
     uv_packages: >-
       {{ uv_packages + [{'name': item.key, 'command': item.value.uv['ansible.builtin.command']}]
          if item.value.uv is defined and _passes_filter else uv_packages }}

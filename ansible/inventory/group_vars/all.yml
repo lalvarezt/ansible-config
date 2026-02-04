@@ -25,7 +25,7 @@
 #   - Source: Detects WSL via /proc/version containing "microsoft"
 #   - Usage: Skip GUI apps in WSL, configure SSH agent bridge
 #
-# arch_package_manager (string: "yay" | "paru" | "pacman")
+# arch_package_manager (string: "yay" | "pacman")
 #   - Set by: system_prereqs role (Arch Linux only)
 #   - Source: Detects available AUR helper or falls back to pacman
 #   - Usage: Determines which package manager to use for native packages
@@ -48,7 +48,7 @@
 #   - go: Install via go install (command)
 #   - cargo: Install via cargo (name, locked)
 #   - npm: Install via npm (name)
-#   - native: Install via system package manager (apt, dnf, pacman, yay, paru)
+#   - native: Install via system package manager (apt, dnf, pacman, yay)
 #   - description: Human-readable description
 #   - tags: List of tags for filtering
 #   - post_install: Commands to run after installation (string or list of strings)
@@ -749,7 +749,6 @@ packages:
       ansible.builtin.apt: medusa
       ansible.builtin.dnf: medusa
       yay: medusa
-      paru: medusa
     description: Medusa Parallel Network Login Auditor
     tags:
       - pentesting
@@ -1191,7 +1190,6 @@ packages:
       ansible.builtin.apt: whatweb
       ansible.builtin.dnf: whatweb
       yay: whatweb
-      paru: whatweb
       skip_on:
         - pacman
     description: Next generation web scanner
