@@ -17,10 +17,6 @@
 #   - Default: "{{ brew_prefix }}/bin/brew"
 #   - Usage: Used to check if Homebrew is installed and run brew commands
 #
-# brew_install_script (string)
-#   - Description: URL of the official Homebrew installation script
-#   - Default: "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
-#   - Note: Downloaded and executed during initial Homebrew setup
 # =============================================================================
 
 # Root installation directory for Homebrew on Linux
@@ -28,6 +24,3 @@ brew_prefix: "/home/linuxbrew/.linuxbrew"
 
 # Full path to the brew executable
 brew_bin: "/home/linuxbrew/.linuxbrew/bin/brew"
-
-# URL for the official Homebrew installation script
-brew_install_script: "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"

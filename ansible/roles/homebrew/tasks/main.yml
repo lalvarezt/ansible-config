@@ -7,15 +7,24 @@
   register: homebrew_check
 
 - name: Install Homebrew
-  ansible.builtin.shell: |
-    set -o pipefail
-    /bin/bash -c "$(curl -fsSL {{ brew_install_script }})"
-  args:
-    executable: /bin/bash
   when: not homebrew_check.stat.exists
-  environment:
-    NONINTERACTIVE: "1"
-  changed_when: true
+  block:
+    - name: Create Homebrew directory
+      ansible.builtin.file:
+        path: "{{ brew_prefix }}"
+        state: directory
+        owner: "{{ ansible_facts['user_id'] }}"
+        group: "{{ ansible_facts['user_id'] }}"
+        mode: "0755"
+      become: true
+
+    - name: Download and extract Homebrew
+      ansible.builtin.shell: |
+        set -o pipefail
+        curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C {{ brew_prefix }}
+      args:
+        executable: /bin/bash
+      changed_when: true
 
 - name: Add Homebrew to bash profile (immediate config)
   ansible.builtin.blockinfile:
