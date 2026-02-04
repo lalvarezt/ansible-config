@@ -287,12 +287,6 @@ packages:
     description: Utility to replace problematic characters in filenames
     tags:
       - development
-  devbox:
-    post_install: curl -fsSL https://get.jetify.com/devbox | bash
-    description: Instant, easy, and predictable development environments
-    tags:
-      - development
-      - package-managers
   difftastic:
     brew:
       name: difftastic
