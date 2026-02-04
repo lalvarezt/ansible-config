@@ -6,6 +6,9 @@
     name: "{{ brew_packages }}"
     state: present
     install_options: ["quiet"]
+    path: "{{ brew_bin }}"
+  environment:
+    PATH: "{{ ansible_path | default(ansible_facts['env']['PATH']) }}"
   register: brew_updates
   when: not ansible_check_mode
 

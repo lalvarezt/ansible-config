@@ -8,11 +8,11 @@
   loop: "{{ uv_packages }}"
   loop_control:
     label: "{{ item.name }}"
-  register: uv_results
+  register: uv_result
   failed_when:
-    - uv_results.rc != 0
-    - "'Executable already exists' not in uv_results.stderr"
+    - uv_result.rc != 0
+    - "'Executable already exists' not in uv_result.stderr"
   changed_when:
-    - "'is already installed' not in uv_results.stderr"
-    - "uv_results.stderr is not regex('Installed \\d+ executable')"
-    - "'Executable already exists' not in uv_results.stderr"
+    - "'is already installed' not in uv_result.stderr"
+    - "uv_result.stderr is not regex('Installed \\d+ executable')"
+    - "'Executable already exists' not in uv_result.stderr"

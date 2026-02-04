@@ -5,6 +5,13 @@
 - name: Aggregate packages by installation method
   ansible.builtin.include_tasks: aggregate.yml
 
+- name: Use inventory-defined native package manager
+  ansible.builtin.set_fact:
+    detected_pkg_manager: "{{ arch_package_manager | default(native_pkg_manager) }}"
+  when:
+    - arch_package_manager is defined or native_pkg_manager is defined
+    - detected_pkg_manager is not defined
+
 - name: Detect native package manager
   ansible.builtin.shell: |
     if command -v yay >/dev/null 2>&1; then
@@ -24,7 +31,23 @@
 
 - name: Set native package manager fact
   ansible.builtin.set_fact:
-    detected_pkg_manager: "{{ native_pkg_mgr_detect.stdout | default(detected_pkg_manager | default('none')) }}"
+    detected_pkg_manager: >-
+      {{ native_pkg_mgr_detect.stdout
+         if native_pkg_mgr_detect is defined
+         and native_pkg_mgr_detect.stdout is defined
+         and native_pkg_mgr_detect.stdout | length > 0
+         else detected_pkg_manager | default('none') }}
+  when: detected_pkg_manager is not defined
+
+- name: Update native package cache (if defined)
+  ansible.builtin.command: "{{ native_update_command }}"
+  become: true
+  failed_when: false
+  changed_when: false
+  when:
+    - native_update_command is defined
+    - detected_pkg_manager in ["apt", "dnf"]
+    - not ansible_check_mode
 
 # Install packages by method (bulk operations)
 - name: Install brew packages

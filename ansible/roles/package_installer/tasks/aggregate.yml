@@ -22,16 +22,16 @@
       {{ brew_packages + [item.value.brew.name]
          if item.value.brew is defined and _passes_filter else brew_packages }}
     apt_packages: >-
-      {{ apt_packages + [{'name': item.value.native.apt | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+      {{ apt_packages + [{'name': item.value.native.apt | default(_native_default), 'skip_on': item.value.native.skip_on | default([])}]
          if item.value.native is defined and item.value.native.apt is defined and _passes_filter else apt_packages }}
     dnf_packages: >-
-      {{ dnf_packages + [{'name': item.value.native.dnf | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+      {{ dnf_packages + [{'name': item.value.native.dnf | default(_native_default), 'skip_on': item.value.native.skip_on | default([])}]
          if item.value.native is defined and item.value.native.dnf is defined and _passes_filter else dnf_packages }}
     pacman_packages: >-
-      {{ pacman_packages + [{'name': item.value.native.pacman | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+      {{ pacman_packages + [{'name': item.value.native.pacman | default(_native_default), 'skip_on': item.value.native.skip_on | default([])}]
          if item.value.native is defined and item.value.native.pacman is defined and _passes_filter else pacman_packages }}
     yay_packages: >-
-      {{ yay_packages + [{'name': item.value.native.yay | default(item.key), 'skip_on': item.value.native.skip_on | default([])}]
+      {{ yay_packages + [{'name': item.value.native.yay | default(_native_default), 'skip_on': item.value.native.skip_on | default([])}]
          if item.value.native is defined and item.value.native.yay is defined and _passes_filter else yay_packages }}
     uv_packages: >-
       {{ uv_packages + [{'name': item.key, 'command': item.value.uv['ansible.builtin.command']}]
@@ -60,6 +60,7 @@
          'cargo' if item.value.cargo is defined else
          'npm' if item.value.npm is defined else
          'native' if item.value.native is defined else 'unknown' }}
+    _native_default: "{{ (package_name_overrides | default({})).get(item.key, item.key) }}"
     _pkg_tags: >-
       {{ (item.value.tags | default([]))
          + (['uv'] if item.value.uv is defined else [])

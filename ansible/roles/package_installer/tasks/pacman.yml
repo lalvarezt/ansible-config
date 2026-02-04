@@ -3,8 +3,11 @@
 
 - name: Filter pacman packages (exclude skipped)
   ansible.builtin.set_fact:
-    pacman_packages_filtered: "{{ pacman_packages | selectattr('skip_on', 'undefined') | map(attribute='name') | list + pacman_packages | rejectattr('skip_on', 'undefined')
-      | rejectattr('skip_on', 'contains', 'pacman') | map(attribute='name') | list }}"
+    pacman_packages_filtered: >-
+      {{ pacman_packages
+         | rejectattr('skip_on', 'contains', 'pacman')
+         | map(attribute='name')
+         | list }}
 
 - name: Install packages via pacman
   community.general.pacman:
