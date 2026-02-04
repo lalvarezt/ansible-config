@@ -12,7 +12,7 @@
     state: present
   when: arch_pkg_mgr.stdout == "yay"
 
-- name: Fail if yay is not available
-  ansible.builtin.fail:
-    msg: "1Password CLI requires yay to be installed on Arch Linux"
+- name: Warn if yay is not available
+  ansible.builtin.debug:
+    msg: "1Password CLI requires yay on Arch Linux. Install yay and re-run the playbook."
   when: arch_pkg_mgr.stdout == "none"

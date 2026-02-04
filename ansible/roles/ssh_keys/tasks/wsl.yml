@@ -6,6 +6,12 @@
   ansible.builtin.set_fact:
     ssh_auth_sock: /tmp/1password-agent.sock
 
+- name: Ensure socat is installed
+  ansible.builtin.package:
+    name: socat
+    state: present
+  become: true
+
 - name: Ensure WSL interop is enabled
   community.general.ini_file:
     path: /etc/wsl.conf
@@ -57,10 +63,30 @@
       [Install]
       WantedBy=default.target
 
+- name: Check if systemd user services are available
+  block:
+    - name: Probe systemd user instance
+      ansible.builtin.systemd:
+        name: default.target
+        scope: user
+        state: started
+      check_mode: true
+      register: systemd_user_check
+      changed_when: false
+
+    - name: Mark systemd user services available
+      ansible.builtin.set_fact:
+        systemd_user_available: true
+  rescue:
+    - name: Mark systemd user services unavailable
+      ansible.builtin.set_fact:
+        systemd_user_available: false
+
 - name: Reload systemd user daemon
   ansible.builtin.systemd:
     daemon_reload: true
     scope: user
+  when: systemd_user_available | default(false)
 
 - name: Enable and start 1Password SSH agent bridge service
   ansible.builtin.systemd:
@@ -68,6 +94,12 @@
     enabled: true
     state: started
     scope: user
+  when: systemd_user_available | default(false)
+
+- name: Warn if systemd user services are unavailable
+  ansible.builtin.debug:
+    msg: "systemd user services are not available. Enable systemd in WSL to auto-start the SSH agent bridge."
+  when: not (systemd_user_available | default(false))
 
 - name: Check if SSH_AUTH_SOCK is already in profile
   ansible.builtin.lineinfile:

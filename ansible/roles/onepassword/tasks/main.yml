@@ -13,11 +13,24 @@
     - op_check.rc != 0
     - ansible_facts['distribution'] | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
 
+- name: Re-check 1Password CLI installation
+  ansible.builtin.command: which op
+  register: op_check_after
+  failed_when: false
+  changed_when: false
+
 - name: Verify 1Password CLI installation
   ansible.builtin.command: op --version
   register: op_version
   changed_when: false
+  when: op_check_after.rc == 0
 
 - name: Display 1Password CLI version
   ansible.builtin.debug:
     msg: "1Password CLI version: {{ op_version.stdout }}"
+  when: op_check_after.rc == 0
+
+- name: Warn if 1Password CLI is not installed
+  ansible.builtin.debug:
+    msg: "1Password CLI is not installed. Install it and re-run the playbook to enable SSH key retrieval."
+  when: op_check_after.rc != 0

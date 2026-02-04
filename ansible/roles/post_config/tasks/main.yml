@@ -45,14 +45,16 @@
       changed_when: false
 
     - name: Install neovim as editor alternative
-      ansible.builtin.command: sudo update-alternatives --install /usr/bin/editor editor "{{ nvim_check.stdout }}" 1
+      ansible.builtin.command: update-alternatives --install /usr/bin/editor editor "{{ nvim_check.stdout }}" 1
       when: "'nvim' not in current_editor.stdout"
       changed_when: true
+      become: true
 
     - name: Set neovim as default editor
-      ansible.builtin.command: sudo update-alternatives --set editor "{{ nvim_check.stdout }}"
+      ansible.builtin.command: update-alternatives --set editor "{{ nvim_check.stdout }}"
       when: "'nvim' not in current_editor.stdout"
       changed_when: true
+      become: true
 
 - name: Check if systemd is available
   ansible.builtin.command: systemctl --version
