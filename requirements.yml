@@ -18,4 +18,4 @@
 collections:
   # Required for homebrew, cargo modules
   - name: community.general
-    version: ">=7.0.0"
+    version: "7.0.0"

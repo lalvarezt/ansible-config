@@ -105,7 +105,9 @@ ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['s
 ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['pentesting']"
 ```
 
-Available tags: `core`, `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
+Available tags: `core`, `optional`, `ai`, `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
+
+Note: `ai` and `optional` are not part of the default module set. Include them explicitly with `--extra-vars "modules=[...]"`.
 
 List all available modules:
 
@@ -202,7 +204,7 @@ package_name:
     - core
 ```
 
-Available tags: `core` (essential), `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
+Available tags: `core` (essential), `optional`, `ai`, `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
 
 ### Post-Install Commands
 
