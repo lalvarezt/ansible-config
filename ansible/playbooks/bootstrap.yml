@@ -19,7 +19,7 @@
   tasks:
     - name: Display bootstrap information
       ansible.builtin.debug:
-        msg: "Starting bootstrap on {{ ansible_distribution }} {{ ansible_distribution_version }}"
+        msg: "Starting bootstrap on {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
 
 - import_playbook: 00-setup.yml
 - import_playbook: 01-packages.yml

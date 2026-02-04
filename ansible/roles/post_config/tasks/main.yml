@@ -62,7 +62,7 @@
 
 - name: Check if ghostty service exists
   ansible.builtin.stat:
-    path: "{{ ansible_user_dir }}/.config/systemd/user/app-com.mitchellh.ghostty.service"
+    path: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/app-com.mitchellh.ghostty.service"
   register: ghostty_service_check
   when:
     - systemd_check.rc == 0

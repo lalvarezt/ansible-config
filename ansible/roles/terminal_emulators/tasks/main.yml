@@ -12,10 +12,10 @@
   when: not (is_wsl | default(false))
   block:
     - name: Include distro-specific terminal emulator installation
-      ansible.builtin.include_tasks: "{{ ansible_distribution | lower }}.yml"
-      when: ansible_distribution | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
+      ansible.builtin.include_tasks: "{{ ansible_facts['distribution'] | lower }}.yml"
+      when: ansible_facts['distribution'] | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
 
     - name: Warn if distribution not supported
       ansible.builtin.debug:
-        msg: "Terminal emulator installation not configured for {{ ansible_distribution }}. Please install ghostty, wezterm, or kitty manually."
-      when: ansible_distribution | lower not in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
+        msg: "Terminal emulator installation not configured for {{ ansible_facts['distribution'] }}. Please install ghostty, wezterm, or kitty manually."
+      when: ansible_facts['distribution'] | lower not in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']

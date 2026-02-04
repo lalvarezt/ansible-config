@@ -8,10 +8,10 @@
   changed_when: false
 
 - name: Include distro-specific 1Password installation
-  ansible.builtin.include_tasks: "{{ ansible_distribution | lower }}.yml"
+  ansible.builtin.include_tasks: "{{ ansible_facts['distribution'] | lower }}.yml"
   when:
     - op_check.rc != 0
-    - ansible_distribution | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
+    - ansible_facts['distribution'] | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
 
 - name: Verify 1Password CLI installation
   ansible.builtin.command: op --version

@@ -19,7 +19,7 @@
 
 - name: Add Homebrew to bash profile (immediate config)
   ansible.builtin.blockinfile:
-    path: "{{ ansible_user_dir }}/.bashrc"
+    path: "{{ ansible_facts['user_dir'] }}/.bashrc"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - HOMEBREW"
     block: |
       eval "$({{ brew_prefix }}/bin/brew shellenv)"
@@ -37,14 +37,14 @@
 - name: Update Homebrew
   ansible.builtin.command: "{{ brew_bin }} update"
   environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   changed_when: false
 
 - name: Display Homebrew version
   ansible.builtin.command: "{{ brew_bin }} --version"
   register: brew_version
   environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   changed_when: false
 
 - name: Show Homebrew version

@@ -18,7 +18,7 @@
 
 - name: Check if chezmoi is already initialized
   ansible.builtin.stat:
-    path: "{{ ansible_user_dir }}/.local/share/chezmoi/.git"
+    path: "{{ ansible_facts['user_dir'] }}/.local/share/chezmoi/.git"
   register: chezmoi_init_check
 
 - name: Set chezmoi applied fact

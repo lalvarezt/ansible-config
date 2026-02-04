@@ -43,7 +43,7 @@
   block:
     - name: Add Ghostty COPR repository
       ansible.builtin.get_url:
-        url: "https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-{{ ansible_distribution_major_version }}/scottames-ghostty-fedora-{{ ansible_distribution_major_version
+        url: "https://copr.fedorainfracloud.org/coprs/scottames/ghostty/repo/fedora-{{ ansible_facts['distribution_major_version'] }}/scottames-ghostty-fedora-{{ ansible_facts['distribution_major_version']
           }}.repo"
         dest: "/etc/yum.repos.d/ghostty.repo"
         mode: "0644"

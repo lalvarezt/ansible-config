@@ -4,20 +4,20 @@
 - name: Install uv via Homebrew
   ansible.builtin.command: "{{ brew_bin }} install --quiet uv"
   environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   args:
     creates: "{{ brew_prefix }}/bin/uv"
 
 - name: Install go via Homebrew
   ansible.builtin.command: "{{ brew_bin }} install --quiet go"
   environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   args:
     creates: "{{ brew_prefix }}/bin/go"
 
 - name: Check if rustup is installed
   ansible.builtin.stat:
-    path: "{{ ansible_user_dir }}/.cargo/bin/rustup"
+    path: "{{ ansible_facts['user_dir'] }}/.cargo/bin/rustup"
   register: rustup_check
 
 - name: Install Rust via rustup
@@ -33,28 +33,28 @@
   ansible.builtin.set_fact:
     uv_bin: "{{ brew_prefix }}/bin/uv"
     go_bin: "{{ brew_prefix }}/bin/go"
-    cargo_bin: "{{ ansible_user_dir }}/.cargo/bin/cargo"
-    rustup_bin: "{{ ansible_user_dir }}/.cargo/bin/rustup"
+    cargo_bin: "{{ ansible_facts['user_dir'] }}/.cargo/bin/cargo"
+    rustup_bin: "{{ ansible_facts['user_dir'] }}/.cargo/bin/rustup"
 
 - name: Verify UV installation
   ansible.builtin.command: "{{ uv_bin }} --version"
   register: uv_version
   environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   changed_when: false
 
 - name: Verify Go installation
   ansible.builtin.command: "{{ go_bin }} version"
   register: go_version
   environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   changed_when: false
 
 - name: Verify Rust installation
   ansible.builtin.command: "{{ cargo_bin }} --version"
   register: cargo_version
   environment:
-    PATH: "{{ ansible_user_dir }}/.cargo/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ ansible_facts['user_dir'] }}/.cargo/bin:{{ ansible_facts['env']['PATH'] }}"
   changed_when: false
 
 - name: Display language manager versions
@@ -67,7 +67,7 @@
 # Environment setup (merged from env_setup role)
 - name: Create temporary environment setup for bash
   ansible.builtin.blockinfile:
-    path: "{{ ansible_user_dir }}/.bashrc"
+    path: "{{ ansible_facts['user_dir'] }}/.bashrc"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - TEMP ENV (will be replaced by chezmoi)"
     block: |
       # Temporary environment setup for installation phase
@@ -87,7 +87,7 @@
 
 - name: Set unified PATH fact for Ansible tasks
   ansible.builtin.set_fact:
-    ansible_path: "{{ brew_prefix }}/bin:{{ ansible_user_dir }}/.cargo/bin:{{ ansible_user_dir }}/go/bin:{{ ansible_user_dir }}/.local/bin:{{ ansible_env.PATH }}"
+    ansible_path: "{{ brew_prefix }}/bin:{{ ansible_facts['user_dir'] }}/.cargo/bin:{{ ansible_facts['user_dir'] }}/go/bin:{{ ansible_facts['user_dir'] }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
 
 - name: Display configured PATH
   ansible.builtin.debug:
