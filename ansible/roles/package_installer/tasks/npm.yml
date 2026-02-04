@@ -6,6 +6,8 @@
     name: "{{ item }}"
     global: true
     state: present
+  environment:
+    PATH: "{{ ansible_path }}"
   loop: "{{ npm_packages }}"
   register: npm_results
   changed_when: npm_results.changed

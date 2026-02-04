@@ -229,8 +229,7 @@ packages:
     tags:
       - pentesting
   claude-code:
-    npm:
-      name: "@anthropic-ai/claude-code"
+    post_install: curl -fsSL https://claude.ai/install.sh | bash
     description: Claude Code CLI - AI coding assistant
     tags:
       - development
