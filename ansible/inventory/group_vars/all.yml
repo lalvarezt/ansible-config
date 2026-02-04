@@ -1134,12 +1134,6 @@ packages:
     description: Find leaked credentials
     tags:
       - pentesting
-  try:
-    brew:
-      name: try
-    description: Fresh directories for every vibe - lightweight experiments for people with ADHD
-    tags:
-      - development
   ty:
     uv:
       ansible.builtin.command: tool install ty
