@@ -1,8 +1,8 @@
 ---
 # Native SSH key management from 1Password
 
-- name: Check if user is logged into 1Password
-  ansible.builtin.command: op account list
+- name: Check if user has an active 1Password session
+  ansible.builtin.command: op whoami
   register: op_login_check
   failed_when: false
   changed_when: false
