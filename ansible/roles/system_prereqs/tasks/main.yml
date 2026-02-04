@@ -13,7 +13,7 @@
 
 - name: Include distro-specific prerequisites
   ansible.builtin.include_tasks: "{{ ansible_distribution | lower }}.yml"
-  when: ansible_distribution | lower in ['ubuntu', 'fedora', 'archlinux']
+  when: ansible_distribution | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
 
 - name: Display system information
   ansible.builtin.debug:
