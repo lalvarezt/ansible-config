@@ -6,6 +6,16 @@
   hosts: all
   gather_facts: true
 
+  pre_tasks:
+    - name: Require host limit
+      ansible.builtin.fail:
+        msg: |
+          You must specify a target host with -l <hostname>.
+          Available hosts: work-laptop, pentest-laptop, home-desktop, work-desktop
+          Example: ansible-playbook playbooks/bootstrap.yml -l work-desktop -K
+      when: ansible_limit is not defined
+      run_once: true
+
   tasks:
     - name: Display bootstrap information
       ansible.builtin.debug:

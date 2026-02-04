@@ -1,6 +1,11 @@
 ---
 # Install packages via paru (bulk)
 
+- name: Cache sudo credentials for paru
+  ansible.builtin.command: /usr/bin/true
+  become: true
+  changed_when: false
+
 - name: Filter paru packages (exclude skipped)
   ansible.builtin.set_fact:
     paru_packages_filtered: "{{ paru_packages | selectattr('skip_on', 'undefined') | map(attribute='name') | list + paru_packages | rejectattr('skip_on', 'undefined')

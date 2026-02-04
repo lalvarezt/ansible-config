@@ -13,6 +13,12 @@
   register: arch_pkg_mgr
   changed_when: false
 
+- name: Cache sudo credentials for AUR helper
+  ansible.builtin.command: /usr/bin/true
+  become: true
+  changed_when: false
+  when: arch_pkg_mgr.stdout in ['yay', 'paru']
+
 - name: Install 1Password CLI via yay
   ansible.builtin.command: yay -S --noconfirm --sudoloop 1password-cli
   when: arch_pkg_mgr.stdout == "yay"

@@ -17,6 +17,12 @@
   ansible.builtin.set_fact:
     arch_package_manager: "{{ arch_pkg_mgr.stdout }}"
 
+- name: Cache sudo credentials for AUR helper
+  ansible.builtin.command: /usr/bin/true
+  become: true
+  changed_when: false
+  when: arch_package_manager in ['yay', 'paru']
+
 - name: Check installed packages (yay)
   ansible.builtin.shell: yay -Q {{ item }} 2>/dev/null
   loop: "{{ system_prereqs }}"

@@ -5,7 +5,7 @@ shell utilities, and system packages across multiple distributions.
 
 ## Features
 
-- **Multi-distribution support**: `Ubuntu`, `Fedora`, `Arch Linux`, `WSL`
+- **Multi-distribution support**: `Ubuntu`, `Fedora`, `Arch Linux`, `EndeavourOS`, `WSL`
 - **Modular package management**: Filter by category, installer type, or functionality
 - **Multiple installers**: `Homebrew`, `apt`, `dnf`, `pacman`, `yay`, `paru`, `uv`, `cargo`, `go`
 - **1Password integration**: Secure SSH key retrieval during bootstrap
@@ -43,8 +43,12 @@ eval $(op signin)
 
 ```bash
 cd ansible
-ansible-playbook playbooks/bootstrap.yml
+ansible-playbook playbooks/bootstrap.yml -l <hostname>
 ```
+
+Available hosts: `work-laptop`, `pentest-laptop`, `home-desktop`, `work-desktop`
+
+You will be prompted for your sudo password (become password).
 
 This will:
 
@@ -72,16 +76,16 @@ Use `--tags` or `--skip-tags` to control which playbooks run:
 
 ```bash
 # Full bootstrap
-ansible-playbook playbooks/bootstrap.yml
+ansible-playbook playbooks/bootstrap.yml -l <hostname>
 
 # Skip pentesting tools
-ansible-playbook playbooks/bootstrap.yml --skip-tags pentesting
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --skip-tags pentesting
 
 # Only install packages (skip setup and config)
-ansible-playbook playbooks/bootstrap.yml --tags packages,pentesting
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --tags packages,pentesting
 
 # Only run setup
-ansible-playbook playbooks/bootstrap.yml --tags setup
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --tags setup
 ```
 
 ## Filtering Packages
@@ -92,13 +96,13 @@ Use `--extra-vars "modules=[...]"` to filter which packages are installed by tag
 
 ```bash
 # Only core packages
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['core']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['core']"
 
 # Only shell tools
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['shell']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['shell']"
 
 # Only pentesting tools
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['pentesting']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['pentesting']"
 ```
 
 Available tags: `core`, `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
@@ -114,38 +118,38 @@ List all available modules:
 
 ```bash
 # Only brew packages
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['brew']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['brew']"
 
 # Only uv-installed packages
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['uv']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['uv']"
 
 # Only go packages
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['go']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['go']"
 
 # Only cargo packages
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['cargo']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['cargo']"
 
 # Only native packages (apt/dnf/pacman)
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['native']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['native']"
 ```
 
 ### Combined Filtering
 
 ```bash
 # Core development tools
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['development','core']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['development','core']"
 
 # Pentesting tools installed via go
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['pentesting','go']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['pentesting','go']"
 
 # Multiple categories (OR logic)
-ansible-playbook playbooks/bootstrap.yml --extra-vars "modules=['shell','files']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['shell','files']"
 ```
 
 ### Dry Run
 
 ```bash
-ansible-playbook playbooks/bootstrap.yml --check
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --check
 ```
 
 ## Project Structure
