@@ -7,58 +7,64 @@
   failed_when: false
   changed_when: false
 
-- name: Ensure user is logged into 1Password
-  ansible.builtin.fail:
-    msg: "Please log into 1Password first: eval $(op signin)"
+- name: Skip SSH key retrieval if not logged in
+  ansible.builtin.debug:
+    msg: |
+      1Password CLI is not signed in. SSH keys will not be configured.
+      To set up SSH keys, run: eval $(op signin)
+      Then re-run the playbook.
   when: op_login_check.rc != 0
 
-- name: Ensure .ssh directory exists
-  ansible.builtin.file:
-    path: "{{ ansible_facts['user_dir'] }}/.ssh"
-    state: directory
-    mode: "0700"
+- name: Retrieve and configure SSH keys from 1Password
+  when: op_login_check.rc == 0
+  block:
+    - name: Ensure .ssh directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] }}/.ssh"
+        state: directory
+        mode: "0700"
 
-- name: Retrieve SSH private key from 1Password
-  ansible.builtin.command: op read "op://Private/SSH Keys/id_ed25519"
-  register: ssh_private_key
-  no_log: true
-  changed_when: false
+    - name: Retrieve SSH private key from 1Password
+      ansible.builtin.command: op read "op://Private/SSH Keys/id_ed25519"
+      register: ssh_private_key
+      no_log: true
+      changed_when: false
 
-- name: Retrieve SSH public key from 1Password
-  ansible.builtin.command: op read "op://Private/SSH Keys/id_ed25519.pub"
-  register: ssh_public_key
-  no_log: true
-  changed_when: false
+    - name: Retrieve SSH public key from 1Password
+      ansible.builtin.command: op read "op://Private/SSH Keys/id_ed25519.pub"
+      register: ssh_public_key
+      no_log: true
+      changed_when: false
 
-- name: Write SSH private key
-  ansible.builtin.copy:
-    content: "{{ ssh_private_key.stdout }}"
-    dest: "{{ ansible_facts['user_dir'] }}/.ssh/id_ed25519"
-    mode: "0600"
-  no_log: true
+    - name: Write SSH private key
+      ansible.builtin.copy:
+        content: "{{ ssh_private_key.stdout }}"
+        dest: "{{ ansible_facts['user_dir'] }}/.ssh/id_ed25519"
+        mode: "0600"
+      no_log: true
 
-- name: Write SSH public key
-  ansible.builtin.copy:
-    content: "{{ ssh_public_key.stdout }}"
-    dest: "{{ ansible_facts['user_dir'] }}/.ssh/id_ed25519.pub"
-    mode: "0644"
+    - name: Write SSH public key
+      ansible.builtin.copy:
+        content: "{{ ssh_public_key.stdout }}"
+        dest: "{{ ansible_facts['user_dir'] }}/.ssh/id_ed25519.pub"
+        mode: "0644"
 
-- name: Find all files in .ssh directory
-  ansible.builtin.find:
-    paths: "{{ ansible_facts['user_dir'] }}/.ssh"
-    file_type: file
-  register: ssh_files
+    - name: Find all files in .ssh directory
+      ansible.builtin.find:
+        paths: "{{ ansible_facts['user_dir'] }}/.ssh"
+        file_type: file
+      register: ssh_files
 
-- name: Set correct permissions on SSH files
-  ansible.builtin.file:
-    path: "{{ item.path }}"
-    mode: >-
-      {{ '0600' if (item.path | basename) is match('^id_(?!.*\\.pub$).*')
-         else '0644' }}
-  loop: "{{ ssh_files.files }}"
-  loop_control:
-    label: "{{ item.path | basename }}"
+    - name: Set correct permissions on SSH files
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: >-
+          {{ '0600' if (item.path | basename) is match('^id_(?!.*\\.pub$).*')
+             else '0644' }}
+      loop: "{{ ssh_files.files }}"
+      loop_control:
+        label: "{{ item.path | basename }}"
 
-- name: Display SSH setup completion
-  ansible.builtin.debug:
-    msg: "SSH keys have been successfully retrieved from 1Password and configured"
+    - name: Display SSH setup completion
+      ansible.builtin.debug:
+        msg: "SSH keys have been successfully retrieved from 1Password and configured"
