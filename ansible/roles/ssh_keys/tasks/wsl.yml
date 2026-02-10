@@ -120,6 +120,20 @@
     create: true
     mode: "0644"
 
+- name: Check if fish shell config directory exists
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['user_dir'] }}/.config/fish/conf.d"
+  register: fish_confd_check
+
+- name: Add SSH_AUTH_SOCK to fish config
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['user_dir'] }}/.config/fish/conf.d/ssh-agent-bridge.fish"
+    mode: "0644"
+    content: |
+      # ssh agent bridge
+      set -gx SSH_AUTH_SOCK {{ ssh_auth_sock }}
+  when: fish_confd_check.stat.exists
+
 - name: Display WSL SSH agent bridge setup completion
   ansible.builtin.debug:
     msg: "WSL SSH agent bridge has been configured to use Windows 1Password"
