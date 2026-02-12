@@ -1214,6 +1214,13 @@ packages:
     tags:
       - files
       - core
+  yaml-language-server:
+    brew:
+      name: yaml-language-server
+    description: Language server for YAML files
+    tags:
+      - development
+      - core
   yamllint:
     uv:
       ansible.builtin.command: tool install yamllint
