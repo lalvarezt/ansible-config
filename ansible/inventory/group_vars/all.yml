@@ -967,6 +967,13 @@ packages:
     description: Powerful, clean, object-oriented scripting language
     tags:
       - development
+  ruby-lsp:
+    brew:
+      name: ruby-lsp
+    description: Language server for Ruby
+    tags:
+      - development
+      - lsp
   ruff:
     uv:
       ansible.builtin.command: tool install ruff
