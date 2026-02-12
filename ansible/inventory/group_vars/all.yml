@@ -399,6 +399,13 @@ packages:
     tags:
       - shell
       - core
+  fish-lsp:
+    brew:
+      name: fish-lsp
+    description: Language server for Fish shell scripts
+    tags:
+      - shell
+      - core
   fisher:
     brew:
       name: fisher
