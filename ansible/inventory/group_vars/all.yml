@@ -58,7 +58,7 @@
 #   - core: Essential tools installed by default
 #   - optional: Large/heavy tools not installed by default (lima, exegol, qemu)
 #   - ai: AI-related tools (claude-code, claude-monitor, ollama, opencode, gemini-cli)
-#   - Category tags: shell, files, development, git, pentesting, data, search, package-managers, misc, fonts
+#   - Category tags: shell, files, development, git, pentesting, data, search, package-managers, misc, fonts, lsp
 # =============================================================================
 
 # Homebrew installation prefix for Linux
@@ -178,6 +178,14 @@ packages:
     description: Clone of cat(1) with syntax highlighting and Git integration
     tags:
       - shell
+      - core
+  bash-language-server:
+    brew:
+      name: bash-language-server
+    description: Language server for Bash scripts
+    tags:
+      - shell
+      - lsp
       - core
   bind:
     brew:
@@ -405,6 +413,7 @@ packages:
     description: Language server for Fish shell scripts
     tags:
       - shell
+      - lsp
       - core
   fisher:
     brew:
@@ -543,6 +552,13 @@ packages:
     tags:
       - development
       - core
+  gopls:
+    brew:
+      name: gopls
+    description: Language server for Go
+    tags:
+      - development
+      - lsp
   gowitness:
     go:
       ansible.builtin.command: install github.com/sensepost/gowitness@latest
@@ -963,6 +979,7 @@ packages:
     description: Experimental Rust compiler front-end for IDEs
     tags:
       - development
+      - lsp
   rustscan:
     brew:
       name: rustscan
@@ -1220,6 +1237,7 @@ packages:
     description: Language server for YAML files
     tags:
       - development
+      - lsp
       - core
   yamllint:
     uv:
