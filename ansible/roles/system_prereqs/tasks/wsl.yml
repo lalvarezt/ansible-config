@@ -1,0 +1,61 @@
+---
+# WSL-specific system configuration
+
+- name: Configure plocate indexing for WSL
+  ansible.builtin.copy:
+    dest: "{{ (wsl_specific_config | default({})).plocate_config_path | default('/etc/updatedb.conf') }}"
+    mode: "0644"
+    content: |
+      PRUNE_BIND_MOUNTS="{{ (wsl_specific_config | default({})).plocate_prune_bind_mounts | default('no') }}"
+      # PRUNENAMES=".git .bzr .hg .svn"
+      PRUNEPATHS="{{ (wsl_specific_config | default({})).plocate_prune_paths | default('/tmp /mnt /var/spool /media /var/lib/os-prober /var/lib/ceph /home/.ecryptfs /var/lib/schroot') }}"
+      PRUNEFS="{{ (wsl_specific_config | default({})).plocate_prunefs | default('NFS afs autofs binfmt_misc ceph cgroup cgroup2 cifs coda configfs curlftpfs debugfs devfs devpts devtmpfs ecryptfs ftpfs fuse.ceph fuse.cryfs fuse.encfs fuse.glusterfs fuse.gocryptfs fuse.gvfsd-fuse fuse.mfs fuse.rclone fuse.rozofs fuse.sshfs fusectl fusesmb hugetlbfs iso9660 lustre lustre_lite mfs mqueue ncpfs nfs nfs4 ocfs ocfs2 proc pstore rpc_pipefs securityfs shfs smbfs sysfs tmpfs tracefs udf usbfs') }}"
+  become: true
+
+- name: Resolve /tmp/.X11-unix symlink target
+  ansible.builtin.command: readlink /tmp/.X11-unix
+  register: x11_unix_link
+  failed_when: false
+  changed_when: false
+  when: (wsl_specific_config | default({})).x11_fix_enabled | default(false)
+
+- name: Remove invalid /tmp/.X11-unix mapping
+  ansible.builtin.file:
+    path: /tmp/.X11-unix
+    state: absent
+  become: true
+  when:
+    - (wsl_specific_config | default({})).x11_fix_enabled | default(false)
+    - x11_unix_link.rc != 0 or x11_unix_link.stdout != '/mnt/wslg/.X11-unix'
+
+- name: Symlink WSLg X11 socket directory
+  ansible.builtin.file:
+    src: /mnt/wslg/.X11-unix
+    dest: /tmp/.X11-unix
+    state: link
+  become: true
+  when:
+    - (wsl_specific_config | default({})).x11_fix_enabled | default(false)
+    - x11_unix_link.rc != 0 or x11_unix_link.stdout != '/mnt/wslg/.X11-unix'
+
+- name: Check that X11 socket X0 exists
+  ansible.builtin.command: test -S /tmp/.X11-unix/X0
+  register: x11_socket_check
+  failed_when: false
+  changed_when: false
+  when: (wsl_specific_config | default({})).x11_fix_enabled | default(false)
+
+- name: Warn when DISPLAY is overridden
+  ansible.builtin.debug:
+    msg: "DISPLAY is {{ ansible_facts['env']['DISPLAY'] }} (expected :0 for WSLg)."
+  when:
+    - (wsl_specific_config | default({})).x11_fix_enabled | default(false)
+    - ansible_facts['env']['DISPLAY'] is defined
+    - ansible_facts['env']['DISPLAY'] != ':0'
+
+- name: Warn when WSLg X11 socket is unavailable
+  ansible.builtin.debug:
+    msg: "WSLg X11 socket /tmp/.X11-unix/X0 not found. Check /mnt/wslg/weston.log and WSLg status."
+  when:
+    - (wsl_specific_config | default({})).x11_fix_enabled | default(false)
+    - x11_socket_check.rc != 0

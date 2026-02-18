@@ -21,6 +21,10 @@
   ansible.builtin.include_tasks: "{{ system_prereqs_distro }}.yml"
   when: system_prereqs_distro in ['ubuntu', 'fedora', 'archlinux']
 
+- name: Apply WSL-specific system configuration
+  ansible.builtin.include_tasks: wsl.yml
+  when: is_wsl | bool
+
 - name: Display system information
   ansible.builtin.debug:
     msg: "Detected {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}, WSL: {{ is_wsl }}"
