@@ -11,9 +11,15 @@
   ansible.builtin.set_fact:
     is_wsl: "{{ wsl_check.rc == 0 }}"
 
+- name: Normalize distribution name for prerequisites
+  ansible.builtin.set_fact:
+    system_prereqs_distro: >-
+      {{ 'archlinux' if ansible_facts['distribution'] | lower == 'endeavouros'
+         else ansible_facts['distribution'] | lower }}
+
 - name: Include distro-specific prerequisites
-  ansible.builtin.include_tasks: "{{ ansible_facts['distribution'] | lower }}.yml"
-  when: ansible_facts['distribution'] | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
+  ansible.builtin.include_tasks: "{{ system_prereqs_distro }}.yml"
+  when: system_prereqs_distro in ['ubuntu', 'fedora', 'archlinux']
 
 - name: Display system information
   ansible.builtin.debug:

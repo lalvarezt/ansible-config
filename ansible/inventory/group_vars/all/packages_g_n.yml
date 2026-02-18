@@ -1,0 +1,377 @@
+---
+packages_g_n:
+  gcc11:
+    brew:
+      name: gcc@11
+    tags:
+    - development
+  gcc12:
+    brew:
+      name: gcc@12
+    tags:
+    - development
+  gdu:
+    brew:
+      name: gdu
+    description: Disk usage analyzer with console interface written in Go
+    tags:
+    - files
+  gemini-cli:
+    description: Google Gemini CLI - AI assistant
+    npm:
+      name: '@google/gemini-cli'
+    tags:
+    - development
+    - ai
+  gfold:
+    brew:
+      name: gfold
+    description: Help keep track of your Git repositories, written in Rust
+    tags:
+    - git
+  gh:
+    brew:
+      name: gh
+    description: GitHub command-line tool
+    tags:
+    - git
+    - core
+  ghauri:
+    description: Automates the process of detecting and exploiting SQL injection security flaws
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/r0oth3x49/ghauri
+  ghp:
+    description: HTTP Methods Tester
+    go:
+      ansible.builtin.command: install github.com/ByteSizedMarius/gohttpprobe/cmd/ghp@latest
+    tags:
+    - pentesting
+  git:
+    brew:
+      name: git
+    description: Distributed revision control system
+    tags:
+    - git
+    - core
+  git-cc:
+    brew:
+      name: git-cc
+    description: A git extension to help write conventional commits
+    tags:
+    - git
+  git-cliff:
+    brew:
+      name: git-cliff
+    description: Highly customizable changelog generator
+    tags:
+    - git
+  git-delta:
+    brew:
+      name: git-delta
+    description: Syntax-highlighting pager for git and diff output
+    tags:
+    - git
+    - core
+  git-dumper:
+    description: A tool to dump a git repository from a website
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/arthaud/git-dumper
+  gitingest:
+    description: Turn any Git repository into a prompt-friendly text ingest for LLMs
+    tags:
+    - git
+    uv:
+      ansible.builtin.command: tool install gitingest
+  glab:
+    brew:
+      name: glab
+    description: Open-source GitLab command-line tool
+    tags:
+    - git
+    - core
+  gobuster:
+    brew:
+      name: gobuster
+    description: Directory/file & DNS busting tool written in Go
+    tags:
+    - pentesting
+  golang:
+    brew:
+      name: go
+    tags:
+    - development
+    - core
+  gopls:
+    brew:
+      name: gopls
+    description: Language server for Go
+    tags:
+    - development
+    - lsp
+  gowitness:
+    description: It's a website screenshot utility written in Golang
+    go:
+      ansible.builtin.command: install github.com/sensepost/gowitness@latest
+    tags:
+    - pentesting
+  grex:
+    brew:
+      name: grex
+    description: Command-line tool for generating regular expressions
+    tags:
+    - search
+  gup:
+    brew:
+      name: gup
+    description: Update binaries installed by "go install"
+    tags:
+    - development
+    - package-managers
+  hapless:
+    description: Simplest way of running and tracking processes in the background
+    tags:
+    - development
+    uv:
+      ansible.builtin.command: tool install hapless
+  hashcat:
+    brew:
+      name: hashcat
+    description: World's fastest and most advanced password recovery utility
+    tags:
+    - pentesting
+  hexyl:
+    brew:
+      name: hexyl
+    description: Command-line hex viewer
+    tags:
+    - development
+  hl:
+    brew:
+      name: hl
+    description: Fast and powerful log viewer and processor
+    tags:
+    - development
+    - core
+  htb-operator:
+    description: HackTheBox operator tool
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install htb-operator
+  htop:
+    brew:
+      name: htop
+    description: Improved top (interactive process viewer)
+    tags:
+    - misc
+    - core
+  httpie:
+    brew:
+      name: httpie
+    description: User-friendly cURL replacement (command-line HTTP client)
+    tags:
+    - development
+    - pentesting
+  httpmethods:
+    description: HTTP methods testing tool
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install httpmethods
+  hydra:
+    brew:
+      name: hydra
+    description: Network logon cracker which supports many services
+    tags:
+    - pentesting
+  hyperfine:
+    brew:
+      name: hyperfine
+    description: Command-line benchmarking tool
+    tags:
+    - development
+  impacket:
+    description: Collection of Python classes for working with network protocols
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/fortra/impacket
+  jc:
+    brew:
+      name: jc
+    description: Serializes the output of command-line tools to structured JSON output
+    tags:
+    - data
+  jetbrains-mono-nerd:
+    brew:
+      name: font-jetbrains-mono-nerd-font
+    tags:
+    - fonts
+    - core
+  jless:
+    brew:
+      name: jless
+    description: Command-line pager for JSON data
+    tags:
+    - data
+  jnv:
+    brew:
+      name: jnv
+    description: Interactive JSON filter using jq
+    tags:
+    - data
+  jq:
+    brew:
+      name: jq
+    description: Lightweight and flexible command-line JSON processor
+    tags:
+    - data
+    - core
+  jql:
+    brew:
+      name: jql
+    description: JSON query language CLI tool
+    tags:
+    - data
+  jujutsu:
+    brew:
+      name: jujutsu
+    description: Git-compatible distributed version control system
+    tags:
+    - git
+  just:
+    brew:
+      name: just
+    description: Handy way to save and run project-specific commands
+    tags:
+    - development
+  knock:
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/guelfoweb/knock
+  lazygit:
+    brew:
+      name: lazygit
+    description: Simple terminal UI for git commands
+    tags:
+    - git
+    - core
+  lazyjj:
+    brew:
+      name: lazyjj
+    description: TUI for Jujutsu/jj
+    tags:
+    - git
+  lima:
+    brew:
+      name: lima
+    description: Linux virtual machines
+    tags:
+    - optional
+  lsof:
+    brew:
+      name: lsof
+    description: Utility to list open files
+    tags:
+    - pentesting
+    - core
+  luarocks:
+    brew:
+      name: luarocks
+    description: Package manager for the Lua programming language
+    tags:
+    - development
+    - core
+  maple-mono:
+    brew:
+      name: font-maple-mono
+    tags:
+    - fonts
+    - core
+  maple-mono-nf:
+    brew:
+      name: font-maple-mono-nf
+    tags:
+    - fonts
+    - core
+  massdns:
+    brew:
+      name: massdns
+    description: High-performance DNS stub resolver
+    tags:
+    - pentesting
+  mdq:
+    brew:
+      name: mdq
+    description: Like jq but for Markdown
+    tags:
+    - data
+  medusa:
+    description: Medusa Parallel Network Login Auditor
+    native:
+      ansible.builtin.apt: medusa
+      ansible.builtin.dnf: medusa
+      yay: medusa
+    tags:
+    - pentesting
+  mergiraf:
+    brew:
+      name: mergiraf
+    description: Syntax-aware git merge driver
+    tags:
+    - git
+  mitmproxy:
+    description: An interactive TLS-capable intercepting HTTP proxy
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install mitmproxy
+  mq:
+    brew:
+      name: mq
+    tags:
+    - data
+  navi:
+    brew:
+      name: navi
+    description: Interactive cheatsheet tool for the command-line
+    tags:
+    - misc
+  ncdu:
+    brew:
+      name: ncdu
+    description: NCurses Disk Usage
+    tags:
+    - files
+  neovim:
+    brew:
+      name: neovim
+    description: Ambitious Vim-fork focused on extensibility and agility
+    tags:
+    - development
+    - core
+  netexec:
+    description: The Network Execution Tool
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/Pennyw0rth/NetExec
+  nmap:
+    brew:
+      name: nmap
+    description: Port scanning utility for large networks
+    tags:
+    - pentesting
+    - core
+  node:
+    brew:
+      name: node
+    description: Open-source, cross-platform JavaScript runtime environment
+    tags:
+    - development
+    - core

@@ -7,11 +7,17 @@
   failed_when: false
   changed_when: false
 
+- name: Normalize distribution name for 1Password installation
+  ansible.builtin.set_fact:
+    onepassword_distro: >-
+      {{ 'archlinux' if ansible_facts['distribution'] | lower == 'endeavouros'
+         else ansible_facts['distribution'] | lower }}
+
 - name: Include distro-specific 1Password installation
-  ansible.builtin.include_tasks: "{{ ansible_facts['distribution'] | lower }}.yml"
+  ansible.builtin.include_tasks: "{{ onepassword_distro }}.yml"
   when:
     - op_check.rc != 0
-    - ansible_facts['distribution'] | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
+    - onepassword_distro in ['ubuntu', 'fedora', 'archlinux']
 
 - name: Re-check 1Password CLI installation
   ansible.builtin.command: which op

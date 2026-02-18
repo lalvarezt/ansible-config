@@ -1,4 +1,0 @@
----
-# EndeavourOS uses the same configuration as Arch Linux
-- name: Include Arch Linux terminal emulator installation for EndeavourOS
-  ansible.builtin.include_tasks: archlinux.yml

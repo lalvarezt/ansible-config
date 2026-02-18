@@ -1,0 +1,465 @@
+---
+packages_o_z:
+  ollama:
+    brew:
+      name: ollama
+    description: Create, run, and share large language models (LLMs)
+    tags:
+    - development
+    - ai
+  onefetch:
+    brew:
+      name: onefetch
+    description: Command-line Git information tool
+    tags:
+    - git
+  opencode:
+    brew:
+      name: opencode
+    description: AI coding agent, built for the terminal
+    tags:
+    - development
+    - ai
+  openjdk:
+    brew:
+      name: openjdk
+    description: Development kit for the Java programming language
+    tags:
+    - development
+  ouch:
+    brew:
+      name: ouch
+    description: Painless compression and decompression for your terminal
+    tags:
+    - misc
+    - core
+  pastel:
+    brew:
+      name: pastel
+    description: Command-line tool to generate, analyze, convert and manipulate colors
+    tags:
+    - development
+  pdtm:
+    description: ProjectDiscovery Tool Manager to download and organize your tools
+    go:
+      ansible.builtin.command: install -v github.com/projectdiscovery/pdtm/cmd/pdtm@latest
+    post_install: pdtm -install alterx,dnsx,httpx,katana,nuclei,vulnx
+    tags:
+    - pentesting
+  pencode:
+    description: Complex payload encoder
+    go:
+      ansible.builtin.command: install github.com/ffuf/pencode/cmd/pencode@latest
+    tags:
+    - pentesting
+  penelope:
+    description: Powerful shell handler built as a modern netcat replacement
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install penelope-shell-handler --from git+https://github.com/brightio/penelope
+  pipx:
+    brew:
+      name: pipx
+    description: (use uv instead) Execute binaries from Python packages in isolated environments
+    tags:
+    - package-managers
+  pkinittools:
+    description: Utilities for playing with PKINIT and certificates
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/Cyb3rC3lt/PKINITtools
+  posting:
+    brew:
+      name: posting
+    description: Modern API client that lives in your terminal
+    tags:
+    - development
+    - pentesting
+  proxychains-ng:
+    brew:
+      name: proxychains-ng
+    description: Hook preloader
+    tags:
+    - pentesting
+  puredns:
+    description: Puredns is a fast domain resolver
+    go:
+      ansible.builtin.command: install github.com/d3mondev/puredns/v2@latest
+    tags:
+    - pentesting
+  pwncat:
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/Chocapikk/pwncat-vl
+  pypykatz:
+    description: Mimikatz implementation in pure Python
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/skelsec/pypykatz
+  python-argcomplete:
+    brew:
+      name: python-argcomplete
+    description: Easy, extensible command line tab completion of arguments for your Python application
+    tags:
+    - development
+  pywhisker:
+    description: Tool for extracting credentials from Windows machines
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/ShutdownRepo/pywhisker
+  qemu:
+    brew:
+      name: qemu
+    description: Generic machine emulator and virtualizer
+    tags:
+    - optional
+  redis:
+    brew:
+      name: redis
+    description: Persistent key-value database, with built-in net interface
+    post_install:
+    - brew services start redis
+    tags:
+    - development
+  ripgrep:
+    brew:
+      name: ripgrep
+    description: Search tool like grep and The Silver Searcher
+    tags:
+    - search
+    - core
+  rlwrap:
+    brew:
+      name: rlwrap
+    description: 'Readline wrapper: adds readline support to tools that lack it'
+    tags:
+    - shell
+  ruby:
+    brew:
+      name: ruby
+    description: Powerful, clean, object-oriented scripting language
+    tags:
+    - development
+  ruby-lsp:
+    brew:
+      name: ruby-lsp
+    description: Language server for Ruby
+    tags:
+    - development
+    - lsp
+  ruff:
+    description: An extremely fast Python linter and code formatter
+    tags:
+    - development
+    uv:
+      ansible.builtin.command: tool install ruff
+  rust-analyzer:
+    brew:
+      name: rust-analyzer
+    description: Experimental Rust compiler front-end for IDEs
+    tags:
+    - development
+    - lsp
+  rustscan:
+    brew:
+      name: rustscan
+    description: Modern Day Portscanner
+    tags:
+    - pentesting
+  secator:
+    description: The pentester's swiss knife
+    post_install:
+    - secator install addons worker
+    - secator install addons redis
+    - secator config set celery.broker_url redis://127.0.0.1:6379/0
+    - secator config set celery.result_backend redis://127.0.0.1:6379/0
+    - secator config set security.auto_install_commands false
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/freelabz/secator --with pip
+  serie:
+    brew:
+      name: serie
+    description: Rich git commit graph in your terminal
+    tags:
+    - git
+  sevenzip:
+    brew:
+      name: sevenzip
+    description: 7-Zip is a file archiver with a high compression ratio
+    tags:
+    - misc
+  shfmt:
+    brew:
+      name: shfmt
+    description: Autoformat shell script source code
+    tags:
+    - development
+  sigrs:
+    brew:
+      name: sigrs
+    description: Interactive grep
+    tags:
+    - search
+  sj:
+    description: JSON stream parser for BishopFox
+    go:
+      ansible.builtin.command: install github.com/BishopFox/sj@latest
+    tags:
+    - data
+  smbclientng:
+    description: SMB client with modern features
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install smbclientng
+  smtp-user-enum:
+    description: SMTP user enumeration tool
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install smtp-user-enum
+  soar:
+    description: Fast, modern, distro-independent package manager for static binaries and portable formats
+    post_install: curl -fsSL https://raw.githubusercontent.com/pkgforge/soar/main/install.sh | sh
+    tags:
+    - package-managers
+  socat:
+    brew:
+      name: socat
+    description: Multipurpose relay for bidirectional data transfer
+    tags:
+    - pentesting
+    - core
+  sploitscan:
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/xaitax/SploitScan
+  sqlmap:
+    brew:
+      name: sqlmap
+    description: Penetration testing for SQL injection and database servers
+    tags:
+    - pentesting
+  ssh-audit:
+    brew:
+      name: ssh-audit
+    description: SSH server & client auditing
+    tags:
+    - pentesting
+  sshuttle:
+    description: Where transparent proxy meets VPN meets ssh
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/sshuttle/sshuttle
+  starship:
+    brew:
+      name: starship
+    description: Cross-shell prompt for astronauts
+    tags:
+    - shell
+    - core
+  stew:
+    brew:
+      name: stew
+    description: An independent package manager for compiled binaries
+    tags:
+    - package-managers
+  sttr:
+    brew:
+      name: sttr
+    description: CLI to perform various operations on string
+    tags:
+    - data
+  t-rec:
+    brew:
+      name: t-rec
+    description: Blazingly fast terminal recorder that generates animated gif images for the web
+    tags:
+    - misc
+  targetedkerberoast:
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/gatariee/targetedKerberoast
+  television:
+    brew:
+      name: television
+    description: General purpose fuzzy finder TUI
+    tags:
+    - search
+  tlrc:
+    brew:
+      name: tlrc
+    description: Simplified and community-driven man pages
+    tags:
+    - misc
+  tmux:
+    brew:
+      name: tmux
+    description: Terminal multiplexer
+    tags:
+    - shell
+    - core
+  tokei:
+    brew:
+      name: tokei
+    description: Program that allows you to count code, quickly
+    tags:
+    - development
+  tran:
+    brew:
+      name: tran
+    description: Securely transfer and send anything between computers with a TUI
+    tags:
+    - misc
+  tree-sitter:
+    brew:
+      name: tree-sitter
+    description: Parser generator tool and incremental parsing library
+    tags:
+    - development
+    - core
+  trufflehog:
+    brew:
+      name: trufflehog
+    description: Find leaked credentials
+    tags:
+    - pentesting
+  ty:
+    description: Type checker for Python
+    tags:
+    - development
+    uv:
+      ansible.builtin.command: tool install ty
+  uv:
+    brew:
+      name: uv
+    description: Extremely fast Python package installer and resolver, written in Rust
+    tags:
+    - package-managers
+    - core
+  vivid:
+    brew:
+      name: vivid
+    description: Generator for LS_COLORS with support for multiple color themes
+    tags:
+    - shell
+    - core
+  wapiti:
+    description: Wapiti is a web vulnerability scanner written in Python
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/wapiti-scanner/wapiti
+  wconv:
+    description: Util to parse and convert Windows related formats into human readable form
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/qtc-de/wconv
+  wenum:
+    description: Fork of Wfuzz The Web Fuzzer
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/WebFuzzForge/wenum --with "setuptools<81,legacy-cgi"
+  wget:
+    brew:
+      name: wget
+    description: Internet file retriever
+    tags:
+    - pentesting
+    - core
+  whatweb:
+    description: Next generation web scanner
+    native:
+      ansible.builtin.apt: whatweb
+      ansible.builtin.dnf: whatweb
+      skip_on:
+      - pacman
+      yay: whatweb
+    tags:
+    - pentesting
+  whois:
+    brew:
+      name: whois
+    description: Lookup tool for domain names and other internet resources
+    tags:
+    - pentesting
+    - core
+  wtfis:
+    brew:
+      name: wtfis
+    description: Passive hostname, domain, and IP lookup tool
+    tags:
+    - pentesting
+  xh:
+    brew:
+      name: xh
+    description: Friendly and fast tool for sending HTTP requests
+    tags:
+    - development
+    - pentesting
+  yaml-language-server:
+    brew:
+      name: yaml-language-server
+    description: Language server for YAML files
+    tags:
+    - development
+    - lsp
+    - core
+  yamllint:
+    description: Linter for YAML files
+    tags:
+    - development
+    uv:
+      ansible.builtin.command: tool install yamllint
+  yazi:
+    brew:
+      name: yazi
+    description: Blazing fast terminal file manager written in Rust, based on async I/O
+    tags:
+    - files
+    - core
+  yq:
+    brew:
+      name: yq
+    description: Process YAML, JSON, XML, CSV and properties documents from the CLI
+    tags:
+    - data
+    - core
+  zellij:
+    brew:
+      name: zellij
+    description: Pluggable terminal workspace, with terminal multiplexer as the base feature
+    tags:
+    - shell
+  zig:
+    brew:
+      name: zig
+    description: Programming language designed for robustness, optimality, and clarity
+    tags:
+    - development
+  zoxide:
+    brew:
+      name: zoxide
+    description: Shell extension to navigate your filesystem faster
+    tags:
+    - shell
+    - core
+  zsh:
+    brew:
+      name: zsh
+    description: UNIX shell (command interpreter)
+    tags:
+    - shell
+    - core

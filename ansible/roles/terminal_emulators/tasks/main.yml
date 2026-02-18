@@ -11,11 +11,17 @@
 - name: Install terminal emulators (non-WSL)
   when: not (is_wsl | default(false))
   block:
+    - name: Normalize distribution name for terminal emulators
+      ansible.builtin.set_fact:
+        terminal_emulators_distro: >-
+          {{ 'archlinux' if ansible_facts['distribution'] | lower == 'endeavouros'
+             else ansible_facts['distribution'] | lower }}
+
     - name: Include distro-specific terminal emulator installation
-      ansible.builtin.include_tasks: "{{ ansible_facts['distribution'] | lower }}.yml"
-      when: ansible_facts['distribution'] | lower in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
+      ansible.builtin.include_tasks: "{{ terminal_emulators_distro }}.yml"
+      when: terminal_emulators_distro in ['ubuntu', 'fedora', 'archlinux']
 
     - name: Warn if distribution not supported
       ansible.builtin.debug:
         msg: "Terminal emulator installation not configured for {{ ansible_facts['distribution'] }}. Please install ghostty, wezterm, or kitty manually."
-      when: ansible_facts['distribution'] | lower not in ['ubuntu', 'fedora', 'archlinux', 'endeavouros']
+      when: terminal_emulators_distro not in ['ubuntu', 'fedora', 'archlinux']

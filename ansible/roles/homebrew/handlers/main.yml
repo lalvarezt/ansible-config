@@ -4,11 +4,3 @@
 - name: Remind shell reload
   ansible.builtin.debug:
     msg: "Shell profile updated. Run 'source ~/.bashrc' or start a new terminal to apply changes."
-
-- name: Source bashrc
-  ansible.builtin.shell: source {{ ansible_facts['user_dir'] }}/.bashrc
-  args:
-    executable: /bin/bash
-  listen: "reload shell profile"
-  failed_when: false
-  changed_when: false

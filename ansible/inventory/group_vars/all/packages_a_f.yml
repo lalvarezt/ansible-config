@@ -1,0 +1,350 @@
+---
+packages_a_f:
+  age:
+    brew:
+      name: age
+    description: Simple, modern, secure file encryption
+    tags:
+    - development
+  age-plugin-yubikey:
+    brew:
+      name: age-plugin-yubikey
+    description: Plugin for encrypting files with age and PIV tokens such as YubiKeys
+    tags:
+    - development
+  aic:
+    brew:
+      name: arimxyer/tap/aic
+    description: Fetch the latest changelogs for popular AI coding assistants
+    tags:
+    - ai
+    - core
+  aliasr:
+    description: Alias manager for the shell
+    tags:
+    - shell
+    uv:
+      ansible.builtin.command: tool install aliasr
+  ansible-lint:
+    description: Checks playbooks for practices and behavior that could be improved
+    tags:
+    - development
+    uv:
+      ansible.builtin.command: tool install ansible-lint
+  ansifilter:
+    brew:
+      name: ansifilter
+    description: Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
+    tags:
+    - data
+  aoc-helper:
+    description: Advent of Code helper tool
+    tags:
+    - misc
+    uv:
+      ansible.builtin.command: tool install aoc-helper
+  arsenal-cli:
+    tags:
+    - misc
+    uv:
+      ansible.builtin.command: tool install arsenal-cli
+  asciinema:
+    brew:
+      name: asciinema
+    description: Record and share terminal sessions
+    tags:
+    - misc
+  ast-grep:
+    brew:
+      name: ast-grep
+    description: Code searching, linting, rewriting
+    tags:
+    - search
+  atuin:
+    brew:
+      name: atuin
+    description: Improved shell history for zsh, bash, fish and nushell
+    tags:
+    - shell
+    - core
+  autobloody:
+    description: Automatically exploit Active Directory privilege escalation paths shown by BloodHound
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/CravateRouge/autobloody
+  bash-language-server:
+    brew:
+      name: bash-language-server
+    description: Language server for Bash scripts
+    tags:
+    - shell
+    - lsp
+    - core
+  bat:
+    brew:
+      name: bat
+    description: Clone of cat(1) with syntax highlighting and Git integration
+    tags:
+    - shell
+    - core
+  bind:
+    brew:
+      name: bind
+    description: Implementation of the DNS protocols (dig)
+    tags:
+    - pentesting
+    - core
+  bloodhound-py:
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/dirkjanm/BloodHound.py@bloodhound-ce
+  bloodyad:
+    description: Active Directory privilege escalation swiss army knife
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/CravateRouge/bloodyAD
+  bob:
+    brew:
+      name: bob
+    description: Version manager for neovim
+    tags:
+    - development
+  broot:
+    brew:
+      name: broot
+    description: New way to see and navigate directory trees
+    tags:
+    - files
+  cariddi:
+    brew:
+      name: cariddi
+    description: Take a list of domains, crawl urls and scan for endpoints, secrets, api keys, etc
+    tags:
+    - pentesting
+  cats:
+    brew:
+      name: cats
+    description: REST API fuzzer and negative testing tool for OpenAPI endpoints
+    tags:
+    - pentesting
+  certipy:
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/ly4k/Certipy
+  chezmoi:
+    brew:
+      name: chezmoi
+    description: Manage your dotfiles across
+    tags:
+    - git
+    - core
+  claude-code:
+    description: Claude Code CLI - AI coding assistant
+    post_install: curl -fsSL https://claude.ai/install.sh | bash
+    tags:
+    - development
+    - ai
+    - core
+  claude-monitor:
+    description: Monitor Claude Code usage and costs
+    tags:
+    - development
+    - ai
+    uv:
+      ansible.builtin.command: tool install claude-monitor
+  cmdperf:
+    description: Command performance measurement tool
+    go:
+      ansible.builtin.command: install github.com/miklosn/cmdperf/cmd/cmdperf@latest
+    tags:
+    - development
+  commitizen:
+    brew:
+      name: commitizen
+    description: Defines a standard way of committing rules and communicating it
+    tags:
+    - git
+  cook:
+    description: Wordlist generator, splitter, merger, finder, saver, create words permutation
+    go:
+      ansible.builtin.command: install github.com/glitchedgitz/cook/v2/cmd/cook@latest
+    tags:
+    - pentesting
+  curl:
+    brew:
+      name: curl
+    description: Get a file from an HTTP, HTTPS or FTP server
+    tags:
+    - pentesting
+    - core
+  curlie:
+    brew:
+      name: curlie
+    description: Power of curl, ease of use of httpie
+    tags:
+    - development
+    - pentesting
+  detox:
+    brew:
+      name: detox
+    description: Utility to replace problematic characters in filenames
+    tags:
+    - development
+  diffoscope:
+    description: In-depth comparison of files, archives, and directories
+    tags:
+    - development
+    uv:
+      ansible.builtin.command: tool install diffoscope
+  difftastic:
+    brew:
+      name: difftastic
+    description: Diff that understands syntax
+    tags:
+    - git
+  direnv:
+    brew:
+      name: direnv
+    description: Load/unload environment variables based on $PWD
+    tags:
+    - development
+    - core
+  dirsearch:
+    description: Web path discovery
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/maurosoria/dirsearch
+  dive:
+    brew:
+      name: dive
+    description: Tool for exploring each layer in a docker image
+    tags:
+    - development
+    - misc
+  dnsrecon:
+    description: DNS Enumeration Script
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/darkoperator/dnsrecon
+  dra:
+    brew:
+      name: dra
+    description: Command-line tool to download release assets from GitHub
+    tags:
+    - package-managers
+  dust:
+    brew:
+      name: dust
+    description: More intuitive version of du in rust
+    tags:
+    - files
+  eget:
+    brew:
+      name: eget
+    description: Easily install prebuilt binaries from GitHub
+    tags:
+    - package-managers
+  enum4linux-ng:
+    description: Next generation version of enum4linux
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install enum4linux-ng
+  exegol:
+    description: Community-driven hacking environment
+    tags:
+    - optional
+    uv:
+      ansible.builtin.command: tool install exegol
+  eza:
+    brew:
+      name: eza
+    description: Modern, maintained replacement for ls
+    tags:
+    - files
+    - core
+  fd:
+    brew:
+      name: fd
+    description: Simple, fast and user-friendly alternative to find
+    tags:
+    - files
+    - core
+  feroxbuster:
+    brew:
+      name: feroxbuster
+    description: Fast, simple, recursive content discovery tool written in Rust
+    tags:
+    - pentesting
+  ffuf:
+    brew:
+      name: ffuf
+    description: Fast web fuzzer written in Go
+    tags:
+    - pentesting
+  ffufPostprocessing:
+    description: Fuff report enhancement, better filtering
+    go:
+      ansible.builtin.command: install github.com/dsecuredcom/ffufPostprocessing@latest
+    tags:
+    - pentesting
+  filessh:
+    cargo:
+      locked: true
+      name: filessh
+    description: A TUI-based file explorer for SSH servers (reconsider when yazi#611 has been merged)
+    tags:
+    - pentesting
+  fish:
+    brew:
+      name: fish
+    description: User -friendly command -line shell for UNIX-like operating systems
+    tags:
+    - shell
+    - core
+  fish-lsp:
+    brew:
+      name: fish-lsp
+    description: Language server for Fish shell scripts
+    tags:
+    - shell
+    - lsp
+    - core
+  fisher:
+    brew:
+      name: fisher
+    description: Plugin manager for the Fish shell
+    tags:
+    - shell
+    - core
+  flask-unsign:
+    description: Fetch, decode, brute-force and craft session cookies of a Flask application
+    tags:
+    - pentesting
+    uv:
+      ansible.builtin.command: tool install git+https://github.com/Paradoxis/Flask-Unsign
+  fq:
+    brew:
+      name: wader/tap/fq
+    description: jq for binary formats
+    tags:
+    - data
+  fx:
+    brew:
+      name: fx
+    description: Terminal JSON viewer
+    tags:
+    - data
+  fzf:
+    brew:
+      name: fzf
+    description: Command-line fuzzy finder written in Go
+    tags:
+    - search
+    - core

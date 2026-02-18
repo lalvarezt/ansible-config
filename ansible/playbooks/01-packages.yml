@@ -1,17 +1,13 @@
 ---
 # Package installation: all tools except pentesting
 
-- name: Install Terminal Emulators
+- name: Install Terminal Emulators and Standard Packages
   hosts: all
   gather_facts: true
   tags: [packages]
-  roles:
-    - role: terminal_emulators
-
-- name: Install Packages
-  hosts: all
-  gather_facts: true
-  tags: [packages]
+  module_defaults:
+    ansible.builtin.get_url:
+      validate_certs: "{{ not (skip_ssl_verify | default(false)) }}"
   vars:
     _default_tags:
       - shell
@@ -24,13 +20,21 @@
       - misc
       - fonts
       - core
+    _package_catalog: >-
+      {{ (packages_a_f | default({}))
+         | combine(packages_g_n | default({}))
+         | combine(packages_o_z | default({})) }}
     _modules_raw: "{{ (modules | from_yaml) if modules is defined and modules is string else (modules | default(_default_tags)) }}"
     modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"
 
   tasks:
+    - name: Install terminal emulators
+      ansible.builtin.include_role:
+        name: terminal_emulators
+
     - name: Install packages
       ansible.builtin.include_role:
         name: package_installer
       vars:
-        package_dict: "{{ packages }}"
+        package_dict: "{{ _package_catalog }}"
         modules_filter: "{{ modules_list }}"
