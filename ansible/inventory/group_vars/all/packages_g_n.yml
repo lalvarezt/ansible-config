@@ -280,6 +280,13 @@ packages_g_n:
     tags:
     - pentesting
     - core
+  lua-language-server:
+    brew:
+      name: lua-language-server
+    description: Language server for Lua
+    tags:
+    - development
+    - lsp
   luarocks:
     brew:
       name: luarocks
