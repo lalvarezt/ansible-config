@@ -21,6 +21,7 @@
   register: rustup_check
 
 - name: Install Rust via rustup
+  when: not rustup_check.stat.exists
   block:
     - name: Download rustup installer
       ansible.builtin.get_url:
@@ -31,7 +32,7 @@
     - name: Run rustup installer
       ansible.builtin.command:
         cmd: /tmp/rustup-init.sh -y
-  when: not rustup_check.stat.exists
+        creates: "{{ ansible_facts['user_dir'] }}/.cargo/bin/rustup"
 
 - name: Set language manager facts
   ansible.builtin.set_fact:
