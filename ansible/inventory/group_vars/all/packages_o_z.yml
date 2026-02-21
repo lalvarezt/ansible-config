@@ -195,6 +195,14 @@ packages_o_z:
     description: 7-Zip is a file archiver with a high compression ratio
     tags:
     - misc
+  shellcheck:
+    brew:
+      name: shellcheck
+    description: Static analysis tool for shell scripts
+    tags:
+    - development
+    - lsp
+    - core
   shfmt:
     brew:
       name: shfmt
