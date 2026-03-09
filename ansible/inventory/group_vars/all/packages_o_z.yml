@@ -387,6 +387,14 @@ packages_o_z:
     tags:
     - pentesting
     - core
+  worktree:
+    brew:
+      name: worktrunk
+    description: CLI for Git worktree management, designed for parallel AI agent workflows
+    tags:
+    - development
+    - ai
+    - core
   whatweb:
     description: Next generation web scanner
     native:
