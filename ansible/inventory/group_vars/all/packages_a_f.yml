@@ -206,6 +206,7 @@ packages_a_f:
     description: Diff that understands syntax
     tags:
     - git
+    - core
   direnv:
     brew:
       name: direnv
