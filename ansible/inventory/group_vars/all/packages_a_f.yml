@@ -64,6 +64,8 @@ packages_a_f:
     brew:
       name: atuin
     description: Improved shell history for zsh, bash, fish and nushell
+    post_install:
+    - brew services start atuin
     tags:
     - shell
     - core
