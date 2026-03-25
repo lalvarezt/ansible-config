@@ -126,6 +126,13 @@ packages_a_f:
     description: Take a list of domains, crawl urls and scan for endpoints, secrets, api keys, etc
     tags:
     - pentesting
+  carapace:
+    brew:
+      name: carapace
+    description: Multi-shell completion generator
+    tags:
+    - shell
+    - core
   cats:
     brew:
       name: cats
