@@ -116,7 +116,11 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK - SSH agent bridge"
     block: |
       # ssh agent bridge
-      export SSH_AUTH_SOCK={{ ssh_auth_sock }}
+      if [ -z "${SSH_AUTH_SOCK:-}" ]; then
+        export SSH_AUTH_SOCK={{ ssh_auth_sock }}
+      elif [ ! -S "${SSH_AUTH_SOCK}" ] && [ -S "{{ ssh_auth_sock }}" ]; then
+        export SSH_AUTH_SOCK={{ ssh_auth_sock }}
+      fi
     create: true
     mode: "0644"
 
@@ -131,7 +135,11 @@
     mode: "0644"
     content: |
       # ssh agent bridge
-      set -gx SSH_AUTH_SOCK {{ ssh_auth_sock }}
+      if not set -q SSH_AUTH_SOCK
+          set -gx SSH_AUTH_SOCK {{ ssh_auth_sock }}
+      else if not test -S "$SSH_AUTH_SOCK"; and test -S "{{ ssh_auth_sock }}"
+          set -gx SSH_AUTH_SOCK {{ ssh_auth_sock }}
+      end
   when: fish_confd_check.stat.exists
 
 - name: Display WSL SSH agent bridge setup completion
