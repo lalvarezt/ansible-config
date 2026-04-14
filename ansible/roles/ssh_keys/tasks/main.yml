@@ -1,6 +1,18 @@
 ---
 # SSH key management - branches based on platform
 
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/.ssh"
+    state: directory
+    mode: "0700"
+
+- name: Ensure SSH control socket directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/.ssh/control"
+    state: directory
+    mode: "0700"
+
 - name: Include WSL SSH agent bridge tasks
   ansible.builtin.include_tasks: wsl.yml
   when: is_wsl | default(false)
