@@ -368,6 +368,12 @@ packages_g_n:
     - pentesting
     uv:
       ansible.builtin.command: tool install git+https://github.com/Pennyw0rth/NetExec
+  nikto:
+    brew:
+      name: nikto
+    description: Web server scanner
+    tags:
+    - pentesting
   nmap:
     brew:
       name: nmap
