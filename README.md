@@ -9,7 +9,7 @@ shell utilities, and system packages across multiple distributions.
 - **Modular package management**: Filter by category, installer type, or functionality
 - **Multiple installers**: `Homebrew`, `apt`, `dnf`, `pacman`, `yay`, `uv`, `cargo`, `go`
 - **1Password integration**: Secure SSH key retrieval during bootstrap
-- **Dotfiles via Chezmoi**: Final configuration applied from [chezmoi repository](https://gitlab.com/lalvarezt/chezmoi)
+- **Dotfiles via Chezmoi**: Ansible bootstraps and applies the [chezmoi repository](https://gitlab.com/lalvarezt/chezmoi), which remains the source of truth for persistent user configuration
 
 ## Prerequisites
 
@@ -153,6 +153,12 @@ ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['s
 ```bash
 ansible-playbook playbooks/bootstrap.yml -l <hostname> --check
 ```
+
+## Repository Boundaries
+
+- `ansible-config` owns machine bootstrap: OS prerequisites, package managers, package installation, secrets retrieval, and service enablement
+- `chezmoi` owns persistent user configuration: shell startup files, dotfiles, templates, and external dotfile assets
+- The `config` playbook should be safe to rerun because it reapplies `chezmoi` instead of treating dotfiles as a first-boot-only step
 
 ## Project Structure
 

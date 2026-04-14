@@ -33,17 +33,6 @@
           - --strip-components=1
         creates: "{{ brew_prefix }}/bin/brew"
 
-- name: Add Homebrew to bash profile (immediate config)
-  ansible.builtin.blockinfile:
-    path: "{{ ansible_facts['user_dir'] }}/.bashrc"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - HOMEBREW"
-    block: |
-      eval "$({{ brew_prefix }}/bin/brew shellenv)"
-    create: true
-    mode: "0644"
-  register: bashrc_updated
-  notify: Remind shell reload
-
 - name: Set brew facts for subsequent tasks
   ansible.builtin.set_fact:
     brew_prefix: "{{ brew_prefix }}"

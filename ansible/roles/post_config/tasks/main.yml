@@ -62,12 +62,60 @@
   failed_when: false
   changed_when: false
 
+- name: Check if systemd user services are available
+  when: systemd_check.rc == 0
+  block:
+    - name: Probe systemd user instance
+      ansible.builtin.systemd:
+        name: default.target
+        scope: user
+        state: started
+      check_mode: true
+      register: systemd_user_check
+      changed_when: false
+
+    - name: Mark systemd user services available
+      ansible.builtin.set_fact:
+        systemd_user_available: true
+  rescue:
+    - name: Mark systemd user services unavailable
+      ansible.builtin.set_fact:
+        systemd_user_available: false
+
+- name: Check if WSL 1Password SSH agent bridge service exists
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/1password-ssh-agent.service"
+  register: onepassword_ssh_agent_service_check
+  when:
+    - systemd_user_available | default(false)
+    - is_wsl | default(false)
+
+- name: Reload systemd user daemon for WSL SSH agent bridge
+  ansible.builtin.systemd:
+    daemon_reload: true
+    scope: user
+  when:
+    - systemd_user_available | default(false)
+    - is_wsl | default(false)
+    - onepassword_ssh_agent_service_check.stat.exists | default(false)
+
+- name: Enable WSL 1Password SSH agent bridge service
+  ansible.builtin.systemd:
+    name: 1password-ssh-agent.service
+    enabled: true
+    state: started
+    scope: user
+  when:
+    - systemd_user_available | default(false)
+    - is_wsl | default(false)
+    - onepassword_ssh_agent_service_check.stat.exists | default(false)
+
 - name: Check if ghostty service exists
   ansible.builtin.stat:
     path: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/app-com.mitchellh.ghostty.service"
   register: ghostty_service_check
   when:
-    - systemd_check.rc == 0
+    - systemd_user_available | default(false)
     - not (is_wsl | default(false))
 
 - name: Enable ghostty systemd service (if systemctl available)
@@ -76,9 +124,16 @@
     enabled: true
     scope: user
   when:
-    - systemd_check.rc == 0
+    - systemd_user_available | default(false)
     - not (is_wsl | default(false))
     - ghostty_service_check.stat.exists | default(false)
+
+- name: Warn if systemd user services are unavailable
+  ansible.builtin.debug:
+    msg: "systemd user services are not available. User services managed via chezmoi were not enabled."
+  when:
+    - systemd_check.rc == 0
+    - not (systemd_user_available | default(false))
 
 # IMPORTANT: Unlink Python at the very end to avoid breaking dependencies during installation
 - name: Check if Python is linked in Homebrew
@@ -105,11 +160,8 @@
 
       IMPORTANT: You should now:
       1. Log out and log back in (or open a new terminal)
-      {% if chezmoi_was_applied | default(false) %}
-      2. Your shell configuration from chezmoi is now active
-      3. All temporary environment variables have been replaced
-      {% endif %}
-      {{ '2' if not chezmoi_was_applied | default(false) else '4' }}. Homebrew Python has been unlinked to prevent conflicts
+      2. Chezmoi-managed configuration has been applied
+      3. Homebrew Python has been unlinked to prevent conflicts
 
       To switch to fish shell (if installed):
       chsh -s $(which fish)
