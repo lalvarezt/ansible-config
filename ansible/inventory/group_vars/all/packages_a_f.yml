@@ -120,6 +120,13 @@ packages_a_f:
     description: New way to see and navigate directory trees
     tags:
     - files
+  bun:
+    brew:
+      name: bun
+    description: Incredibly fast JavaScript runtime, bundler, transpiler and package manager
+    tags:
+    - development
+    - package-managers
   cariddi:
     brew:
       name: cariddi

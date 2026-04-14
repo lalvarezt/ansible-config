@@ -412,6 +412,12 @@ packages_o_z:
     tags:
     - pentesting
     - core
+  witr:
+    brew:
+      name: witr
+    description: Why is this running?
+    tags:
+    - misc
   wtfis:
     brew:
       name: wtfis
