@@ -332,6 +332,12 @@ packages_g_n:
     description: Syntax-aware git merge driver
     tags:
     - git
+  mermaid-cli:
+    brew:
+      name: mermaid-cli
+    description: Command-line interface for generating Mermaid diagrams
+    tags:
+    - development
   mitmproxy:
     description: An interactive TLS-capable intercepting HTTP proxy
     tags:
