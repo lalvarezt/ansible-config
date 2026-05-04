@@ -94,7 +94,9 @@ rustup_bin: "{{ ansible_facts['user_dir'] }}/.cargo/bin/rustup"
 
 # Combined PATH for Ansible task execution
 ansible_path: >-
-  /home/linuxbrew/.linuxbrew/bin:{{ ansible_facts['user_dir'] }}/.cargo/bin:{{ ansible_facts['user_dir'] }}/go/bin:{{ ansible_facts['user_dir'] }}/.local/bin:{{ ansible_facts['env']['PATH'] }}
+  /home/linuxbrew/.linuxbrew/bin:{{ ansible_facts['user_dir'] }}/.cargo/bin:{{
+  ansible_facts['user_dir'] }}/go/bin:{{ ansible_facts['user_dir']
+  }}/.local/bin:{{ ansible_facts['env']['PATH'] }}
 
 # =============================================================================
 # PACKAGE CATALOG
