@@ -323,6 +323,13 @@ packages_o_z:
     description: Program that allows you to count code, quickly
     tags:
     - development
+  topgrade:
+    brew:
+      name: topgrade
+    description: Upgrade all package managers and repositories with one command
+    tags:
+    - package-managers
+    - core
   tran:
     brew:
       name: tran
