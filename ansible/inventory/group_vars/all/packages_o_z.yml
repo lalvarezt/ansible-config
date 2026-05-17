@@ -102,6 +102,13 @@ packages_o_z:
       - pentesting
     uv:
       ansible.builtin.command: tool install git+https://github.com/skelsec/pypykatz
+  pyrefly:
+    description: Fast Python type checker and language server
+    tags:
+      - development
+      - lsp
+    uv:
+      ansible.builtin.command: tool install pyrefly
   python-argcomplete:
     brew:
       name: python-argcomplete
