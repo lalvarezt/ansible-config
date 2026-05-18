@@ -39,6 +39,13 @@ packages_o_z:
     description: Command-line tool to generate, analyze, convert and manipulate colors
     tags:
       - development
+  pi-coding-agent:
+    description: AI coding agent
+    npm:
+      name: '@earendil-works/pi-coding-agent'
+    tags:
+      - development
+      - ai
   pdtm:
     description: ProjectDiscovery Tool Manager to download and organize your tools
     go:
@@ -122,6 +129,13 @@ packages_o_z:
       - pentesting
     uv:
       ansible.builtin.command: tool install git+https://github.com/ShutdownRepo/pywhisker
+  qmd:
+    description: AI coding assistant
+    npm:
+      name: '@tobilu/qmd'
+    tags:
+      - development
+      - ai
   qemu:
     brew:
       name: qemu
