@@ -33,6 +33,12 @@ packages_o_z:
     tags:
       - misc
       - core
+  pass:
+    brew:
+      name: pass
+    description: Password manager
+    tags:
+      - development
   pastel:
     brew:
       name: pastel
