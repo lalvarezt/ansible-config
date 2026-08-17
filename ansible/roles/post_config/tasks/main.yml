@@ -1,6 +1,39 @@
 ---
 # Post-configuration tasks (run at the very end)
 
+- name: Check whether the OpenSSH server is installed
+  ansible.builtin.stat:
+    path: /usr/sbin/sshd
+  register: sshd_binary
+
+- name: Ensure the OpenSSH drop-in directory exists
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+  when:
+    - sshd_binary.stat.exists
+    - not (is_wsl | default(false))
+
+- name: Allow stale Unix sockets to be replaced by remote SSH forwards
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/90-streamlocal-bind-unlink.conf
+    content: |
+      # Permit remote GnuPG-agent forwarding to replace a stale socket.
+      StreamLocalBindUnlink yes
+    owner: root
+    group: root
+    mode: "0644"
+    validate: "/usr/sbin/sshd -t -f %s"
+  become: true
+  when:
+    - sshd_binary.stat.exists
+    - not (is_wsl | default(false))
+  notify: Reload OpenSSH server
+
 - name: Check if bat is installed
   ansible.builtin.command: which bat
   environment:

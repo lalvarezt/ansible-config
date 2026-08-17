@@ -1,0 +1,7 @@
+---
+
+- name: Reload OpenSSH server
+  ansible.builtin.systemd:
+    name: sshd
+    state: reloaded
+  become: true

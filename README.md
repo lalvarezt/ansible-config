@@ -160,6 +160,19 @@ ansible-playbook playbooks/bootstrap.yml -l <hostname> --check
 - `chezmoi` owns persistent user configuration: shell startup files, dotfiles, templates, and external dotfile assets
 - The `config` playbook should be safe to rerun because it reapplies `chezmoi` instead of treating dotfiles as a first-boot-only step
 
+### OpenSSH and GnuPG-agent forwarding
+
+The client-side forwarding configuration lives in chezmoi. On Linux hosts, run the
+configuration playbook once after pulling this change so `sshd` can replace a
+stale `/run/user/1000/gnupg/S.gpg-agent` socket:
+
+```bash
+ansible-playbook playbooks/03-config.yml -l <hostname> --tags config
+```
+
+After the playbook reloads `sshd`, the usual `ssh -A lalvarezt@pentest-laptop`
+session can carry both the SSH agent and the restricted OpenPGP agent socket.
+
 ## Project Structure
 
 ```
