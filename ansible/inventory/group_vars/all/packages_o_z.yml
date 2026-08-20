@@ -397,6 +397,13 @@ packages_o_z:
       - development
     uv:
       ansible.builtin.command: tool install ty
+  usbtree:
+    brew:
+      name: usbtree
+    description: Display the connected USB device tree
+    tags:
+      - misc
+      - core
   uv:
     brew:
       name: uv
