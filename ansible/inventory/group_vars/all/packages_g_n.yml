@@ -281,6 +281,13 @@ packages_g_n:
     tags:
       - pentesting
       - core
+  lsoff:
+    brew:
+      name: lsoff
+    description: Utility to identify processes using files and network ports
+    tags:
+      - files
+      - core
   lua-language-server:
     brew:
       name: lua-language-server

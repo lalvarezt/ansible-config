@@ -9,6 +9,14 @@
   environment:
     PATH: "{{ ansible_path }}"
 
+- name: Trust Homebrew taps
+  ansible.builtin.command: "{{ brew_bin }} trust {{ item }}"
+  loop: "{{ homebrew_trusted_taps | default([]) }}"
+  changed_when: false
+  when: not ansible_check_mode
+  environment:
+    PATH: "{{ ansible_path | default(ansible_facts['env']['PATH']) }}"
+
 - name: Install packages via Homebrew
   community.general.homebrew:
     name: "{{ brew_packages }}"

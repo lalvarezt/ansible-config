@@ -11,6 +11,7 @@
 # brew_prefix: Homebrew installation directory (default: /home/linuxbrew/.linuxbrew)
 # brew_bin: Path to brew binary
 # homebrew_taps: Additional Homebrew taps to install
+# homebrew_trusted_taps: Homebrew taps to trust before installing packages
 # uv_bin: Path to uv (Python package manager)
 # go_bin: Path to Go binary
 # cargo_bin: Path to Cargo binary
@@ -79,6 +80,11 @@ homebrew_taps:
   - endava/tap
   - wader/tap
   - harehare/tap
+  - yutat23/tap
+
+# Homebrew taps that require explicit trust before package installation
+homebrew_trusted_taps:
+  - yutat23/tap
 
 # Path to uv Python package manager
 uv_bin: /home/linuxbrew/.linuxbrew/bin/uv
