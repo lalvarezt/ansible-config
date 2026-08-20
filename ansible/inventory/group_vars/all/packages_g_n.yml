@@ -382,6 +382,13 @@ packages_g_n:
       - pentesting
     uv:
       ansible.builtin.command: tool install git+https://github.com/Pennyw0rth/NetExec
+  network-doctor:
+    brew:
+      name: network-doctor
+    description: Network connectivity diagnostic tool
+    tags:
+      - misc
+      - core
   nikto:
     brew:
       name: nikto

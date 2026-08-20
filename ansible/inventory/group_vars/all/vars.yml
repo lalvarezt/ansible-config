@@ -81,6 +81,7 @@ homebrew_taps:
   - wader/tap
   - harehare/tap
   - yutat23/tap
+  - heymaikol/tap
 
 # Homebrew taps that require explicit trust before package installation
 homebrew_trusted_taps:
