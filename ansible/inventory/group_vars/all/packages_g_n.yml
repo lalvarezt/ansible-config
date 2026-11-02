@@ -208,8 +208,9 @@ packages_g_n:
     tags:
       - data
   jetbrains-mono-nerd:
-    brew:
-      name: font-jetbrains-mono-nerd-font
+    font:
+      url: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.zip
+      checksum: sha256:fab782a66f7d3019da64f6572db9fc5d3a4bcb19f9fa13e2d8a62e3693d6396e
     tags:
       - fonts
       - core
@@ -303,14 +304,16 @@ packages_g_n:
       - development
       - core
   maple-mono:
-    brew:
-      name: font-maple-mono
+    font:
+      url: https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-TTF.zip
+      checksum: sha256:3a35f8f0669bef3dded9df208cc4526a6f7573210e134816e9084a8981271d75
     tags:
       - fonts
       - core
   maple-mono-nf:
-    brew:
-      name: font-maple-mono-nf
+    font:
+      url: https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF.zip
+      checksum: sha256:59098b87c895d871635d37680e88000ae2b2b25b55428195b228ec589e35fb89
     tags:
       - fonts
       - core

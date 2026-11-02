@@ -28,6 +28,11 @@
       string else (modules | default(_default_tags)) }}"
     modules_list: "{{ [_modules_raw] if _modules_raw is string else _modules_raw }}"
 
+  pre_tasks:
+    - name: Detect WSL for standalone package runs
+      ansible.builtin.set_fact:
+        is_wsl: "{{ 'microsoft' in (ansible_facts['kernel'] | lower) }}"
+
   tasks:
     - name: Install terminal emulators
       ansible.builtin.include_role:

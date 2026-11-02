@@ -52,18 +52,19 @@ if [[ ${#missing[@]} -gt 0 ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ALL_YML="$SCRIPT_DIR/../ansible/inventory/group_vars/all.yml"
+CATALOG_DIR="$SCRIPT_DIR/../ansible/inventory/group_vars/all"
+CATALOG_FILES=("$CATALOG_DIR"/packages_*.yml)
 
-if [[ ! -f "$ALL_YML" ]]; then
-  echo "Error: $ALL_YML not found" >&2
+if [[ ! -f "${CATALOG_FILES[0]}" ]]; then
+  echo "Error: no package catalogs found in $CATALOG_DIR" >&2
   exit 1
 fi
 
 if [[ "$VERBOSE" == true ]]; then
-  for tag in $(yq '.. | select(has("tags")) | .tags[]' "$ALL_YML" | sort -u); do
+  for tag in $(yq --no-doc '.. | select(has("tags")) | .tags[]' "${CATALOG_FILES[@]}" | sort -u); do
     echo "$tag:"
-    yq ".. | select(has(\"tags\") and .tags[] == \"$tag\") | path | .[-1]" "$ALL_YML" | sort | sed 's/^/  - /'
+    yq --no-doc ".. | select(has(\"tags\") and .tags[] == \"$tag\") | path | .[-1]" "${CATALOG_FILES[@]}" | sort -u | sed 's/^/  - /'
   done
 else
-  yq '.. | select(has("tags")) | .tags[]' "$ALL_YML" | sort -u
+  yq --no-doc '.. | select(has("tags")) | .tags[]' "${CATALOG_FILES[@]}" | sort -u
 fi

@@ -8,6 +8,7 @@ shell utilities, and system packages across multiple distributions.
 - **Multi-distribution support**: `Ubuntu`, `Fedora`, `Arch Linux`, `EndeavourOS`, `WSL`
 - **Modular package management**: Filter by category, installer type, or functionality
 - **Multiple installers**: `Homebrew`, `apt`, `dnf`, `pacman`, `yay`, `uv`, `cargo`, `go`
+- **Linux fonts**: Checksum-pinned JetBrains Mono Nerd Font and Maple Mono archives installed under `~/.local/share/fonts`
 - **1Password integration**: Secure SSH key retrieval during bootstrap
 - **Dotfiles via Chezmoi**: Ansible bootstraps and applies the [chezmoi repository](https://gitlab.com/lalvarezt/chezmoi), which remains the source of truth for persistent user configuration
 
@@ -20,6 +21,7 @@ Before bootstrapping, ensure you have:
 1. **1Password account** with CLI access
 2. **SSH keys stored in 1Password** at path: `op://Private/SSH Keys/id_ed25519`
 3. **Network access** to clone the `chezmoi` repository
+4. **ansible-core 2.18 or newer**, with `community.general` 13.5.0
 
 ### Optional
 
@@ -32,6 +34,9 @@ Before bootstrapping, ensure you have:
 ```bash
 ./scripts/bootstrap.sh
 ```
+
+The script also installs the pinned collection requirements. If Ansible is
+already installed, you can install them with `ansible-galaxy collection install -r requirements.yml`.
 
 ### 2. Sign in to 1Password
 
@@ -46,7 +51,20 @@ cd ansible
 ansible-playbook playbooks/bootstrap.yml -l <hostname>
 ```
 
-Available hosts: `work-laptop`, `pentest-laptop`, `home-desktop`, `work-desktop`
+Available profiles: `pentest-laptop`, `work-wsl`, `work-laptop`, `home-desktop`,
+and `work-desktop`. `work-wsl` uses Fedora. The Windows host itself is outside
+this Linux playbook's scope.
+
+All profiles use a local connection. Run the playbook on the target machine and
+select exactly one profile with `-l`. Selecting a hostname does not connect to it remotely.
+
+Real hostnames belong in the private chezmoi repository. Set `ansible_profile`
+on each entry in its `.chezmoidata.yaml` to one of the generic profiles above.
+For example, a private host entry can contain `ansible_profile: pentest-laptop`.
+The inventory reads `chezmoi data --format json` at runtime and sets `ansible_host`
+for the current machine's profile. No private inventory is written into this repo.
+Before chezmoi is installed, generic profiles still work for the initial bootstrap.
+Use `-i inventory/hosts.yml` to load only the public profiles, including in CI.
 
 You will be prompted for your sudo password (become password).
 
@@ -102,12 +120,14 @@ ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['c
 ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['shell']"
 
 # Only pentesting tools
-ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['pentesting']"
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --tags pentesting --extra-vars "modules=['pentesting']"
 ```
 
 Available tags: `core`, `optional`, `ai`, `shell`, `files`, `development`, `git`, `pentesting`, `data`, `search`, `package-managers`, `misc`, `fonts`
 
-Note: `ai` and `optional` are not part of the default module set. Include them explicitly with `--extra-vars "modules=[...]"`.
+Packages tagged `ai` or `optional` require that tag explicitly in `modules`, even
+when another tag such as `development` matches. Category and installer filters
+otherwise use OR logic. An empty `modules` list selects all packages except these opt-in packages.
 
 List all available modules:
 
@@ -138,11 +158,11 @@ ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['n
 ### Combined Filtering
 
 ```bash
-# Core development tools
+# Development or core tools
 ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['development','core']"
 
-# Pentesting tools installed via go
-ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['pentesting','go']"
+# Pentesting or Go tools, including the pentesting playbook
+ansible-playbook playbooks/bootstrap.yml -l <hostname> --tags packages,pentesting --extra-vars "modules=['pentesting','go']"
 
 # Multiple categories (OR logic)
 ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['shell','files']"
@@ -153,6 +173,9 @@ ansible-playbook playbooks/bootstrap.yml -l <hostname> --extra-vars "modules=['s
 ```bash
 ansible-playbook playbooks/bootstrap.yml -l <hostname> --check
 ```
+
+Check mode validates only the tasks that support it. Command-based installers
+and the chezmoi apply command are skipped, so this does not prove a fresh install succeeds.
 
 ## Repository Boundaries
 
@@ -170,7 +193,7 @@ stale `/run/user/1000/gnupg/S.gpg-agent` socket:
 ansible-playbook playbooks/03-config.yml -l <hostname> --tags config
 ```
 
-After the playbook reloads `sshd`, the usual `ssh -A lalvarezt@pentest-laptop`
+After the playbook reloads `sshd`, an `ssh -A user@target-host`
 session can carry both the SSH agent and the restricted OpenPGP agent socket.
 
 ## Project Structure
@@ -198,9 +221,9 @@ ansible-config/
 │   │   └── ...
 │   └── inventory/
 │       ├── hosts.yml
-│       ├── host_vars/localhost.yml
+│       ├── chezmoi.py        # Runtime private hostname lookup
 │       └── group_vars/
-│           ├── all.yml       # Global package definitions
+│           ├── all/          # vars.yml and packages_a_f.yml, packages_g_n.yml, packages_o_z.yml
 │           ├── ubuntu.yml
 │           ├── fedora.yml
 │           ├── arch.yml
@@ -211,7 +234,8 @@ ansible-config/
 
 ### Adding Packages
 
-Edit `ansible/inventory/group_vars/all.yml`, sample `brew` package:
+Add the package under the matching `packages_a_f`, `packages_g_n`, or `packages_o_z`
+key in `ansible/inventory/group_vars/all/packages_*.yml`. Example entry:
 
 ```yaml
 package_name:
@@ -248,7 +272,23 @@ Edit `ansible/roles/chezmoi/defaults/main.yml` and update the `chezmoi_repo_url`
 
 ### Host-specific Overrides
 
-Edit `ansible/inventory/host_vars/localhost.yml` for machine-specific settings.
+Create `ansible/inventory/host_vars/<inventory-hostname>.yml` for machine-specific settings.
+
+## Validation
+
+Run from the repository root with Ansible and Mike Farah's yq v4 on PATH:
+
+```bash
+python3 -m unittest discover -s tests -v
+shellcheck scripts/*.sh
+cd ansible
+yamllint -d relaxed .
+ansible-lint --offline
+ansible-playbook playbooks/bootstrap.yml --syntax-check
+```
+
+The regression tests exercise the real aggregation and uv tasks against temporary
+inputs. They do not install packages or apply dotfiles.
 
 ## License
 

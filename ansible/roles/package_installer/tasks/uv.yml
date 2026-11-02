@@ -9,10 +9,6 @@
   loop_control:
     label: "{{ item.name }}"
   register: uv_result
-  failed_when:
-    - uv_result.rc != 0
-    - "'Executable already exists' not in uv_result.stderr"
   changed_when:
+    - uv_result.rc == 0
     - "'is already installed' not in uv_result.stderr"
-    - "uv_result.stderr is not regex('Installed \\d+ executable')"
-    - "'Executable already exists' not in uv_result.stderr"

@@ -1,0 +1,13 @@
+---
+- name: Install font archive prerequisites
+  ansible.builtin.package:
+    name: [unzip, fontconfig]
+    state: present
+  become: true
+
+- name: Install user fonts
+  ansible.builtin.include_tasks: font.yml
+  loop: "{{ font_packages }}"
+  loop_control:
+    loop_var: font_package
+    label: "{{ font_package.name }}"

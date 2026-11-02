@@ -27,6 +27,14 @@ jobs:
         run: |
           uvx yamllint -d relaxed ansible/
 
+      - name: Install yq for regression checks
+        run: |
+          go install github.com/mikefarah/yq/v4@v4.54.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Run bootstrap regression checks
+        run: uv run --with ansible-core python -m unittest discover -s tests -v
+
       - name: Run ansible-lint
         working-directory: ansible
         run: |

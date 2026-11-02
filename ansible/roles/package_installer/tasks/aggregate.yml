@@ -14,6 +14,7 @@
     go_packages: []
     cargo_packages: []
     npm_packages: []
+    font_packages: []
     post_install_tasks: []
 
 - name: Aggregate packages by installation method
@@ -45,6 +46,9 @@
     npm_packages: >-
       {{ npm_packages + [item.value.npm.name]
          if item.value.npm is defined and _passes_filter else npm_packages }}
+    font_packages: >-
+      {{ font_packages + [item.value.font | combine({'name': item.key})]
+         if item.value.font is defined and _passes_filter else font_packages }}
     post_install_tasks: >-
       {{ post_install_tasks + [{'name': item.key, 'commands': item.value.post_install}]
          if item.value.post_install is defined and _passes_filter else post_install_tasks }}
@@ -59,6 +63,7 @@
          'go' if item.value.go is defined else
          'cargo' if item.value.cargo is defined else
          'npm' if item.value.npm is defined else
+         'font' if item.value.font is defined else
          'native' if item.value.native is defined else 'unknown' }}
     _native_default: "{{ (package_name_overrides | default({})).get(item.key, item.key) }}"
     _pkg_tags: >-
@@ -68,7 +73,11 @@
          + (['go'] if item.value.go is defined else [])
          + (['cargo'] if item.value.cargo is defined else [])
          + (['npm'] if item.value.npm is defined else [])
+         + (['font'] if item.value.font is defined else [])
          + (['native'] if item.value.native is defined else []) }}
     _passes_filter: >-
-      {{ (modules_filter | default([]) | length == 0) or
-         (_pkg_tags | intersect(modules_filter | default([])) | length > 0) }}
+      {{ ((modules_filter | default([]) | length == 0) or
+          (_pkg_tags | intersect(modules_filter | default([])) | length > 0))
+         and (_pkg_tags | intersect(['ai', 'optional']) | length == 0 or
+              _pkg_tags | intersect(['ai', 'optional'])
+              | intersect(modules_filter | default([])) | length > 0) }}

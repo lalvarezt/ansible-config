@@ -124,8 +124,11 @@ packages_o_z:
     uv:
       ansible.builtin.command: tool install pyrefly
   python-argcomplete:
-    brew:
-      name: python-argcomplete
+    native:
+      apt: python3-argcomplete
+      dnf: python3-argcomplete
+      pacman: python-argcomplete
+      yay: python-argcomplete
     description:
       Easy, extensible command line tab completion of arguments for your
       Python application

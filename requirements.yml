@@ -6,8 +6,7 @@
 #
 # ANSIBLE VERSION REQUIREMENTS
 # ----------------------------
-# Minimum supported version: 2.12
-# Recommended version: 2.15+
+# Minimum supported ansible-core version: 2.18
 #
 # This project uses features including:
 #   - module_defaults (2.12+)
@@ -18,4 +17,4 @@
 collections:
   # Required for homebrew, cargo modules
   - name: community.general
-    version: "7.0.0"
+    version: "13.5.0"

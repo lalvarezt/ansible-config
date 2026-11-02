@@ -1,0 +1,32 @@
+---
+- name: Create font directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ ansible_facts['user_dir'] }}/.cache/ansible-fonts"
+    - "{{ ansible_facts['user_dir'] }}/.local/share/fonts/{{ font_package.name }}"
+
+- name: Download pinned font archive
+  ansible.builtin.get_url:
+    url: "{{ font_package.url }}"
+    dest: "{{ ansible_facts['user_dir'] }}/.cache/ansible-fonts/{{ font_package.name }}.zip"
+    checksum: "{{ font_package.checksum }}"
+    mode: "0644"
+
+- name: Extract font archive
+  ansible.builtin.unarchive:
+    src: "{{ ansible_facts['user_dir'] }}/.cache/ansible-fonts/{{ font_package.name }}.zip"
+    dest: "{{ ansible_facts['user_dir'] }}/.local/share/fonts/{{ font_package.name }}"
+    remote_src: true
+    creates: "{{ ansible_facts['user_dir'] }}/.local/share/fonts/{{ font_package.name }}/.{{ font_package.checksum.split(':')[-1] }}"
+  when: not ansible_check_mode
+  notify: Refresh font cache
+
+- name: Record installed font archive checksum
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['user_dir'] }}/.local/share/fonts/{{ font_package.name }}/.{{ font_package.checksum.split(':')[-1] }}"
+    content: "{{ font_package.checksum }}\n"
+    mode: "0644"
+  when: not ansible_check_mode

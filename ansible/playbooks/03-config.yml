@@ -5,6 +5,10 @@
   hosts: all
   gather_facts: true
   tags: [config]
+  pre_tasks:
+    - name: Detect WSL for standalone configuration runs
+      ansible.builtin.set_fact:
+        is_wsl: "{{ 'microsoft' in (ansible_facts['kernel'] | lower) }}"
   roles:
     - role: chezmoi
     - role: post_config

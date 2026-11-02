@@ -27,10 +27,53 @@
 
 - name: Initialize chezmoi with SSH
   ansible.builtin.command: chezmoi init {{ chezmoi_repo_url }}
-  when: not chezmoi_init_check.stat.exists
+  when:
+    - not chezmoi_init_check.stat.exists
+    - not (is_wsl | default(false))
   environment:
     PATH: "{{ ansible_path }}"
   changed_when: true
+
+- name: Initialize chezmoi on WSL before its persistent SSH bridge exists
+  when:
+    - not chezmoi_init_check.stat.exists
+    - is_wsl | default(false)
+  block:
+    - name: Create a private directory for the bootstrap SSH socket
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: ansible-chezmoi-agent-
+      register: chezmoi_agent_directory
+
+    - name: Clone dotfiles through a temporary Windows SSH agent bridge
+      ansible.builtin.shell: |
+        socat "UNIX-LISTEN:$BOOTSTRAP_AGENT_SOCKET,fork,mode=0600" \
+          "EXEC:$BOOTSTRAP_NPIPERELAY -ei -s //./pipe/openssh-ssh-agent,nofork" &
+        relay_pid=$!
+        trap 'kill "$relay_pid" 2>/dev/null; wait "$relay_pid" 2>/dev/null' EXIT
+        attempt=0
+        while [ ! -S "$BOOTSTRAP_AGENT_SOCKET" ]; do
+          attempt=$((attempt + 1))
+          if [ "$attempt" -ge 50 ] || ! kill -0 "$relay_pid" 2>/dev/null; then
+            echo "Temporary SSH agent bridge did not start" >&2
+            exit 1
+          fi
+          sleep 0.1
+        done
+        SSH_AUTH_SOCK="$BOOTSTRAP_AGENT_SOCKET" chezmoi init "$BOOTSTRAP_CHEZMOI_REPO"
+      environment:
+        PATH: "{{ ansible_path }}"
+        BOOTSTRAP_AGENT_SOCKET: "{{ chezmoi_agent_directory.path }}/agent.sock"
+        BOOTSTRAP_NPIPERELAY: "{{ npiperelay_path | quote }}"
+        BOOTSTRAP_CHEZMOI_REPO: "{{ chezmoi_repo_url }}"
+      changed_when: true
+      when: not ansible_check_mode
+  always:
+    - name: Remove the temporary SSH agent directory
+      ansible.builtin.file:
+        path: "{{ chezmoi_agent_directory.path }}"
+        state: absent
+      when: chezmoi_agent_directory.path is defined
 
 - name: Apply chezmoi configuration (FINAL CONFIG - overrides temp env)
   ansible.builtin.command: chezmoi apply
