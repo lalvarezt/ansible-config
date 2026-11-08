@@ -69,8 +69,12 @@ packages_g_n:
     tags:
       - git
   git-delta:
-    brew:
+    cargo:
       name: git-delta
+      locked: true
+      repo: https://github.com/lalvarezt/delta.git
+      dest: "{{ ansible_facts['user_dir'] }}/git-repos/delta"
+      version: experiments
     description: Syntax-highlighting pager for git and diff output
     tags:
       - git

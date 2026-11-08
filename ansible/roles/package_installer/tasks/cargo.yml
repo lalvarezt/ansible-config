@@ -1,6 +1,14 @@
 ---
 # Install packages via Cargo
 
+- name: Install Cargo packages from local checkouts
+  ansible.builtin.include_tasks: cargo_source.yml
+  loop: "{{ cargo_packages | selectattr('repo', 'defined') | list }}"
+  loop_control:
+    loop_var: cargo_package
+    label: "{{ cargo_package.name }}"
+  when: not ansible_check_mode
+
 - name: Install packages via Cargo
   community.general.cargo:
     name: "{{ item.name }}"
@@ -8,7 +16,7 @@
     state: present
   environment:
     PATH: "{{ ansible_path }}"
-  loop: "{{ cargo_packages }}"
+  loop: "{{ cargo_packages | rejectattr('repo', 'defined') | list }}"
   loop_control:
     label: "{{ item.name }}"
   when: not ansible_check_mode

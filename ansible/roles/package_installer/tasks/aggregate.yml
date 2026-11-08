@@ -41,7 +41,7 @@
       {{ go_packages + [item.value.go | combine({'name': item.key, 'command': item.value.go['ansible.builtin.command']})]
          if item.value.go is defined and _passes_filter else go_packages }}
     cargo_packages: >-
-      {{ cargo_packages + [{'name': item.value.cargo.name, 'locked': item.value.cargo.locked | default(false)}]
+      {{ cargo_packages + [item.value.cargo | combine({'locked': item.value.cargo.locked | default(false)})]
          if item.value.cargo is defined and _passes_filter else cargo_packages }}
     npm_packages: >-
       {{ npm_packages + [item.value.npm.name]

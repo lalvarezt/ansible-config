@@ -101,6 +101,8 @@ class BootstrapTests(unittest.TestCase):
                 f"('lazygit' in (go_packages | map(attribute='name') | list)) == {str(not ai_expected).lower()}",
                 "'fzf' not in brew_packages",
                 f"('fzf' in (go_packages | map(attribute='name') | list)) == {str(not ai_expected).lower()}",
+                "'git-delta' not in brew_packages",
+                f"('git-delta' in (cargo_packages | map(attribute='name') | list)) == {str(not ai_expected).lower()}",
             ]}},
         ], {
             "package_dict": "{{ packages_a_f | combine(packages_g_n) | combine(packages_o_z) }}",
@@ -136,6 +138,12 @@ class BootstrapTests(unittest.TestCase):
                 self.assertRegex(result.stdout, rf"changed={int(changed)}\s")
 
     def test_go_source_clones_updates_and_reinstalls_existing_binary(self):
+        self.check_source_install("go", "lazygit", "go/bin/lazygit")
+
+    def test_cargo_source_clones_updates_and_reinstalls_existing_binary(self):
+        self.check_source_install("cargo", "git-delta", ".cargo/bin/delta")
+
+    def check_source_install(self, method, name, binary):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
             source = base / "source"
@@ -153,22 +161,27 @@ class BootstrapTests(unittest.TestCase):
             (source / "version").write_text("first")
             git("add", ".")
             git("commit", "-m", "Initial source")
-            mock = base / "mock-go"
+            mock = base / f"mock-{method}"
+            arguments = ["install", "."] if method == "go" else [
+                "install", "--path", ".", "--force", "--locked"]
+            target = base / binary
             mock.write_text(
                 f"#!{sys.executable}\nimport os, pathlib, sys\n"
-                "assert sys.argv[1:] == ['install', '.']\n"
-                "target = pathlib.Path(os.environ['GOBIN']) / 'lazygit'\n"
+                f"assert sys.argv[1:] == {arguments!r}\n"
+                f"target = pathlib.Path({str(target)!r})\n"
+                f"if {method!r} == 'go':\n"
+                "    assert pathlib.Path(os.environ['GOBIN']) == target.parent\n"
                 "target.parent.mkdir(parents=True, exist_ok=True)\n"
                 "target.write_text(pathlib.Path('version').read_text())\n")
             mock.chmod(0o755)
             checkout = base / "checkout"
             tasks = [{"ansible.builtin.include_tasks": str(
-                ANSIBLE / "roles/package_installer/tasks/go.yml")}]
+                ANSIBLE / f"roles/package_installer/tasks/{method}.yml")}]
             variables = {
                 "ansible_facts": {"user_dir": directory},
-                "go_bin": str(mock), "ansible_path": os.environ["PATH"],
-                "go_packages": [{
-                    "name": "lazygit", "command": "install .",
+                f"{method}_bin": str(mock), "ansible_path": os.environ["PATH"],
+                f"{method}_packages": [{
+                    "name": name, "command": "install .", "locked": True,
                     "repo": str(source), "dest": str(checkout),
                     "version": "experiments",
                 }],
@@ -179,7 +192,7 @@ class BootstrapTests(unittest.TestCase):
                     git("commit", "-am", "Update source")
                 result = self.run_play(tasks, variables)
                 self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-                self.assertEqual((base / "go/bin/lazygit").read_text(), version)
+                self.assertEqual(target.read_text(), version)
 
             git("config", "user.name", "Test", cwd=checkout)
             git("config", "user.email", "test@example.invalid", cwd=checkout)
@@ -189,7 +202,7 @@ class BootstrapTests(unittest.TestCase):
             result = self.run_play(tasks, variables)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertEqual(git("rev-parse", "HEAD", cwd=checkout), local_head)
-            self.assertEqual((base / "go/bin/lazygit").read_text(), "local")
+            self.assertEqual(target.read_text(), "local")
 
             (source / "version").write_text("diverged")
             git("commit", "-am", "Divergent remote change")

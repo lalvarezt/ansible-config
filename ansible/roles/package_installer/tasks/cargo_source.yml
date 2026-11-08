@@ -1,0 +1,33 @@
+---
+- name: Clone Cargo package source if missing
+  ansible.builtin.git:
+    repo: "{{ cargo_package.repo }}"
+    dest: "{{ cargo_package.dest }}"
+    version: "{{ cargo_package.version }}"
+    update: false
+
+- name: Update Cargo package source without discarding local commits
+  ansible.builtin.command:
+    argv:
+      - git
+      - pull
+      - --ff-only
+      - "{{ cargo_package.repo }}"
+      - "{{ cargo_package.version }}"
+    chdir: "{{ cargo_package.dest }}"
+  environment:
+    LANG: C
+    LC_ALL: C
+  register: cargo_source_update
+  changed_when: "'Already up to date.' not in cargo_source_update.stdout"
+
+- name: Install Cargo package from local source
+  ansible.builtin.command:
+    argv: >-
+      {{ [cargo_bin, 'install', '--path', '.', '--force']
+         + (['--locked'] if cargo_package.locked else []) }}
+    chdir: "{{ cargo_package.dest }}"
+  environment:
+    PATH: "{{ ansible_path }}"
+  register: cargo_source_install
+  changed_when: cargo_source_install.rc == 0
