@@ -97,10 +97,13 @@ class BootstrapTests(unittest.TestCase):
                 f"('claude-code' in (post_install_tasks | map(attribute='name') | list)) == {str(ai_expected).lower()}",
                 f"('ollama' in brew_packages) == {str(ai_expected).lower()}",
                 "'qemu' not in brew_packages",
+                "'lazygit' not in brew_packages",
+                f"('lazygit' in (go_packages | map(attribute='name') | list)) == {str(not ai_expected).lower()}",
             ]}},
         ], {
             "package_dict": "{{ packages_a_f | combine(packages_g_n) | combine(packages_o_z) }}",
             "modules_filter": modules,
+            "ansible_facts": {"user_dir": str(Path.home())},
         }, [str(p) for p in sorted(
             (ANSIBLE / "inventory/group_vars/all").glob("packages_*.yml"))])
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -129,6 +132,68 @@ class BootstrapTests(unittest.TestCase):
                 else:
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                 self.assertRegex(result.stdout, rf"changed={int(changed)}\s")
+
+    def test_go_source_clones_updates_and_reinstalls_existing_binary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            source = base / "source"
+            source.mkdir()
+
+            def git(*args, cwd=source):
+                return subprocess.run(
+                    ["git", *args], cwd=cwd, check=True,
+                    text=True, capture_output=True,
+                ).stdout.strip()
+
+            git("init", "-b", "experiments")
+            git("config", "user.name", "Test")
+            git("config", "user.email", "test@example.invalid")
+            (source / "version").write_text("first")
+            git("add", ".")
+            git("commit", "-m", "Initial source")
+            mock = base / "mock-go"
+            mock.write_text(
+                f"#!{sys.executable}\nimport os, pathlib, sys\n"
+                "assert sys.argv[1:] == ['install', '.']\n"
+                "target = pathlib.Path(os.environ['GOBIN']) / 'lazygit'\n"
+                "target.parent.mkdir(parents=True, exist_ok=True)\n"
+                "target.write_text(pathlib.Path('version').read_text())\n")
+            mock.chmod(0o755)
+            checkout = base / "checkout"
+            tasks = [{"ansible.builtin.include_tasks": str(
+                ANSIBLE / "roles/package_installer/tasks/go.yml")}]
+            variables = {
+                "ansible_facts": {"user_dir": directory},
+                "go_bin": str(mock), "ansible_path": os.environ["PATH"],
+                "go_packages": [{
+                    "name": "lazygit", "command": "install .",
+                    "repo": str(source), "dest": str(checkout),
+                    "version": "experiments",
+                }],
+            }
+            for version in ["first", "second"]:
+                if version == "second":
+                    (source / "version").write_text(version)
+                    git("commit", "-am", "Update source")
+                result = self.run_play(tasks, variables)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual((base / "go/bin/lazygit").read_text(), version)
+
+            git("config", "user.name", "Test", cwd=checkout)
+            git("config", "user.email", "test@example.invalid", cwd=checkout)
+            (checkout / "version").write_text("local")
+            git("commit", "-am", "Unpublished change", cwd=checkout)
+            local_head = git("rev-parse", "HEAD", cwd=checkout)
+            result = self.run_play(tasks, variables)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(git("rev-parse", "HEAD", cwd=checkout), local_head)
+            self.assertEqual((base / "go/bin/lazygit").read_text(), "local")
+
+            (source / "version").write_text("diverged")
+            git("commit", "-am", "Divergent remote change")
+            result = self.run_play(tasks, variables)
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertEqual(git("rev-parse", "HEAD", cwd=checkout), local_head)
 
     def test_font_archive_is_verified_and_extracted_once(self):
         with tempfile.TemporaryDirectory() as directory:

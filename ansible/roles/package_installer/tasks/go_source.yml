@@ -1,0 +1,33 @@
+---
+- name: Clone Go package source if missing
+  ansible.builtin.git:
+    repo: "{{ go_package.repo }}"
+    dest: "{{ go_package.dest }}"
+    version: "{{ go_package.version }}"
+    update: false
+
+- name: Update Go package source without discarding local commits
+  ansible.builtin.command:
+    argv:
+      - git
+      - pull
+      - --ff-only
+      - "{{ go_package.repo }}"
+      - "{{ go_package.version }}"
+    chdir: "{{ go_package.dest }}"
+  environment:
+    LANG: C
+    LC_ALL: C
+  register: go_source_update
+  changed_when: "'Already up to date.' not in go_source_update.stdout"
+
+- name: Install Go package from local source
+  ansible.builtin.command: "{{ go_bin }} {{ go_package.command }}"
+  args:
+    chdir: "{{ go_package.dest }}"
+  environment:
+    PATH: "{{ ansible_path }}"
+    GOPATH: "{{ ansible_facts['user_dir'] }}/go"
+    GOBIN: "{{ ansible_facts['user_dir'] }}/go/bin"
+  register: go_source_install
+  changed_when: go_source_install.rc == 0

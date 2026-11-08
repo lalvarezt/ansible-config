@@ -1,10 +1,17 @@
 ---
 # Install packages via Go (batch loop)
 
+- name: Install Go packages from local checkouts
+  ansible.builtin.include_tasks: go_source.yml
+  loop: "{{ go_packages | selectattr('repo', 'defined') | list }}"
+  loop_control:
+    loop_var: go_package
+    label: "{{ go_package.name }}"
+
 - name: Check existing Go binaries
   ansible.builtin.stat:
     path: "{{ ansible_facts['user_dir'] }}/go/bin/{{ item.name }}"
-  loop: "{{ go_packages }}"
+  loop: "{{ go_packages | rejectattr('repo', 'defined') | list }}"
   loop_control:
     label: "{{ item.name }}"
   register: go_binary_checks

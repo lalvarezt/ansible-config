@@ -257,8 +257,11 @@ packages_g_n:
     uv:
       ansible.builtin.command: tool install git+https://github.com/guelfoweb/knock
   lazygit:
-    brew:
-      name: lazygit
+    go:
+      ansible.builtin.command: install .
+      repo: https://github.com/lalvarezt/lazygit.git
+      dest: "{{ ansible_facts['user_dir'] }}/git-repos/lazygit"
+      version: experiments
     description: Simple terminal UI for git commands
     tags:
       - git

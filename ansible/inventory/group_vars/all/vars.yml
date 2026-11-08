@@ -48,6 +48,8 @@
 #   - brew: Install via Homebrew (name, flags)
 #   - uv: Install via uv/pip (command)
 #   - go: Install via go install (command)
+#     Optional repo, dest, version: clone/update a checkout and install locally.
+#     Updates use git pull --ff-only to preserve local commits; divergent history fails.
 #   - cargo: Install via cargo (name, locked)
 #   - npm: Install via npm (name)
 #   - native: Install via system package manager (apt, dnf, pacman, yay)
