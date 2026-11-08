@@ -16,31 +16,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
 
-      - name: Install Ansible collections
-        run: |
-          uvx --from ansible-core ansible-galaxy collection install -r requirements.yml
-
-      - name: Run yamllint
-        run: |
-          uvx yamllint -d relaxed ansible/
+      - name: Install uv from PyPI
+        run: python -m pip install uv==0.13.7
 
       - name: Install yq for regression checks
         run: |
           go install github.com/mikefarah/yq/v4@v4.54.1
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
-      - name: Run bootstrap regression checks
-        run: uv run --with ansible-core python -m unittest discover -s tests -v
-
-      - name: Run ansible-lint
-        working-directory: ansible
-        run: |
-          uvx ansible-lint playbooks/*.yml
-
-      - name: Check Ansible syntax
-        working-directory: ansible
-        run: |
-          uvx --from ansible-core ansible-playbook playbooks/*.yml --syntax-check -i inventory/hosts.yml
+      - name: Run pre-push checks
+        run: ./scripts/check.sh

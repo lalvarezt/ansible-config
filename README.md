@@ -276,19 +276,23 @@ Create `ansible/inventory/host_vars/<inventory-hostname>.yml` for machine-specif
 
 ## Validation
 
-Run from the repository root with Ansible and Mike Farah's yq v4 on PATH:
+Install uv and Mike Farah's yq v4 on PATH. Enable the pre-push hook once per clone:
 
 ```bash
-python3 -m unittest discover -s tests -v
-shellcheck scripts/*.sh
-cd ansible
-yamllint -d relaxed .
-ansible-lint --offline
-ansible-playbook playbooks/bootstrap.yml --syntax-check
+git config core.hooksPath .githooks
+./scripts/check.sh
 ```
 
-The regression tests exercise the real aggregation and uv tasks against temporary
-inputs. They do not install packages or apply dotfiles.
+Every push runs the same script as CI. Commit or stash tracked changes before
+pushing. The script uses Python 3.13 and the tool versions in
+`requirements-check.txt`, installs the required Ansible collections, then runs
+YAML lint, bootstrap regression tests, Ansible lint, and playbook syntax checks.
+The first run needs network access to download Python, tools, and collections.
+
+The regression tests exercise the real aggregation and installer tasks against
+temporary inputs. They do not install workstation packages or apply dotfiles.
+CI installs uv 0.13.7 from PyPI to avoid the GitHub release download that returned
+HTTP 504 in the failed run. Local checks cannot prevent CI network outages.
 
 ## License
 

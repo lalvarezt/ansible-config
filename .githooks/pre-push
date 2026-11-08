@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+HEAD_SHA="$(git -C "$ROOT" rev-parse HEAD)"
+CHECK=false
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [[ "$local_sha" =~ ^0+$ ]] && continue
+  if [[ "$local_sha" != "$HEAD_SHA" ]]; then
+    echo "Error: check out $local_ref before pushing so checks validate the pushed commit." >&2
+    exit 1
+  fi
+  CHECK=true
+done
+[[ "$CHECK" == true ]] || exit 0
+
+if ! git -C "$ROOT" diff --quiet HEAD --; then
+  echo "Error: commit or stash tracked changes before pushing so checks validate the committed files." >&2
+  exit 1
+fi
+exec "$ROOT/scripts/check.sh" </dev/null
