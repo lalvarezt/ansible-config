@@ -363,8 +363,11 @@ packages_a_f:
     tags:
       - data
   fzf:
-    brew:
-      name: fzf
+    go:
+      ansible.builtin.command: install .
+      repo: https://github.com/lalvarezt/fzf.git
+      dest: "{{ ansible_facts['user_dir'] }}/git-repos/fzf"
+      version: frecency
     description: Command-line fuzzy finder written in Go
     tags:
       - search

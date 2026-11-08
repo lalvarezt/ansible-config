@@ -99,6 +99,8 @@ class BootstrapTests(unittest.TestCase):
                 "'qemu' not in brew_packages",
                 "'lazygit' not in brew_packages",
                 f"('lazygit' in (go_packages | map(attribute='name') | list)) == {str(not ai_expected).lower()}",
+                "'fzf' not in brew_packages",
+                f"('fzf' in (go_packages | map(attribute='name') | list)) == {str(not ai_expected).lower()}",
             ]}},
         ], {
             "package_dict": "{{ packages_a_f | combine(packages_g_n) | combine(packages_o_z) }}",
