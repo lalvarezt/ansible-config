@@ -77,6 +77,9 @@ This will:
 - Install all configured packages
 - Apply dotfiles via `chezmoi`
 
+The Homebrew role also installs Homebrew's portable Ruby so its Linux sandbox can
+load Fiddle for Landlock. Homebrew selects and updates that runtime automatically.
+
 ### 4. Restart your shell
 
 Log out and back in, or start a new terminal session.

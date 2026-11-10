@@ -45,6 +45,24 @@
     PATH: "{{ brew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   changed_when: false
 
+- name: Locate Homebrew repository
+  ansible.builtin.command: "{{ brew_bin }} --repository"
+  register: homebrew_repository
+  changed_when: false
+  check_mode: false
+
+# Homebrew disables RubyGems, so a system Ruby may not expose Fiddle for Landlock.
+# Homebrew automatically selects and updates its portable Ruby once installed.
+- name: Install Homebrew portable Ruby
+  ansible.builtin.command:
+    argv:
+      - "{{ brew_bin }}"
+      - vendor-install
+      - ruby
+    creates: "{{ homebrew_repository.stdout }}/Library/Homebrew/vendor/portable-ruby/current/bin/ruby"
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
+
 - name: Display Homebrew version
   ansible.builtin.command: "{{ brew_bin }} --version"
   register: brew_version
